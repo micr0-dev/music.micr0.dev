@@ -61,6 +61,9 @@ document.addEventListener('DOMContentLoaded', () => {
     function playTrack(music) {
         audioPlayer.src = `/api/stream/${music.id}`;
         coverArt.src = `/api/thumbnail/${music.id}`;
+        coverArt.alt = music.title;
+        const color = fetch(`/api/color/${music.id}`)
+        coverArt.style.setProperty('--art-color', color);
         trackTitle.textContent = music.title;
         trackArtist.textContent = music.artist;
         audioPlayer.play();
