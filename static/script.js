@@ -109,6 +109,6 @@ function updateSlider() {
     const value = (audioPlayer.currentTime * 1000) / duration;
     const duration = Math.floor(audioPlayer.duration);
     slider.value = value;
-    const percentage = (value - slider.min) / (slider.max - slider.min) * 100;
+    const percentage = audioPlayer.currentTime / duration * 100;
     slider.style.setProperty('--value', `${percentage}%`);
 }
