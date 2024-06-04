@@ -4,6 +4,9 @@ import (
 	"crypto/rand"
 	"database/sql"
 	"encoding/hex"
+	"encoding/json"
+	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"os"
@@ -16,11 +19,12 @@ import (
 )
 
 type MusicHandler struct {
-	DB *sqlx.DB
+	DB           *sqlx.DB
+	LastFmAPIKey string
 }
 
-func NewMusicHandler(db *sqlx.DB) *MusicHandler {
-	return &MusicHandler{DB: db}
+func NewMusicHandler(db *sqlx.DB, lastFmAPIKey string) *MusicHandler {
+	return &MusicHandler{DB: db, LastFmAPIKey: lastFmAPIKey}
 }
 
 func generateUniqueID() string {
@@ -43,6 +47,65 @@ func readMetadata(filepath string) (tag.Metadata, error) {
 		return nil, err
 	}
 	return metadata, nil
+}
+
+func (h *MusicHandler) fetchThumbnail(title, artist string) (string, error) {
+	url := fmt.Sprintf("http://ws.audioscrobbler.com/2.0/?method=track.getInfo&api_key=%s&artist=%s&track=%s&format=json", h.LastFmAPIKey, artist, title)
+	resp, err := http.Get(url)
+	if err != nil {
+		return "", err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return "", fmt.Errorf("failed to get data from Last.fm")
+	}
+
+	var result map[string]interface{}
+	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
+		return "", err
+	}
+
+	track, ok := result["track"].(map[string]interface{})
+	if !ok {
+		return "", fmt.Errorf("no track data found")
+	}
+
+	album, ok := track["album"].(map[string]interface{})
+	if !ok {
+		return "", fmt.Errorf("no album data found")
+	}
+
+	images, ok := album["image"].([]interface{})
+	if !ok || len(images) == 0 {
+		return "", fmt.Errorf("no images found")
+	}
+
+	// Assume the last image in the list is the largest one.
+	largestImage := images[len(images)-1].(map[string]interface{})
+	imageURL, ok := largestImage["#text"].(string)
+	if !ok || imageURL == "" {
+		return "", fmt.Errorf("no image URL found")
+	}
+
+	return imageURL, nil
+}
+
+func downloadImage(url, filepath string) error {
+	resp, err := http.Get(url)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+
+	out, err := os.Create(filepath)
+	if err != nil {
+		return err
+	}
+	defer out.Close()
+
+	_, err = io.Copy(out, resp.Body)
+	return err
 }
 
 func (h *MusicHandler) UploadMusic(c *gin.Context) {
@@ -101,10 +164,21 @@ func (h *MusicHandler) UploadMusic(c *gin.Context) {
 					log.Printf("Error writing thumbnail: %v", err)
 				}
 			}
+		} else {
+			thumbnailURL, err := h.fetchThumbnail(music.Title, music.Artist)
+			if err != nil {
+				log.Printf("Error fetching thumbnail: %v", err)
+			} else {
+				music.Thumbnail = sql.NullString{String: id + ".jpg", Valid: true}
+				thumbnailPath := "./static/" + music.Thumbnail.String
+				if err := downloadImage(thumbnailURL, thumbnailPath); err != nil {
+					log.Printf("Error downloading thumbnail: %v", err)
+				}
+			}
 		}
 	}
 
-	if _, err := h.DB.NamedExec(`INSERT INTO music (id, title, artist, filename) VALUES (:id, :title, :artist, :filename)`, &music); err != nil {
+	if _, err := h.DB.NamedExec(`INSERT INTO music (id, title, artist, filename, thumbnail) VALUES (:id, :title, :artist, :filename, :thumbnail)`, &music); err != nil {
 		log.Printf("Error inserting music: %v", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to insert into database"})
 		return

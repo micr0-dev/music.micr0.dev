@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	"music.micr0.dev/backend/handlers"
 	"music.micr0.dev/backend/models"
@@ -20,13 +21,18 @@ func main() {
 	}
 	defer db.Close()
 
+	lastFmAPIKey := os.Getenv("LASTFM_API_KEY")
+	if lastFmAPIKey == "" {
+		log.Fatalf("Last.fm API key is not set in the environment variables")
+	}
+
 	gin.SetMode(gin.ReleaseMode)
 
 	models.InitializeDatabase(db)
 
 	router := gin.Default()
 
-	musicHandler := handlers.NewMusicHandler(db)
+	musicHandler := handlers.NewMusicHandler(db, lastFmAPIKey)
 	router.GET("/music", musicHandler.GetMusic)
 	router.GET("/music/:id", musicHandler.GetMusicByID)
 	router.POST("/music", musicHandler.UploadMusic)

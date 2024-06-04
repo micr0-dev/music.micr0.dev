@@ -36,7 +36,7 @@ footer {
     left: 0;
     right: 0;
     background-color: #282828;
-    padding: 10px;
+    padding: 0px;
     text-align: center;
 
 }
@@ -91,6 +91,7 @@ button:hover {
     background-color: #282828;
     border-radius: 5px;
     padding: 10px;
+    margin-top: 10px;
     width: 100%;
 }
 
@@ -140,42 +141,43 @@ button:hover {
 }
 
 .slidecontainer {
+    display: flex;
     width: 100%;
-    padding: 10px 0;
+    margin: 0px;
+    padding: 0px;
 }
 
 .slider {
     -webkit-appearance: none;
     appearance: none;
     width: 100%;
-    height: 15px;
+    height: 6px;
+    margin: 0px;
     background: linear-gradient(to right, #1ed760 0%, #1ed760 var(--value), #121212 var(--value), #121212 100%);
     outline: none;
-    opacity: 0.7;
-    -webkit-transition: opacity .2s;
-    transition: opacity .2s;
-}
-
-.slider:hover {
     opacity: 1;
+    -webkit-transition: opacity .1s;
+    transition: opacity .1s;
 }
 
 .slider::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    width: 25px;
-    height: 25px;
-    background: #fff;
+    opacity: 0;
+    width: 10px;
+    height: 10px;
+    background: #1ed760;
     border: none;
-    cursor: pointer;
-    border-radius: 50%;
+    border-radius: 10px;
+    transition: opacity .1s;
 }
 
 .slider::-moz-range-thumb {
-    width: 25px;
-    height: 25px;
-    background: #fff;
+    opacity: 0;
+    width: 10px;
+    height: 10px;
+    background: #1ed760;
     border: none;
-    cursor: pointer;
-    border-radius: 50%;
+    border-radius: 10px;
+    transition: opacity .1s;
 }
