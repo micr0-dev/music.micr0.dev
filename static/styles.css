@@ -1,0 +1,74 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #121212;
+    color: white;
+}
+
+header {
+    background-color: #1db954;
+    padding: 20px;
+    text-align: center;
+}
+
+main {
+    margin: 20px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background-color: #282828;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+form input,
+form button {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+}
+
+form button {
+    background-color: #1db954;
+    color: white;
+    cursor: pointer;
+}
+
+form button:hover {
+    background-color: #1ed760;
+}
+
+#music-section {
+    margin-top: 20px;
+}
+
+#music-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.music-item {
+    background-color: #282828;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.music-item:hover {
+    background-color: #3e3e3e;
+}
+
+footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #282828;
+    padding: 10px;
+    text-align: center;
+}
