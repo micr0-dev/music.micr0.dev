@@ -205,7 +205,7 @@ button:hover {
     padding-right: 10px;
 }
 
-#audio-controls .control-button {
+#audio-controls .control-button svg {
     width: 24px;
     height: 24px;
 }
