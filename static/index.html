@@ -22,6 +22,14 @@
         <symbol id="prev" viewbox="0 -960 960 960">
             <path xmlns="http://www.w3.org/2000/svg" d="M142-162v-636h136v636H142Zm676 0L340-480l478-318v636Z" />
         </symbol>
+        <symbol id="shuffle" viewbox="0 -960 960 960">
+            <path xmlns="http://www.w3.org/2000/svg"
+                d="M556-114v-115h92L534-343l82-80 114 111v-90h116v288H556Zm-362-1-80-81 534-534h-92v-116h290v289H730v-92L194-115Zm155-416L114-765l80-81 237 234-82 81Z" />
+        </symbol>
+        <symbol id="repeat" viewbox="0 -960 960 960">
+            <path xmlns="http://www.w3.org/2000/svg"
+                d="M266-32 74-225l192-193 89 90-41 40h366v-161h126v287H314l41 40-89 90ZM154-500v-288h493l-40-39 88-90 193 192-193 193-88-90 40-40H280v162H154Z" />
+        </symbol>
     </defs>
 </svg>
 
@@ -60,6 +68,12 @@
                     <p id="track-artist"></p>
                 </div>
                 <div id="audio-controls">
+                    <button id="repeat-button" class="control-button">
+                        <svg>
+                            <use href="#repeat"></use>
+                        </svg>
+                    </button>
+
                     <button id="prev-button">
                         <svg>
                             <use href="#prev"></use>
@@ -78,6 +92,14 @@
                             <use href="#next"></use>
                         </svg>
                     </button>
+                    <button id="shuffle-button" class="control-button">
+                        <svg>
+                            <use href="#shuffle"></use>
+                        </svg>
+                    </button>
+                </div>
+                <div class="volume">
+                    <input type="range" min="0" max="100" value="100" class="slider" id="volume-slider">
                 </div>
                 <div class="playtime">
                     <span id="current-time">2:42</span> / <span id="duration">4:20</span>
