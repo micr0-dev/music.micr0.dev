@@ -32,10 +32,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     async function loadMusicList() {
-        document.getElementById('loading-progress').classList.remove('hidden');
         const response = await fetch('/api/music');
         const musics = await response.json();
-        document.getElementById('loading-progress').classList.add('hidden');
 
         const musicList = document.getElementById('music-list');
         musicList.innerHTML = '';
