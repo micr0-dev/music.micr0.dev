@@ -105,6 +105,7 @@ slider.addEventListener('input', function () {
 });
 
 function updateSlider() {
+    const slider = document.querySelector('.slider');
     const audioPlayer = document.getElementById('audio-player');
     const value = audioPlayer.currentTime;
     const percentage = (value - slider.min) / (slider.max - slider.min) * 100;
