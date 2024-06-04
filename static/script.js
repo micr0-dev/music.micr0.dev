@@ -16,11 +16,13 @@ document.addEventListener('DOMContentLoaded', () => {
     uploadForm.addEventListener('submit', async (event) => {
         event.preventDefault();
         const formData = new FormData(event.target);
+        document.getElementById('upload-progress').classList.remove('hidden');
         const response = await fetch('/api/music', {
             method: 'POST',
             body: formData,
         });
         const result = await response.json();
+        document.getElementById('upload-progress').classList.add('hidden');
         if (response.ok) {
             alert('Music uploaded successfully!');
             loadMusicList();
@@ -30,18 +32,29 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     async function loadMusicList() {
+        document.getElementById('loading-progress').classList.remove('hidden');
         const response = await fetch('/api/music');
         const musics = await response.json();
+        document.getElementById('loading-progress').classList.add('hidden');
+
+        const musicList = document.getElementById('music-list');
         musicList.innerHTML = '';
         musics.forEach(music => {
             const div = document.createElement('div');
-            const link = document.createElement('a');
-            link.href = '#';
-            link.textContent = `${music.title} by ${music.artist}`;
-            link.onclick = () => {
+            div.className = 'music-item';
+            const ext = music.filename.split('.').pop().toUpperCase();
+            const isHiFi = ext === 'FLAC';
+
+            div.innerHTML = `
+                <img src="${music.thumbnail.Valid ? '/static/' + music.thumbnail.String : 'default-thumbnail.jpg'}" alt="cover art" class="cover-art">
+                <div class="music-info">
+                    <div class="music-item-title">${music.title} ${isHiFi ? `<span class="hifi-tag">${ext}</span>` : ''}</div>
+                    <div class="music-item-artist">${music.artist}</div>
+                </div>
+            `;
+            div.addEventListener('click', () => {
                 playTrack(music);
-            };
-            div.appendChild(link);
+            });
             musicList.appendChild(div);
         });
     }
