@@ -71,6 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
         isPlaying = true;
         playPauseButton.textContent = 'Pause';
         currentTrack = music;
+        durationLabel.textContent = formatTime(Math.floor(audioPlayer.duration));
 
         nowPlayingContainer.style.setProperty('--art-color', music.color);
     }

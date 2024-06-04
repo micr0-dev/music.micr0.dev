@@ -1,0 +1,13 @@
+[Unit]
+Description=music.micr0.dev Backend Server
+After=network.target
+
+[Service]
+User=user
+WorkingDirectory=/home/user/music.micr0.dev/backend
+ExecStart=/usr/local/go/bin/go run .
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

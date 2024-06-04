@@ -16,7 +16,6 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
-	"time"
 
 	"github.com/dhowden/tag"
 	"github.com/gin-gonic/gin"
@@ -170,14 +169,6 @@ func downloadImage(url, filepath string) error {
 }
 
 func (h *MusicHandler) UploadMusic(c *gin.Context) {
-	startTime := time.Now()
-	log.Printf("UploadMusic started at %v", startTime)
-
-	defer func() {
-		duration := time.Since(startTime)
-		log.Printf("UploadMusic completed in %v", duration)
-	}()
-
 	title := c.PostForm("title")
 	artist := c.PostForm("artist")
 
@@ -187,30 +178,22 @@ func (h *MusicHandler) UploadMusic(c *gin.Context) {
 		return
 	}
 
-	log.Println("File received:", file.Filename)
-
 	id := generateUniqueID()
 	filename := id + filepath.Ext(file.Filename)
 	filepath := "./static/" + filename
 
-	// Save uploaded file
-	beforeSaveTime := time.Now()
 	if err := c.SaveUploadedFile(file, filepath); err != nil {
 		log.Printf("Error saving file: %v", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save file"})
 		return
 	}
-	log.Printf("File saved in %v", time.Since(beforeSaveTime))
 
-	// Read metadata
-	beforeMetadataTime := time.Now()
 	metadata, err := readMetadata(filepath)
 	if err != nil {
 		log.Printf("Error reading metadata: %v", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to read metadata"})
 		return
 	}
-	log.Printf("Metadata read in %v", time.Since(beforeMetadataTime))
 
 	music := models.Music{
 		ID:        id,
@@ -231,7 +214,6 @@ func (h *MusicHandler) UploadMusic(c *gin.Context) {
 	}
 
 	// Fetch or extract thumbnail
-	beforeThumbnailTime := time.Now()
 	if music.Thumbnail == (sql.NullString{}) {
 		if metadata.Picture() != nil {
 			music.Thumbnail = sql.NullString{String: id + ".jpg", Valid: true}
@@ -258,26 +240,21 @@ func (h *MusicHandler) UploadMusic(c *gin.Context) {
 			}
 		}
 	}
-	log.Printf("Thumbnail processed in %v", time.Since(beforeThumbnailTime))
 
 	// Calculate primary color
-	beforePrimaryColorTime := time.Now()
 	if music.Color == "#000000" {
 		if music.Thumbnail.Valid {
 			thumbnailPath := "./static/" + music.Thumbnail.String
 			music.Color = getPrimaryColor(thumbnailPath)
 		}
 	}
-	log.Printf("Primary color calculated in %v", time.Since(beforePrimaryColorTime))
 
 	// Insert into database
-	beforeInsertTime := time.Now()
 	if _, err := h.DB.NamedExec(`INSERT INTO music (id, title, artist, filename, thumbnail, color) VALUES (:id, :title, :artist, :filename, :thumbnail, :color)`, music); err != nil {
 		log.Printf("Error inserting music: %v", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to insert into database"})
 		return
 	}
-	log.Printf("Database insert completed in %v", time.Since(beforeInsertTime))
 
 	c.JSON(http.StatusCreated, music)
 }

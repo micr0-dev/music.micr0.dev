@@ -222,9 +222,12 @@ button:hover {
     margin: 0px;
     background: linear-gradient(to right, var(--art-color) 0%, var(--art-color) var(--value), #000 var(--value), #000 100%);
     outline: none;
-    opacity: 1;
-    -webkit-transition: opacity .1s;
-    transition: opacity .1s;
+    cursor: pointer;
+    transition: background 0.4s;
+}
+
+.slider:hover {
+    background: linear-gradient(to right, var(--art-color) 0%, var(--art-color) var(--value), #222 var(--value), #222 100%);
 }
 
 .slider::-webkit-slider-thumb {
