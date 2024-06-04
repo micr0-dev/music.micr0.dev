@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const div = document.createElement('div');
             div.className = 'music-item';
             const ext = music.filename.split('.').pop().toUpperCase();
-            const isHiFi = ext === 'FLAC';
+            const isHiFi = ext === 'FLAC' || ext === 'WAV' || ext === 'AIFF' || ext === 'ALAC' || ext === 'DSD';
 
             div.innerHTML = `
                 <img src="${`/api/thumbnail/${music.id}?size=80`}" alt="cover art" class="cover-art">
@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="music-item-title">${music.title} </div>
                     <div class="music-item-artist">${music.artist}</div>
                 </div>
-                ${isHiFi ? `<span class="hifi-tag">${ext}</span>` : ''}
+                ${isHiFi ? `<span class="hifi-tag">.${ext}</span>` : ''}
             `;
             div.addEventListener('click', () => {
                 playTrack(music);
@@ -80,24 +80,43 @@ document.addEventListener('DOMContentLoaded', () => {
         isPlaying = !isPlaying;
     });
 
-    audioPlayer.addEventListener('timeupdate', () => {
-        const currentTime = Math.floor(audioPlayer.currentTime);
-        const duration = Math.floor(audioPlayer.duration);
-        seekSlider.value = (currentTime / duration) * 1000;
-        currentTimeLabel.textContent = formatTime(currentTime);
-        durationLabel.textContent = formatTime(duration);
+    let isDragging = false;
 
+    seekSlider.addEventListener('input', () => {
+        if (!isDragging) return;
+
+        const duration = Math.floor(audioPlayer.duration);
         const progress = seekSlider.value / 10;
         seekSlider.style.setProperty('--value', `${progress}%`);
     });
 
-    seekSlider.addEventListener('input', () => {
+    seekSlider.addEventListener('mousedown', () => {
+        isDragging = true;
+    });
+
+    seekSlider.addEventListener('mouseup', () => {
+        if (!isDragging) return;
+
+        isDragging = false;
         const duration = Math.floor(audioPlayer.duration);
         audioPlayer.currentTime = (seekSlider.value / 1000) * duration;
 
         const progress = seekSlider.value / 10;
         seekSlider.style.setProperty('--value', `${progress}%`);
     });
+
+    audioPlayer.addEventListener('timeupdate', () => {
+        if (isDragging) return;
+
+        const duration = Math.floor(audioPlayer.duration);
+        const currentTime = Math.floor(audioPlayer.currentTime);
+        const value = (currentTime / duration) * 1000;
+        seekSlider.value = value;
+
+        const progress = value / 10;
+        seekSlider.style.setProperty('--value', `${progress}%`);
+    });
+
 
     function formatTime(seconds) {
         const minutes = Math.floor(seconds / 60);
