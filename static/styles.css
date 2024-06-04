@@ -127,6 +127,7 @@ button:hover {
 #now-playing {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     background-color: #282828;
     border-radius: 5px;
     padding: 10px;
@@ -141,7 +142,6 @@ button:hover {
 }
 
 #cover-art {
-
     width: 300px;
     height: 300px;
     border-radius: 25px;
