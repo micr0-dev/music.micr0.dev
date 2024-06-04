@@ -190,7 +190,8 @@ button:hover {
 #audio-controls button {
     background: none;
     color: #fff;
-    font-size: 12px;
+    width: 48px;
+    height: 48px;
     border: none;
     cursor: pointer;
     transition: transform 0.4s;
@@ -208,6 +209,11 @@ button:hover {
 #audio-controls .control-button svg {
     width: 24px;
     height: 24px;
+}
+
+#audio-controls .control-button button {
+    width: 48px;
+    height: 48px;
 }
 
 #audio-controls button:hover {
