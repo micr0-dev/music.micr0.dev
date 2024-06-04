@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"image"
+	"image/color"
 	"image/jpeg"
 	"image/png"
 	"io"
@@ -14,7 +15,6 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
-	"sort"
 	"strconv"
 
 	"github.com/dhowden/tag"
@@ -58,74 +58,55 @@ func readMetadata(filepath string) (tag.Metadata, error) {
 func getPrimaryColor(filepath string) string {
 	file, err := os.Open(filepath)
 	if err != nil {
+		fmt.Println("Error opening image file:", err)
 		return ""
 	}
 	defer file.Close()
 
 	img, _, err := image.Decode(file)
 	if err != nil {
+		fmt.Println("Error decoding image:", err)
 		return ""
 	}
 
-	// Resize to a smaller size for faster processing
 	resizedImg := resize.Resize(100, 0, img, resize.Lanczos3)
 
-	// Create a map to store color counts
-	colorCounts := make(map[string]int)
+	averageColor := calculateAverageColor(resizedImg)
 
-	// Iterate over pixels and count color occurrences
-	bounds := resizedImg.Bounds()
-	for y := bounds.Min.Y; y < bounds.Max.Y; y++ {
-		for x := bounds.Min.X; x < bounds.Max.X; x++ {
-			r, g, b, _ := resizedImg.At(x, y).RGBA()
-			colorHex := rgbToHex(uint8(r>>8), uint8(g>>8), uint8(b>>8))
-			colorCounts[colorHex]++
+	hexColor := fmt.Sprintf("#%02x%02x%02x", averageColor.R, averageColor.G, averageColor.B)
+
+	return hexColor
+}
+
+func calculateAverageColor(img image.Image) color.RGBA {
+	var r, g, b, a uint32
+	pixelCount := 0
+
+	for y := 0; y < img.Bounds().Dy(); y++ {
+		for x := 0; x < img.Bounds().Dx(); x++ {
+			pixelColor := img.At(x, y)
+			red, green, blue, alpha := pixelColor.RGBA()
+
+			r += red
+			g += green
+			b += blue
+			a += alpha
+
+			pixelCount++
 		}
 	}
 
-	// Sort colors by brightness and prominence
-	type colorItem struct {
-		Color      string
-		Count      int
-		Brightness float64
+	r /= uint32(pixelCount)
+	g /= uint32(pixelCount)
+	b /= uint32(pixelCount)
+	a /= uint32(pixelCount)
+
+	return color.RGBA{
+		R: uint8(r >> 8),
+		G: uint8(g >> 8),
+		B: uint8(b >> 8),
+		A: uint8(a >> 8),
 	}
-	var colorItems []colorItem
-	for colorHex, count := range colorCounts {
-		r, g, b := hexToRGB(colorHex)
-		brightness := getBrightness(r, g, b)
-		colorItems = append(colorItems, colorItem{
-			Color:      colorHex,
-			Count:      count,
-			Brightness: brightness,
-		})
-	}
-	sort.Slice(colorItems, func(i, j int) bool {
-		if colorItems[i].Brightness == colorItems[j].Brightness {
-			return colorItems[i].Count > colorItems[j].Count
-		}
-		return colorItems[i].Brightness > colorItems[j].Brightness
-	})
-
-	// Return the most prominent bright color
-	if len(colorItems) > 0 {
-		return colorItems[0].Color
-	}
-
-	return "" // Default to no color if the image has no pixels
-}
-
-func getBrightness(r, g, b uint8) float64 {
-	return 0.299*float64(r) + 0.587*float64(g) + 0.114*float64(b)
-}
-
-func hexToRGB(hex string) (uint8, uint8, uint8) {
-	var r, g, b uint8
-	fmt.Sscanf(hex, "#%02x%02x%02x", &r, &g, &b)
-	return r, g, b
-}
-
-func rgbToHex(r, g, b uint8) string {
-	return fmt.Sprintf("#%02x%02x%02x", r, g, b)
 }
 
 func (h *MusicHandler) fetchThumbnail(title, artist string) (string, error) {
@@ -366,15 +347,4 @@ func resizeImage(filepath string, width int) (string, error) {
 	}
 
 	return resizedFilePath, err
-}
-
-func (h *MusicHandler) GetColor(c *gin.Context) {
-	id := c.Param("id")
-	var music models.Music
-	err := h.DB.Get(&music, "SELECT color FROM music WHERE id = ?", id)
-	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "Music not found"})
-		return
-	}
-	c.JSON(http.StatusOK, gin.H{"color": music.Color})
 }
