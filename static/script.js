@@ -134,9 +134,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (isDragging) return;
 
         const duration = Math.floor(audioPlayer.duration);
+        if (isNaN(duration)) return;
         durationLabel.textContent = formatTime(duration);
         const currentTime = Math.floor(audioPlayer.currentTime);
         const value = (currentTime / duration) * 1000;
+        if (isNaN(value)) return;
         seekSlider.value = value;
 
         currentTimeLabel.textContent = formatTime(Math.floor(audioPlayer.currentTime));
