@@ -219,3 +219,18 @@ func (h *MusicHandler) StreamMusic(c *gin.Context) {
 	}
 	c.File("./static/" + music.Filename)
 }
+
+func (h *MusicHandler) GetThumbnail(c *gin.Context) {
+	id := c.Param("id")
+	var music models.Music
+	err := h.DB.Get(&music, "SELECT thumbnail FROM music WHERE id = ?", id)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Music not found"})
+		return
+	}
+	if music.Thumbnail.Valid {
+		c.File("./static/" + music.Thumbnail.String)
+	} else {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Thumbnail not found"})
+	}
+}

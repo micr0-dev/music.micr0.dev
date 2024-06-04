@@ -37,7 +37,7 @@ func main() {
 	router.GET("/music/:id", musicHandler.GetMusicByID)
 	router.POST("/music", musicHandler.UploadMusic)
 	router.GET("/stream/:id", musicHandler.StreamMusic)
-	router.Static("/static", "./static")
+	router.GET("/thumbnail/:id", musicHandler.GetThumbnail)
 
 	fmt.Println("Go server listening on port 8084")
 	log.Fatal(http.ListenAndServe(":8084", router))
