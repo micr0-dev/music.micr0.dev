@@ -24,7 +24,7 @@
         document.getElementById('upload-form').addEventListener('submit', async function (event) {
             event.preventDefault();
             const formData = new FormData(event.target);
-            const response = await fetch('/music', {
+            const response = await fetch('/api/music', {
                 method: 'POST',
                 body: formData,
             });
@@ -38,7 +38,7 @@
         });
 
         async function loadMusicList() {
-            const response = await fetch('/music');
+            const response = await fetch('/api/music');
             const musics = await response.json();
             const musicList = document.getElementById('music-list');
             musicList.innerHTML = '';
