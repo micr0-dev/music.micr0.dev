@@ -72,7 +72,7 @@ button:hover {
 
 #music-list {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 20px;
 }
 
@@ -130,7 +130,7 @@ button:hover {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: var(--art-color);
+    background-image: linear-gradient(0deg, var(--art-color), #282828);
     padding: 10px;
     width: 100%;
 }
@@ -148,7 +148,7 @@ button:hover {
     border-radius: 25px;
 
     /* box-shadow: 0 0 16px 8px var(--art-color) */
-    border: 8px solid var(--art-color);
+    /* border: 8px solid var(--art-color); */
 }
 
 #track-info {
