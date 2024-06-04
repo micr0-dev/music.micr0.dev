@@ -149,8 +149,9 @@ button:hover {
 
 #track-info {
     display: flex;
+    align-items: center;
     flex-direction: column;
-    gap: 5px;
+    padding: 5px;
 }
 
 #track-title {
