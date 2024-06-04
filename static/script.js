@@ -96,19 +96,17 @@ document.addEventListener('DOMContentLoaded', () => {
 document.getElementById('audio-player').addEventListener('timeupdate', updateSlider);
 
 const slider = document.querySelector('.slider');
-slider.addEventListener('input', function () {
-    const value = this.value;
-    const percentage = (value - this.min) / (this.max - this.min) * 100;
-    this.style.setProperty('--value', `${percentage}%`);
-    // Sync the audio player currentTime with slider value
-    document.getElementById('audio-player').currentTime = value;
-});
 
 function updateSlider() {
-    const slider = document.querySelector('.slider');
     const audioPlayer = document.getElementById('audio-player');
-    const value = audioPlayer.currentTime;
-    const percentage = (value - slider.min) / (slider.max - slider.min) * 100;
-    slider.value = value;
-    slider.style.setProperty('--value', `${percentage}%`);
+    const value = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+    slider.style.setProperty('--value', `${value}%`);
+}
+
+slider.addEventListener('click', seek);
+
+function seek(e) {
+    const audioPlayer = document.getElementById('audio-player');
+    const percent = e.offsetX / this.offsetWidth;
+    audioPlayer.currentTime = percent * audioPlayer.duration;
 }
