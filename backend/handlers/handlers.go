@@ -5,8 +5,10 @@ import (
 	"encoding/hex"
 	"log"
 	"net/http"
+	"os"
 	"path/filepath"
 
+	"github.com/dhowden/tag"
 	"github.com/gin-gonic/gin"
 	"github.com/jmoiron/sqlx"
 	"music.micr0.dev/backend/models"
@@ -26,6 +28,20 @@ func generateUniqueID() string {
 		panic(err)
 	}
 	return hex.EncodeToString(b)
+}
+
+func readMetadata(filepath string) (tag.Metadata, error) {
+	file, err := os.Open(filepath)
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
+
+	metadata, err := tag.ReadFrom(file)
+	if err != nil {
+		return nil, err
+	}
+	return metadata, nil
 }
 
 func (h *MusicHandler) UploadMusic(c *gin.Context) {
@@ -48,11 +64,43 @@ func (h *MusicHandler) UploadMusic(c *gin.Context) {
 		return
 	}
 
+	metadata, err := readMetadata(filepath)
+	if err != nil {
+		log.Printf("Error reading metadata: %v", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to read metadata"})
+		return
+	}
+
 	music := models.Music{
-		ID:       id,
-		Title:    title,
-		Artist:   artist,
-		Filename: filename,
+		ID:        id,
+		Title:     title,
+		Artist:    artist,
+		Filename:  filename,
+		Thumbnail: "",
+	}
+
+	if music.Title == "" {
+		music.Title = metadata.Title()
+	}
+
+	if music.Artist == "" {
+		music.Artist = metadata.Artist()
+	}
+
+	if music.Thumbnail == "" {
+		if metadata.Picture() != nil {
+			music.Thumbnail = id + ".jpg"
+			thumbnailPath := "./static/" + music.Thumbnail
+			thumbnailFile, err := os.Create(thumbnailPath)
+			if err != nil {
+				log.Printf("Error creating thumbnail: %v", err)
+			} else {
+				_, err = thumbnailFile.Write(metadata.Picture().Data)
+				if err != nil {
+					log.Printf("Error writing thumbnail: %v", err)
+				}
+			}
+		}
 	}
 
 	if _, err := h.DB.NamedExec(`INSERT INTO music (id, title, artist, filename) VALUES (:id, :title, :artist, :filename)`, &music); err != nil {

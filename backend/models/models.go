@@ -9,8 +9,7 @@ type Music struct {
 	Title     string `db:"title" json:"title"`
 	Artist    string `db:"artist" json:"artist"`
 	Filename  string `db:"filename" json:"filename"`
-	Duration  int    `db:"duration" json:"duration"`
-	Thumbnail string `db:"thumbnail" json:"thumbnail"`
+	Thumbnail string `db:"thumbnail" json:"thumbnail,omitempty"`
 }
 
 func InitializeDatabase(db *sqlx.DB) {
@@ -20,7 +19,6 @@ func InitializeDatabase(db *sqlx.DB) {
             title TEXT,
             artist TEXT,
             filename TEXT,
-            duration INTEGER,
             thumbnail TEXT
         )
     `)
