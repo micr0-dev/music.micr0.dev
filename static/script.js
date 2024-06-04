@@ -48,7 +48,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function playTrack(music) {
         audioPlayer.src = `/api/stream/${music.id}`;
-        coverArt.src = music.thumbnail.Valid ? fetch('/api/thumbnail/' + music.id).then(response => response.blob()).then(blob => URL.createObjectURL(blob)) : '/static/default-cover-art.png';
+        coverArt.src = `/api/thumbnail/${music.id}`;
+        trackTitle.textContent = music.title;
         trackArtist.textContent = music.artist;
         audioPlayer.play();
         isPlaying = true;
