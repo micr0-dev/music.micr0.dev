@@ -145,7 +145,7 @@ button:hover {
 
 #cover-art-container {
     position: fixed;
-    bottom: 96px;
+    bottom: 80px;
     left: 0px;
     padding: 0px;
     z-index: -1;
