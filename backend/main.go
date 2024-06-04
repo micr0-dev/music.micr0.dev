@@ -12,9 +12,15 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/mattn/go-sqlite3"
+
+	_ "net/http/pprof"
 )
 
 func main() {
+	go func() {
+		log.Println(http.ListenAndServe("localhost:6060", nil))
+	}()
+
 	db, err := sqlx.Connect("sqlite3", "./music.db")
 	if err != nil {
 		log.Fatalf("Failed to connect to the database: %v", err)
