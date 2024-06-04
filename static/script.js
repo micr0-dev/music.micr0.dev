@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    function playTrack(music) {
+    async function playTrack(music) {
         audioPlayer.src = `/api/stream/${music.id}`;
         coverArt.src = `/api/thumbnail/${music.id}`;
         coverArt.alt = music.title;
@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
         currentTrack = music;
 
         const response = fetch(`/api/color/${music.id}`);
-        const color = response.json().color;
+        const color = await response.json().color;
         coverArt.style.setProperty('--art-color', color);
     }
 
