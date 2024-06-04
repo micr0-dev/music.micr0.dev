@@ -153,6 +153,8 @@ button:hover {
 
     box-shadow: 0 0 20px 10px var(--art-color);
     /* border: 8px solid var(--art-color); */
+
+    transition: box-shadow, 1s ease-out;
 }
 
 #track-info {
@@ -196,6 +198,11 @@ button:hover {
     cursor: pointer;
     padding-left: 10px;
     padding-right: 10px;
+    transition: transform 0.4s;
+}
+
+#audio-controls button:hover {
+    transform: scale(1.1);
 }
 
 .playtime {
