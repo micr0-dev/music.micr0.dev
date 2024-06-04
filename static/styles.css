@@ -146,6 +146,8 @@ button:hover {
 #cover-art-container {
     position: fixed;
     bottom: 80px;
+    width: 300px;
+    height: 300px;
     left: 0px;
     padding: 0px;
     z-index: -1;
