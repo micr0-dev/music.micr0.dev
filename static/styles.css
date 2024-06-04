@@ -78,7 +78,7 @@ button:hover {
 
 .music-item {
     position: relative;
-    background-color: #282828;
+    background-color: linear-gradient(to right, var(--art-color), #282828);
     padding: 15px;
     border-radius: 10px;
     text-align: center;
