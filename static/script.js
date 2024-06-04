@@ -89,6 +89,8 @@ document.addEventListener('DOMContentLoaded', () => {
         playPauseButton.textContent = 'Pause';
         currentTrack = music;
 
+        nowPlayingContainer.classList.remove('hidden');
+
         nowPlayingContainer.style.setProperty('--art-color', music.color);
     }
 
