@@ -189,6 +189,12 @@ button:hover {
     cursor: pointer;
 }
 
+#audio-controls svg {
+    width: 24px;
+    height: 24px;
+    fill: #fff;
+}
+
 .playtime {
     position: absolute;
     right: 10px;

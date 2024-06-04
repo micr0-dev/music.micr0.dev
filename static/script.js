@@ -4,6 +4,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const musicList = document.getElementById('music-list');
     const audioPlayer = document.getElementById('audio-player');
     const playPauseButton = document.getElementById('play-pause');
+    const playIcon = document.getElementById('play-icon');
+    const pauseIcon = document.getElementById('pause-icon');
     const seekSlider = document.getElementById('seek-slider');
     const currentTimeLabel = document.getElementById('current-time');
     const durationLabel = document.getElementById('duration');
@@ -97,13 +99,24 @@ document.addEventListener('DOMContentLoaded', () => {
     playPauseButton.addEventListener('click', () => {
         if (isPlaying) {
             audioPlayer.pause();
-            playPauseButton.textContent = 'Play';
+            playIcon.style.display = 'inline';
+            pauseIcon.style.display = 'none';
         } else {
             audioPlayer.play();
-            playPauseButton.textContent = 'Pause';
+            playIcon.style.display = 'none';
+            pauseIcon.style.display = 'inline';
         }
         isPlaying = !isPlaying;
     });
+
+    prevButton.addEventListener('click', () => {
+        //TODO: Implement this
+    });
+
+    nextButton.addEventListener('click', () => {
+        //TODO: Implement this
+    });
+
 
     let isDragging = false;
 

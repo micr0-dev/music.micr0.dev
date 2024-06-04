@@ -8,6 +8,23 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 
+<svg style="display: none">
+    <defs>
+        <symbol id="pause" viewbox="0 -960 960 960">
+            <path xmlns="http://www.w3.org/2000/svg" d="M540-128v-705h272v705H540Zm-392 0v-705h272v705H148Z" />
+        </symbol>
+        <symbol id="play" viewbox="0 -960 960 960">
+            <path xmlns="http://www.w3.org/2000/svg" d="M275-124v-712l561 356-561 356Z" />
+        </symbol>
+        <symbol id="next" viewbox="0 -960 960 960">
+            <path xmlns="http://www.w3.org/2000/svg" d="M682-162v-636h136v636H682Zm-540 0v-636l478 318-478 318Z" />
+        </symbol>
+        <symbol id="prev" viewbox="0 -960 960 960">
+            <path xmlns="http://www.w3.org/2000/svg" d="M142-162v-636h136v636H142Zm676 0L340-480l478-318v636Z" />
+        </symbol>
+    </defs>
+</svg>
+
 <body>
     <div class="container">
         <header>
@@ -43,8 +60,24 @@
                     <p id="track-artist"></p>
                 </div>
                 <div id="audio-controls">
-                    <button id="play-pause">Play</button>
-
+                    <button id="prev-button">
+                        <svg>
+                            <use href="#prev"></use>
+                        </svg>
+                    </button>
+                    <button id="play-pause">
+                        <svg id="play-icon">
+                            <use href="#play"></use>
+                        </svg>
+                        <svg id="pause-icon" style="display: none;">
+                            <use href="#pause"></use>
+                        </svg>
+                    </button>
+                    <button id="next-button">
+                        <svg>
+                            <use href="#next"></use>
+                        </svg>
+                    </button>
                 </div>
                 <div class="playtime">
                     <span id="current-time">2:42</span> / <span id="duration">4:20</span>
