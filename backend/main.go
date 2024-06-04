@@ -33,6 +33,6 @@ func main() {
 	router.GET("/stream/:id", musicHandler.StreamMusic)
 	router.Static("/static", "./static")
 
-	fmt.Println("Go server listening on port 8081")
-	log.Fatal(http.ListenAndServe(":8081", router))
+	fmt.Println("Go server listening on port 8084")
+	log.Fatal(http.ListenAndServe(":8084", router))
 }
