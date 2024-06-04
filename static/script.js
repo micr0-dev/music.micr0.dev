@@ -62,14 +62,16 @@ document.addEventListener('DOMContentLoaded', () => {
         audioPlayer.src = `/api/stream/${music.id}`;
         coverArt.src = `/api/thumbnail/${music.id}`;
         coverArt.alt = music.title;
-        const color = fetch(`/api/color/${music.id}`)
-        coverArt.style.setProperty('--art-color', color);
         trackTitle.textContent = music.title;
         trackArtist.textContent = music.artist;
         audioPlayer.play();
         isPlaying = true;
         playPauseButton.textContent = 'Pause';
         currentTrack = music;
+
+        const response = fetch(`/api/color/${music.id}`);
+        const color = response.json().color;
+        coverArt.style.setProperty('--art-color', color);
     }
 
     playPauseButton.addEventListener('click', () => {
