@@ -220,7 +220,7 @@ func (h *MusicHandler) UploadMusic(c *gin.Context) {
 		Artist:    artist,
 		Filename:  filename,
 		Thumbnail: sql.NullString{String: "", Valid: false},
-		Color:     "",
+		Color:     "#000000",
 	}
 
 	if music.Title == "" {
@@ -258,12 +258,11 @@ func (h *MusicHandler) UploadMusic(c *gin.Context) {
 		}
 	}
 
-	if music.Color == "" {
+	if music.Color == "#000000" {
 		if music.Thumbnail.Valid {
 			thumbnailPath := "./static/" + music.Thumbnail.String
 			music.Color = getPrimaryColor(thumbnailPath)
-		} else {
-			music.Color = "#000000"
+			log.Printf("Color: %s", music.Color)
 		}
 	}
 
