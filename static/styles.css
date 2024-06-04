@@ -185,6 +185,7 @@ button:hover {
     margin-right: auto;
     align-items: center;
     padding: 5px 0;
+    gap: 20px;
 }
 
 #audio-controls button {
@@ -192,6 +193,7 @@ button:hover {
     color: #fff;
     width: 48px;
     height: 48px;
+    padding: 0;
     border: none;
     cursor: pointer;
     transition: transform 0.4s;
@@ -202,8 +204,6 @@ button:hover {
     height: 48px;
     fill: #fff;
     cursor: pointer;
-    padding-left: 10px;
-    padding-right: 10px;
 }
 
 #audio-controls .control-button svg {
