@@ -89,10 +89,14 @@ document.addEventListener('DOMContentLoaded', () => {
         trackTitle.textContent = music.title;
         trackArtist.textContent = music.artist;
         audioPlayer.play();
+        playIcon.style.display = 'none';
+        pauseIcon.style.display = 'inline';
         isPlaying = true;
         currentTrack = music;
 
         nowPlayingContainer.classList.remove('not-playing');
+
+        if (music.color == "#000000") music.color = "#ffffff";
 
         nowPlayingContainer.style.setProperty('--art-color', music.color);
     }
