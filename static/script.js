@@ -43,20 +43,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const ext = music.filename.split('.').pop().toUpperCase();
             const isHiFi = ext === 'FLAC';
 
-            if (isHiFi) {
-                const hifi = document.createElement('span');
-                hifi.className = 'hifi';
-                hifi.textContent = 'FLAC';
-                div.appendChild(hifi);
-            }
-
             div.innerHTML = `
                 <img src="${`/api/thumbnail/${music.id}?size=80`}" alt="cover art" class="cover-art">
                 <div class="music-info">
                     <div class="music-item-title">${music.title} </div>
                     <div class="music-item-artist">${music.artist}</div>
-                    
                 </div>
+                ${isHiFi ? `<span class="hifi-tag">${ext}</span>` : ''}
             `;
             div.addEventListener('click', () => {
                 playTrack(music);
