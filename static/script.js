@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const coverArt = document.getElementById('cover-art');
     const trackTitle = document.getElementById('track-title');
     const trackArtist = document.getElementById('track-artist');
+    const nowPlayingContainer = document.getElementById('now-playing-container');
 
     let isPlaying = false;
     let currentTrack = null;
@@ -71,7 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
         playPauseButton.textContent = 'Pause';
         currentTrack = music;
 
-        coverArt.style.setProperty('--art-color', music.color);
+        nowPlayingContainer.style.setProperty('--art-color', music.color);
     }
 
     playPauseButton.addEventListener('click', () => {
