@@ -130,7 +130,7 @@ button:hover {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-image: linear-gradient(0deg, var(--art-color), #282828);
+    background-image: linear-gradient(180deg, var(--art-color), #282828);
     padding: 10px;
     width: 100%;
 }
