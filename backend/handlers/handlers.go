@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"crypto/rand"
+	"database/sql"
 	"encoding/hex"
 	"log"
 	"net/http"
@@ -76,7 +77,7 @@ func (h *MusicHandler) UploadMusic(c *gin.Context) {
 		Title:     title,
 		Artist:    artist,
 		Filename:  filename,
-		Thumbnail: "",
+		Thumbnail: sql.NullString{String: "", Valid: false},
 	}
 
 	if music.Title == "" {
@@ -87,10 +88,10 @@ func (h *MusicHandler) UploadMusic(c *gin.Context) {
 		music.Artist = metadata.Artist()
 	}
 
-	if music.Thumbnail == "" {
+	if music.Thumbnail == (sql.NullString{}) {
 		if metadata.Picture() != nil {
-			music.Thumbnail = id + ".jpg"
-			thumbnailPath := "./static/" + music.Thumbnail
+			music.Thumbnail = sql.NullString{String: id + ".jpg", Valid: true}
+			thumbnailPath := "./static/" + music.Thumbnail.String
 			thumbnailFile, err := os.Create(thumbnailPath)
 			if err != nil {
 				log.Printf("Error creating thumbnail: %v", err)

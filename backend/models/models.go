@@ -1,15 +1,17 @@
 package models
 
 import (
+	"database/sql"
+
 	"github.com/jmoiron/sqlx"
 )
 
 type Music struct {
-	ID        string `db:"id" json:"id"`
-	Title     string `db:"title" json:"title"`
-	Artist    string `db:"artist" json:"artist"`
-	Filename  string `db:"filename" json:"filename"`
-	Thumbnail string `db:"thumbnail" json:"thumbnail,omitempty"`
+	ID        string         `db:"id" json:"id"`
+	Title     string         `db:"title" json:"title"`
+	Artist    string         `db:"artist" json:"artist"`
+	Filename  string         `db:"filename" json:"filename"`
+	Thumbnail sql.NullString `db:"thumbnail" json:"thumbnail,omitempty"`
 }
 
 func InitializeDatabase(db *sqlx.DB) {
