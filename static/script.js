@@ -71,7 +71,6 @@ document.addEventListener('DOMContentLoaded', () => {
         isPlaying = true;
         playPauseButton.textContent = 'Pause';
         currentTrack = music;
-        durationLabel.textContent = formatTime(Math.floor(audioPlayer.duration));
 
         nowPlayingContainer.style.setProperty('--art-color', music.color);
     }
@@ -118,6 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (isDragging) return;
 
         const duration = Math.floor(audioPlayer.duration);
+        durationLabel.textContent = formatTime(duration);
         const currentTime = Math.floor(audioPlayer.currentTime);
         const value = (currentTime / duration) * 1000;
         seekSlider.value = value;

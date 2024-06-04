@@ -56,7 +56,6 @@ input[type="text"],
 input[type="file"],
 button {
     padding: 10px;
-    border-radius: 5px;
     border: none;
     font-size: 16px;
 }
@@ -87,7 +86,6 @@ button:hover {
     background-position: 100%;
     background-size: 150%;
     padding: 15px;
-    border-radius: 10px;
     text-align: center;
     cursor: pointer;
     display: flex;
@@ -99,7 +97,6 @@ button:hover {
 .music-item img.cover-art {
     width: 80px;
     height: 80px;
-    border-radius: 8px;
     object-fit: cover;
 }
 
@@ -130,7 +127,6 @@ button:hover {
     background-color: #000;
     color: #fff;
     padding: 5px;
-    border-radius: 5px;
     font-size: 12px;
 }
 
@@ -153,7 +149,6 @@ button:hover {
 #cover-art {
     width: 300px;
     height: 300px;
-    border-radius: 25px;
 
     box-shadow: 0 0 20px 10px var(--art-color);
     /* border: 8px solid var(--art-color); */
@@ -218,16 +213,11 @@ button:hover {
     -webkit-appearance: none;
     appearance: none;
     width: 100%;
-    height: 6px;
+    height: 8px;
     margin: 0px;
     background: linear-gradient(to right, var(--art-color) 0%, var(--art-color) var(--value), #000 var(--value), #000 100%);
     outline: none;
     cursor: pointer;
-    transition: background 0.4s;
-}
-
-.slider:hover {
-    background: linear-gradient(to right, var(--art-color) 0%, var(--art-color) var(--value), #222 var(--value), #222 100%);
 }
 
 .slider::-webkit-slider-thumb {
@@ -238,7 +228,6 @@ button:hover {
     height: 10px;
     background: var(--art-color);
     border: none;
-    border-radius: 10px;
     transition: opacity .1s;
 }
 
@@ -248,7 +237,6 @@ button:hover {
     height: 10px;
     background: var(--art-color);
     border: none;
-    border-radius: 10px;
     transition: opacity .1s;
 }
 
