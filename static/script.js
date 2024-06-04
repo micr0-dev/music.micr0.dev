@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const isHiFi = ext === 'FLAC';
 
             div.innerHTML = `
-                <img src="${music.thumbnail.Valid ? '/static/' + music.thumbnail.String : 'default-thumbnail.jpg'}" alt="cover art" class="cover-art">
+                <img src="${`/api/thumbnail/${music.id}`}" alt="cover art" class="cover-art">
                 <div class="music-info">
                     <div class="music-item-title">${music.title} ${isHiFi ? `<span class="hifi-tag">${ext}</span>` : ''}</div>
                     <div class="music-item-artist">${music.artist}</div>
