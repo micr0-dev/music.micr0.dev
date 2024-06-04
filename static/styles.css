@@ -149,8 +149,9 @@ button:hover {
 
 #track-info {
     display: flex;
-    align-items: center;
+    text-align: left;
     flex-direction: column;
+    vertical-align: middle;
     padding: 5px;
 }
 
