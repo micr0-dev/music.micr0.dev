@@ -205,8 +205,20 @@ button:hover {
     padding-right: 10px;
 }
 
+#audio-controls .control-button {
+    width: 24px;
+    height: 24px;
+}
+
 #audio-controls button:hover {
     transform: scale(1.2);
+}
+
+.volume {
+    position: absolute;
+    right: 100px;
+    align-items: center;
+    padding: 10px;
 }
 
 .playtime {
@@ -232,6 +244,10 @@ button:hover {
     background: linear-gradient(to right, var(--art-color) 0%, var(--art-color) var(--value), #000 var(--value), #000 100%);
     outline: none;
     cursor: pointer;
+}
+
+#volume-slider {
+    background: linear-gradient(to right, #fff 0%, #fff var(--value), #000 var(--value), #000 100%);
 }
 
 .slider::-webkit-slider-thumb {

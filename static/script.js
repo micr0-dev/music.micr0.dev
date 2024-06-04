@@ -8,7 +8,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const pauseIcon = document.getElementById('pause-icon');
     const prevButton = document.getElementById('prev-button');
     const nextButton = document.getElementById('next-button');
+    const shuffleButton = document.getElementById('shuffle-button');
+    const repeatButton = document.getElementById('repeat-button');
     const seekSlider = document.getElementById('seek-slider');
+    const volumeSlider = document.getElementById('volume-slider');
     const currentTimeLabel = document.getElementById('current-time');
     const durationLabel = document.getElementById('duration');
     const coverArt = document.getElementById('cover-art');
@@ -122,6 +125,19 @@ document.addEventListener('DOMContentLoaded', () => {
         //TODO: Implement this
     });
 
+    shuffleButton.addEventListener('click', () => {
+        //TODO: Implement this
+    });
+
+    repeatButton.addEventListener('click', () => {
+        //TODO: Implement this
+    });
+
+    volumeSlider.addEventListener('input', () => {
+        audioPlayer.volume = volumeSlider.value / 100;
+        volumeSlider.style.setProperty('--value', `${volumeSlider.value}%`);
+    });
+
 
     let isDragging = false;
 
@@ -174,7 +190,8 @@ document.addEventListener('DOMContentLoaded', () => {
         return `${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
     }
 
-    loadMusicList();
-
     seekSlider.style.setProperty('--value', '0%');
+    volumeSlider.style.setProperty('--value', '100%');
+
+    loadMusicList();
 });
