@@ -156,10 +156,7 @@ button:hover {
 #cover-art {
     width: 300px;
     height: 300px;
-
     box-shadow: 0 0 40px 20px var(--art-color);
-    /* border: 8px solid var(--art-color); */
-
     transition: box-shadow, 0.6s ease-out;
 }
 

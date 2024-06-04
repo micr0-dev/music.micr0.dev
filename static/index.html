@@ -43,7 +43,9 @@
                 <h2>Upload Music</h2>
                 <form id="upload-form" enctype="multipart/form-data">
                     <input type="file" name="files" multiple required>
-                    <button type="submit">Upload</button>
+
+                    <button type="submit" name="upload">Upload</button>
+                    <label for="files" id="file-progress"></label>
                 </form>
                 <div id="upload-progress" class="loader hidden"></div>
             </section>

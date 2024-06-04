@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     const uploadForm = document.getElementById('upload-form');
     const uploadProgress = document.getElementById('upload-progress');
+    const fileProgress = document.getElementById('file-progress');
     const musicList = document.getElementById('music-list');
     const audioPlayer = document.getElementById('audio-player');
     const playPauseButton = document.getElementById('play-pause');
@@ -35,6 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
         uploadProgress.classList.remove('hidden');
 
         for (let i = 0; i < files.length; i++) {
+            fileProgress.textContent = `Uploading ${i + 1}/${files.length} files`;
             const formData = new FormData();
             formData.append('file', files[i]);
 
