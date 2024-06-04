@@ -294,7 +294,7 @@ func (h *MusicHandler) StreamMusic(c *gin.Context) {
 
 func (h *MusicHandler) GetThumbnail(c *gin.Context) {
 	id := c.Param("id")
-	sizeStr := c.DefaultQuery("size", "300") // Default size to 100 if not specified
+	sizeStr := c.DefaultQuery("size", "300")
 	size, err := strconv.Atoi(sizeStr)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid size parameter"})
@@ -309,19 +309,31 @@ func (h *MusicHandler) GetThumbnail(c *gin.Context) {
 	}
 
 	if music.Thumbnail.Valid {
-		thumbnailPath := "./static/" + music.Thumbnail.String
-		if resizedPath, err := resizeImage(thumbnailPath, size); err == nil {
-			c.File(resizedPath)
-		} else {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to resize image"})
+		originalThumbnailPath := "./static/" + music.Thumbnail.String
+		resizedThumbnailPath := getResizedThumbnailPath(originalThumbnailPath, size)
+
+		if _, err := os.Stat(resizedThumbnailPath); os.IsNotExist(err) {
+			if _, err := resizeAndSaveImage(originalThumbnailPath, resizedThumbnailPath, size); err != nil {
+				log.Printf("Error resizing image: %v", err)
+				c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to resize image"})
+				return
+			}
 		}
+
+		c.File(resizedThumbnailPath)
 	} else {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Thumbnail not found"})
 	}
 }
 
-func resizeImage(filepath string, width int) (string, error) {
-	file, err := os.Open(filepath)
+func getResizedThumbnailPath(originalPath string, width int) string {
+	ext := filepath.Ext(originalPath)
+	name := originalPath[0 : len(originalPath)-len(ext)]
+	return name + "_resized_" + strconv.Itoa(width) + ext
+}
+
+func resizeAndSaveImage(originalPath, resizedPath string, width int) (string, error) {
+	file, err := os.Open(originalPath)
 	if err != nil {
 		return "", err
 	}
@@ -332,10 +344,9 @@ func resizeImage(filepath string, width int) (string, error) {
 		return "", err
 	}
 
-	m := resize.Resize(uint(width), 0, img, resize.Lanczos3)
+	resizedImg := resize.Resize(uint(width), 0, img, resize.Lanczos3)
 
-	resizedFilePath := filepath + "_resized_" + strconv.Itoa(width) + ".jpg"
-	out, err := os.Create(resizedFilePath)
+	out, err := os.Create(resizedPath)
 	if err != nil {
 		return "", err
 	}
@@ -343,12 +354,16 @@ func resizeImage(filepath string, width int) (string, error) {
 
 	switch format {
 	case "jpeg":
-		err = jpeg.Encode(out, m, nil)
+		err = jpeg.Encode(out, resizedImg, nil)
 	case "png":
-		err = png.Encode(out, m)
+		err = png.Encode(out, resizedImg)
 	default:
-		return "", fmt.Errorf("unsupported format: %s", format)
+		return "", formatErr(format)
 	}
 
-	return resizedFilePath, err
+	return resizedPath, err
+}
+
+func formatErr(format string) error {
+	return fmt.Errorf("unsupported format: %s", format)
 }
