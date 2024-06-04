@@ -130,7 +130,7 @@ button:hover {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-image: linear-gradient(180deg, var(--art-color), #282828);
+    background-color: #282828;
     padding: 10px;
     width: 100%;
 }
@@ -139,7 +139,7 @@ button:hover {
     position: fixed;
     bottom: 96px;
     left: 0px;
-    padding: 10px;
+    padding: 30px;
 }
 
 #cover-art {
@@ -147,8 +147,8 @@ button:hover {
     height: 300px;
     border-radius: 25px;
 
-    /* box-shadow: 0 0 16px 8px var(--art-color) */
-    /* border: 8px solid var(--art-color); */
+    box-shadow: 0 0 20px 10px var(--art-color)
+        /* border: 8px solid var(--art-color); */
 }
 
 #track-info {
