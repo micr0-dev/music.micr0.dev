@@ -377,3 +377,147 @@ func resizeAndSaveImage(originalPath, resizedPath string, width int) (string, er
 func formatErr(format string) error {
 	return fmt.Errorf("unsupported format: %s", format)
 }
+
+func (h *MusicHandler) CreatePlaylist(c *gin.Context) {
+	var playlist models.Playlist
+	if err := c.ShouldBindJSON(&playlist); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	playlist.ID = generateUniqueID()
+	if _, err := h.DB.NamedExec(`INSERT INTO playlists (id, name, description) VALUES (:id, :name, :description)`, &playlist); err != nil {
+		log.Printf("Error inserting playlist: %v", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create playlist"})
+		return
+	}
+
+	c.JSON(http.StatusCreated, playlist)
+}
+
+func (h *MusicHandler) UpdatePlaylist(c *gin.Context) {
+	id := c.Param("id")
+	var playlist models.Playlist
+	if err := c.ShouldBindJSON(&playlist); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	playlist.ID = id
+	if _, err := h.DB.NamedExec(`UPDATE playlists SET name = :name, description = :description WHERE id = :id`, &playlist); err != nil {
+		log.Printf("Error updating playlist: %v", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update playlist"})
+		return
+	}
+
+	c.JSON(http.StatusOK, playlist)
+}
+
+func (h *MusicHandler) GetPlaylists(c *gin.Context) {
+	var playlists []models.Playlist
+	if err := h.DB.Select(&playlists, "SELECT * FROM playlists"); err != nil {
+		log.Printf("Error querying playlists: %v", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get playlists"})
+		return
+	}
+	c.JSON(http.StatusOK, playlists)
+}
+
+func (h *MusicHandler) GetPlaylistByID(c *gin.Context) {
+	id := c.Param("id")
+	var playlist models.Playlist
+	if err := h.DB.Get(&playlist, "SELECT * FROM playlists WHERE id = ?", id); err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Playlist not found"})
+		return
+	}
+	c.JSON(http.StatusOK, playlist)
+}
+
+func (h *MusicHandler) DeletePlaylist(c *gin.Context) {
+	id := c.Param("id")
+	if _, err := h.DB.Exec("DELETE FROM playlists WHERE id = ?", id); err != nil {
+		log.Printf("Error deleting playlist: %v", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete playlist"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "Playlist deleted"})
+}
+
+func (h *MusicHandler) AddMusicToPlaylist(c *gin.Context) {
+	playlistID := c.Param("playlist_id")
+	musicID := c.Param("music_id")
+
+	if _, err := h.DB.Exec("INSERT INTO playlist_songs (playlist_id, song_id) VALUES (?, ?)", playlistID, musicID); err != nil {
+		log.Printf("Error adding music to playlist: %v", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to add music to playlist"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Music added to playlist"})
+}
+
+func (h *MusicHandler) RemoveMusicFromPlaylist(c *gin.Context) {
+	playlistID := c.Param("playlist_id")
+	musicID := c.Param("music_id")
+
+	if _, err := h.DB.Exec("DELETE FROM playlist_songs WHERE playlist_id = ? AND song_id = ?", playlistID, musicID); err != nil {
+		log.Printf("Error removing music from playlist: %v", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to remove music from playlist"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Music removed from playlist"})
+}
+
+func (h *MusicHandler) GetMusicByPlaylist(c *gin.Context) {
+	playlistID := c.Param("playlist_id")
+	var musics []models.Music
+	if err := h.DB.Select(&musics, `
+        SELECT m.* FROM music m
+        JOIN playlist_songs ps ON m.id = ps.song_id
+        WHERE ps.playlist_id = ?`, playlistID); err != nil {
+		log.Printf("Error querying music by playlist: %v", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get music by playlist"})
+		return
+	}
+	c.JSON(http.StatusOK, musics)
+}
+
+// Album Handlers
+func (h *MusicHandler) CreateAlbum(c *gin.Context) {
+	var album models.Album
+	if err := c.ShouldBindJSON(&album); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	album.ID = generateUniqueID()
+	if _, err := h.DB.NamedExec(`INSERT INTO albums (id, name, artist) VALUES (:id, :name, :artist)`, &album); err != nil {
+		log.Printf("Error inserting album: %v", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create album"})
+		return
+	}
+
+	c.JSON(http.StatusCreated, album)
+}
+
+func (h *MusicHandler) GetAlbums(c *gin.Context) {
+	var albums []models.Album
+	if err := h.DB.Select(&albums, "SELECT * FROM albums"); err != nil {
+		log.Printf("Error querying albums: %v", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get albums"})
+		return
+	}
+	c.JSON(http.StatusOK, albums)
+}
+
+func (h *MusicHandler) GetMusicByAlbum(c *gin.Context) {
+	albumID := c.Param("album_id")
+	var musics []models.Music
+	if err := h.DB.Select(&musics, "SELECT * FROM music WHERE album = ?", albumID); err != nil {
+		log.Printf("Error querying music by album: %v", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get music by album"})
+		return
+	}
+	c.JSON(http.StatusOK, musics)
+}

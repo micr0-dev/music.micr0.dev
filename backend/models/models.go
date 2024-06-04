@@ -14,6 +14,22 @@ type Music struct {
 	Thumbnail sql.NullString `db:"thumbnail" json:"thumbnail,omitempty"`
 	Color     string         `json:"color,omitempty"`
 }
+type Playlist struct {
+	ID          string `db:"id" json:"id"`
+	Name        string `db:"name" json:"name"`
+	Description string `db:"description" json:"description"`
+}
+
+type Album struct {
+	ID     string `db:"id" json:"id"`
+	Name   string `db:"name" json:"name"`
+	Artist string `db:"artist" json:"artist"`
+}
+
+type PlaylistSong struct {
+	PlaylistID string `db:"playlist_id" json:"playlist_id"`
+	SongID     string `db:"song_id" json:"song_id"`
+}
 
 func InitializeDatabase(db *sqlx.DB) {
 	_, err := db.Exec(`
@@ -21,10 +37,29 @@ func InitializeDatabase(db *sqlx.DB) {
             id TEXT PRIMARY KEY,
             title TEXT,
             artist TEXT,
+            album TEXT,
             filename TEXT,
             thumbnail TEXT,
-			color TEXT
-        )
+            color TEXT
+        );
+
+        CREATE TABLE IF NOT EXISTS playlists (
+            id TEXT PRIMARY KEY,
+            name TEXT,
+            description TEXT
+        );
+
+		CREATE TABLE IF NOT EXISTS albums (
+            id TEXT PRIMARY KEY,
+            name TEXT,
+			artist TEXT
+        );
+
+        CREATE TABLE IF NOT EXISTS playlist_songs (
+            playlist_id TEXT,
+            song_id TEXT,
+            PRIMARY KEY (playlist_id, song_id)
+        );
     `)
 	if err != nil {
 		panic(err)

@@ -45,6 +45,20 @@ func main() {
 	router.GET("/stream/:id", musicHandler.StreamMusic)
 	router.GET("/thumbnail/:id", musicHandler.GetThumbnail)
 
+	router.GET("/api/albums", musicHandler.GetAlbums)
+	router.POST("/api/albums", musicHandler.CreateAlbum)
+	router.GET("/api/albums/:album_id/music", musicHandler.GetMusicByAlbum)
+
+	router.GET("/api/playlists", musicHandler.GetPlaylists)
+	router.POST("/api/playlists", musicHandler.CreatePlaylist)
+	router.GET("/api/playlists/:id", musicHandler.GetPlaylistByID)
+	router.PUT("/api/playlists/:id", musicHandler.UpdatePlaylist)
+	router.DELETE("/api/playlists/:id", musicHandler.DeletePlaylist)
+
+	router.POST("/api/playlists/:playlist_id/music/:music_id", musicHandler.AddMusicToPlaylist)
+	router.DELETE("/api/playlists/:playlist_id/music/:music_id", musicHandler.RemoveMusicFromPlaylist)
+	router.GET("/api/playlists/:playlist_id/music", musicHandler.GetMusicByPlaylist)
+
 	fmt.Println("Go server listening on port 8084")
 	log.Fatal(http.ListenAndServe(":8084", router))
 }
