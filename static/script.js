@@ -75,7 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
         currentTimeLabel.textContent = formatTime(currentTime);
         durationLabel.textContent = formatTime(duration);
 
-        const progress = seekSlider.value / 1000;
+        const progress = seekSlider.value / 10;
         seekSlider.style.setProperty('--value', `${progress}%`);
     });
 
@@ -83,7 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const duration = Math.floor(audioPlayer.duration);
         audioPlayer.currentTime = (seekSlider.value / 1000) * duration;
 
-        const progress = seekSlider.value / 1000;
+        const progress = seekSlider.value / 10;
         seekSlider.style.setProperty('--value', `${progress}%`);
     });
 
