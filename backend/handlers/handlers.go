@@ -3,6 +3,7 @@ package handlers
 import (
 	"crypto/rand"
 	"encoding/hex"
+	"log"
 	"net/http"
 	"path/filepath"
 
@@ -42,8 +43,8 @@ func (h *MusicHandler) UploadMusic(c *gin.Context) {
 	filepath := "./static/" + filename
 
 	if err := c.SaveUploadedFile(file, filepath); err != nil {
+		log.Printf("Error saving file: %v", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save file"})
-		print(err)
 		return
 	}
 
@@ -55,8 +56,8 @@ func (h *MusicHandler) UploadMusic(c *gin.Context) {
 	}
 
 	if _, err := h.DB.NamedExec(`INSERT INTO music (id, title, artist, filename) VALUES (:id, :title, :artist, :filename)`, &music); err != nil {
+		log.Printf("Error inserting music: %v", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to insert into database"})
-		print(err)
 		return
 	}
 
@@ -67,8 +68,8 @@ func (h *MusicHandler) GetMusic(c *gin.Context) {
 	var musics []models.Music
 	err := h.DB.Select(&musics, "SELECT * FROM music")
 	if err != nil {
+		log.Printf("Error querying music: %v", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get music"})
-		print(err)
 		return
 	}
 	c.JSON(http.StatusOK, musics)
