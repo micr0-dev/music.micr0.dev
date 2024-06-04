@@ -74,11 +74,17 @@ document.addEventListener('DOMContentLoaded', () => {
         seekSlider.value = (currentTime / duration) * 1000;
         currentTimeLabel.textContent = formatTime(currentTime);
         durationLabel.textContent = formatTime(duration);
+
+        const progress = (currentTime / duration) * 100;
+        slider.style.setProperty('--value', `${progress}%`);
     });
 
     seekSlider.addEventListener('input', () => {
         const duration = Math.floor(audioPlayer.duration);
         audioPlayer.currentTime = (seekSlider.value / 1000) * duration;
+
+        const progress = (currentTime / duration) * 100;
+        slider.style.setProperty('--value', `${progress}%`);
     });
 
     function formatTime(seconds) {
@@ -91,22 +97,3 @@ document.addEventListener('DOMContentLoaded', () => {
 
     slider.style.setProperty('--value', '0%');
 });
-
-
-document.getElementById('audio-player').addEventListener('timeupdate', updateSlider);
-
-const slider = document.querySelector('.slider');
-
-function updateSlider() {
-    const audioPlayer = document.getElementById('audio-player');
-    const value = (audioPlayer.currentTime / audioPlayer.duration) * 100;
-    slider.style.setProperty('--value', `${value}%`);
-}
-
-slider.addEventListener('click', seek);
-
-function seek(e) {
-    const audioPlayer = document.getElementById('audio-player');
-    const percent = e.offsetX / this.offsetWidth;
-    audioPlayer.currentTime = percent * audioPlayer.duration;
-}
