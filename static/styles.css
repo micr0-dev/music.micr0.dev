@@ -212,7 +212,7 @@ button:hover {
     height: 24px;
 }
 
-#audio-controls .control-button button {
+.control-button button {
     width: 24px;
     height: 24px;
 }
