@@ -262,11 +262,10 @@ func (h *MusicHandler) UploadMusic(c *gin.Context) {
 		if music.Thumbnail.Valid {
 			thumbnailPath := "./static/" + music.Thumbnail.String
 			music.Color = getPrimaryColor(thumbnailPath)
-			log.Printf("Color: %s", music.Color)
 		}
 	}
 
-	if _, err := h.DB.NamedExec(`INSERT INTO music (id, title, artist, filename, thumbnail) VALUES (:id, :title, :artist, :filename, :thumbnail)`, &music); err != nil {
+	if _, err := h.DB.NamedExec(`INSERT INTO music (id, title, artist, filename, thumbnail, color) VALUES (:id, :title, :artist, :filename, :thumbnail, :color)`, music); err != nil {
 		log.Printf("Error inserting music: %v", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to insert into database"})
 		return
