@@ -180,11 +180,12 @@ button:hover {
 }
 
 #audio-controls {
-    display: inline;
     margin-left: auto;
     margin-right: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
     align-items: center;
-    padding: 5px 0;
     gap: 20px;
 }
 
@@ -212,8 +213,8 @@ button:hover {
 }
 
 #audio-controls .control-button button {
-    width: 48px;
-    height: 48px;
+    width: 24px;
+    height: 24px;
 }
 
 #audio-controls button:hover {
