@@ -101,6 +101,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const duration = Math.floor(audioPlayer.duration);
         audioPlayer.currentTime = (seekSlider.value / 1000) * duration;
 
+        currentTimeLabel.textContent = formatTime(Math.floor(audioPlayer.currentTime));
+
         const progress = seekSlider.value / 10;
         seekSlider.style.setProperty('--value', `${progress}%`);
     });
@@ -112,6 +114,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const currentTime = Math.floor(audioPlayer.currentTime);
         const value = (currentTime / duration) * 1000;
         seekSlider.value = value;
+
+        currentTimeLabel.textContent = formatTime(Math.floor(audioPlayer.currentTime));
 
         const progress = value / 10;
         seekSlider.style.setProperty('--value', `${progress}%`);

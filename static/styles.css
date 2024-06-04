@@ -126,7 +126,6 @@ button:hover {
 
 #now-playing {
     display: flex;
-    align-items: center;
     justify-content: space-between;
     background-color: #282828;
     border-radius: 5px;
@@ -149,7 +148,11 @@ button:hover {
 }
 
 #track-info {
-    flex: 1;
+    margin-left: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
 }
 
 #track-title {
@@ -186,6 +189,13 @@ button:hover {
 
 #audio-controls span {
     font-size: 12px;
+}
+
+.playtime {
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+    padding: 10px;
 }
 
 .slidecontainer {
