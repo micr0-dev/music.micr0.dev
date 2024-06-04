@@ -43,6 +43,7 @@ func (h *MusicHandler) UploadMusic(c *gin.Context) {
 
 	if err := c.SaveUploadedFile(file, filepath); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save file"})
+		print(err)
 		return
 	}
 
@@ -55,6 +56,7 @@ func (h *MusicHandler) UploadMusic(c *gin.Context) {
 
 	if _, err := h.DB.NamedExec(`INSERT INTO music (id, title, artist, filename) VALUES (:id, :title, :artist, :filename)`, &music); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to insert into database"})
+		print(err)
 		return
 	}
 
@@ -66,6 +68,7 @@ func (h *MusicHandler) GetMusic(c *gin.Context) {
 	err := h.DB.Select(&musics, "SELECT * FROM music")
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get music"})
+		print(err)
 		return
 	}
 	c.JSON(http.StatusOK, musics)
