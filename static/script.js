@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const ext = music.filename.split('.').pop().toUpperCase();
             const isHiFi = ext === 'FLAC' || ext === 'WAV' || ext === 'AIFF' || ext === 'ALAC' || ext === 'DSD';
 
-            div.style.setProperty('--art-color', music.avrageColor);
+            div.style.setProperty('--art-color', music.color);
 
             div.innerHTML = `
                 <img src="${`/api/thumbnail/${music.id}?size=80`}" alt="cover art" class="cover-art">
@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
         playPauseButton.textContent = 'Pause';
         currentTrack = music;
 
-        coverArt.style.setProperty('--art-color', music.avrageColor);
+        coverArt.style.setProperty('--art-color', music.color);
     }
 
     playPauseButton.addEventListener('click', () => {
