@@ -90,7 +90,6 @@ document.addEventListener('DOMContentLoaded', () => {
         trackArtist.textContent = music.artist;
         audioPlayer.play();
         isPlaying = true;
-        playPauseButton.textContent = 'Pause';
         currentTrack = music;
 
         nowPlayingContainer.classList.remove('not-playing');
