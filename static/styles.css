@@ -148,10 +148,8 @@ button:hover {
 }
 
 #track-info {
-    margin-left: 20px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     gap: 5px;
 }
 
