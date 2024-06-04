@@ -17,10 +17,6 @@ import (
 )
 
 func main() {
-	go func() {
-		log.Println(http.ListenAndServe("localhost:6060", nil))
-	}()
-
 	db, err := sqlx.Connect("sqlite3", "./music.db")
 	if err != nil {
 		log.Fatalf("Failed to connect to the database: %v", err)
@@ -45,19 +41,19 @@ func main() {
 	router.GET("/stream/:id", musicHandler.StreamMusic)
 	router.GET("/thumbnail/:id", musicHandler.GetThumbnail)
 
-	router.GET("/api/albums", musicHandler.GetAlbums)
-	router.POST("/api/albums", musicHandler.CreateAlbum)
-	router.GET("/api/albums/:album_id/music", musicHandler.GetMusicByAlbum)
+	router.GET("/albums", musicHandler.GetAlbums)
+	router.POST("/albums", musicHandler.CreateAlbum)
+	router.GET("/albums/:album_id/music", musicHandler.GetMusicByAlbum)
 
-	router.GET("/api/playlists", musicHandler.GetPlaylists)
-	router.POST("/api/playlists", musicHandler.CreatePlaylist)
-	router.GET("/api/playlists/:id", musicHandler.GetPlaylistByID)
-	router.PUT("/api/playlists/:id", musicHandler.UpdatePlaylist)
-	router.DELETE("/api/playlists/:id", musicHandler.DeletePlaylist)
+	router.GET("/playlists", musicHandler.GetPlaylists)
+	router.POST("/playlists", musicHandler.CreatePlaylist)
+	router.GET("/playlists/:id", musicHandler.GetPlaylistByID)
+	router.PUT("/playlists/:id", musicHandler.UpdatePlaylist)
+	router.DELETE("/playlists/:id", musicHandler.DeletePlaylist)
 
-	router.POST("/api/playlists/:playlist_id/music/:music_id", musicHandler.AddMusicToPlaylist)
-	router.DELETE("/api/playlists/:playlist_id/music/:music_id", musicHandler.RemoveMusicFromPlaylist)
-	router.GET("/api/playlists/:playlist_id/music", musicHandler.GetMusicByPlaylist)
+	router.POST("/playlists/:playlist_id/music/:music_id", musicHandler.AddMusicToPlaylist)
+	router.DELETE("/playlists/:playlist_id/music/:music_id", musicHandler.RemoveMusicFromPlaylist)
+	router.GET("/playlists/:playlist_id/music", musicHandler.GetMusicByPlaylist)
 
 	fmt.Println("Go server listening on port 8084")
 	log.Fatal(http.ListenAndServe(":8084", router))
