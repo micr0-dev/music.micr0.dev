@@ -49,7 +49,7 @@
                 link.textContent = `${music.title} by ${music.artist}`;
                 link.onclick = () => {
                     const audioPlayer = document.getElementById('audio-player');
-                    audioPlayer.src = `/stream/${music.id}`;
+                    audioPlayer.src = `/api/stream/${music.id}`;
                     audioPlayer.play();
                 };
                 div.appendChild(link);
