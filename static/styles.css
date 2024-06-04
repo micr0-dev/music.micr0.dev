@@ -131,6 +131,9 @@ button:hover {
 }
 
 #now-playing {
+    position: fixed;
+    display: flex;
+    justify-content: space-between;
     align-items: center;
     background-color: #000;
     padding: 10px;
@@ -155,9 +158,9 @@ button:hover {
 
 #track-info {
     flex: 1;
-    text-align: left;
     display: flex;
     flex-direction: column;
+    text-align: left;
     padding: 5px;
 }
 
@@ -191,9 +194,9 @@ button:hover {
 .playtime {
     display: flex;
     align-items: center;
+    text-align: right;
     padding: 10px;
     flex: 0 0 auto;
-    text-align: right;
 }
 
 .slidecontainer {
