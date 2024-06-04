@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     const uploadForm = document.getElementById('upload-form');
+    const uploadProgress = document.getElementById('upload-progress');
     const musicList = document.getElementById('music-list');
     const audioPlayer = document.getElementById('audio-player');
     const playPauseButton = document.getElementById('play-pause');
@@ -14,29 +15,45 @@ document.addEventListener('DOMContentLoaded', () => {
     let isPlaying = false;
     let currentTrack = null;
 
+
+
     uploadForm.addEventListener('submit', async (event) => {
         event.preventDefault();
-        const formData = new FormData(event.target);
-        document.getElementById('upload-progress').classList.remove('hidden');
-        const response = await fetch('/api/music', {
-            method: 'POST',
-            body: formData,
-        });
-        const result = await response.json();
-        document.getElementById('upload-progress').classList.add('hidden');
-        if (response.ok) {
-            alert('Music uploaded successfully!');
-            loadMusicList();
-        } else {
-            alert('Failed to upload music: ' + result.error);
+        const files = event.target.files.files;  // get the files from the input
+        if (files.length === 0) {
+            alert('Please select at least one file.');
+            return;
         }
+
+        uploadProgress.classList.remove('hidden');
+
+        for (let i = 0; i < files.length; i++) {
+            const formData = new FormData();
+            formData.append('file', files[i]);
+
+            const response = await fetch('/api/music', {
+                method: 'POST',
+                body: formData,
+            });
+
+            if (!response.ok) {
+                const result = await response.json();
+                alert('Failed to upload music: ' + (result.error || 'Unknown error'));
+                break;
+            }
+        }
+
+        uploadProgress.classList.add('hidden');
+        alert('All music files uploaded successfully!');
+        loadMusicList();
     });
+
+
 
     async function loadMusicList() {
         const response = await fetch('/api/music');
         const musics = await response.json();
 
-        const musicList = document.getElementById('music-list');
         musicList.innerHTML = '';
         musics.forEach(music => {
             const div = document.createElement('div');
