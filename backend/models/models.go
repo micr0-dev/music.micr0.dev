@@ -12,6 +12,7 @@ type Music struct {
 	Artist    string         `db:"artist" json:"artist"`
 	Filename  string         `db:"filename" json:"filename"`
 	Thumbnail sql.NullString `db:"thumbnail" json:"thumbnail,omitempty"`
+	Color     string         `json:"avrageColor,omitempty"`
 }
 
 func InitializeDatabase(db *sqlx.DB) {
@@ -21,7 +22,8 @@ func InitializeDatabase(db *sqlx.DB) {
             title TEXT,
             artist TEXT,
             filename TEXT,
-            thumbnail TEXT
+            thumbnail TEXT,
+			color TEXT
         )
     `)
 	if err != nil {
