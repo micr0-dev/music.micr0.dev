@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Streaming</title>
+</head>
+
+<body>
+    <h1>Music Streaming</h1>
+    <form id="upload-form" enctype="multipart/form-data">
+        <input type="text" name="title" placeholder="Title" required>
+        <input type="text" name="artist" placeholder="Artist" required>
+        <input type="file" name="file" required>
+        <button type="submit">Upload</button>
+    </form>
+
+    <div id="music-list"></div>
+
+    <audio id="audio-player" controls></audio>
+
+    <script>
+        document.getElementById('upload-form').addEventListener('submit', async function (event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const response = await fetch('/music', {
+                method: 'POST',
+                body: formData,
+            });
+            const result = await response.json();
+            if (response.ok) {
+                alert('Music uploaded successfully!');
+                loadMusicList();
+            } else {
+                alert('Failed to upload music: ' + result.error);
+            }
+        });
+
+        async function loadMusicList() {
+            const response = await fetch('/music');
+            const musics = await response.json();
+            const musicList = document.getElementById('music-list');
+            musicList.innerHTML = '';
+            musics.forEach(music => {
+                const div = document.createElement('div');
+                const link = document.createElement('a');
+                link.href = '#';
+                link.textContent = `${music.title} by ${music.artist}`;
+                link.onclick = () => {
+                    const audioPlayer = document.getElementById('audio-player');
+                    audioPlayer.src = `/stream/${music.id}`;
+                    audioPlayer.play();
+                };
+                div.appendChild(link);
+                musicList.appendChild(div);
+            });
+        }
+
+        loadMusicList();
+    </script>
+</body>
+
+</html>
