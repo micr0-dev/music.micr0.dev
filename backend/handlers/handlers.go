@@ -6,15 +6,20 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"image"
+	"image/jpeg"
+	"image/png"
 	"io"
 	"log"
 	"net/http"
 	"os"
 	"path/filepath"
+	"strconv"
 
 	"github.com/dhowden/tag"
 	"github.com/gin-gonic/gin"
 	"github.com/jmoiron/sqlx"
+	"github.com/nfnt/resize"
 	"music.micr0.dev/backend/models"
 )
 
@@ -222,15 +227,61 @@ func (h *MusicHandler) StreamMusic(c *gin.Context) {
 
 func (h *MusicHandler) GetThumbnail(c *gin.Context) {
 	id := c.Param("id")
+	sizeStr := c.DefaultQuery("size", "300") // Default size to 100 if not specified
+	size, err := strconv.Atoi(sizeStr)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid size parameter"})
+		return
+	}
+
 	var music models.Music
-	err := h.DB.Get(&music, "SELECT thumbnail FROM music WHERE id = ?", id)
+	err = h.DB.Get(&music, "SELECT thumbnail FROM music WHERE id = ?", id)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Music not found"})
 		return
 	}
+
 	if music.Thumbnail.Valid {
-		c.File("./static/" + music.Thumbnail.String)
+		thumbnailPath := "./static/" + music.Thumbnail.String
+		if resizedPath, err := resizeImage(thumbnailPath, size); err == nil {
+			c.File(resizedPath)
+		} else {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to resize image"})
+		}
 	} else {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Thumbnail not found"})
 	}
+}
+
+func resizeImage(filepath string, width int) (string, error) {
+	file, err := os.Open(filepath)
+	if err != nil {
+		return "", err
+	}
+	defer file.Close()
+
+	img, format, err := image.Decode(file)
+	if err != nil {
+		return "", err
+	}
+
+	m := resize.Resize(uint(width), 0, img, resize.Lanczos3)
+
+	resizedFilePath := filepath + "_resized_" + strconv.Itoa(width) + ".jpg"
+	out, err := os.Create(resizedFilePath)
+	if err != nil {
+		return "", err
+	}
+	defer out.Close()
+
+	switch format {
+	case "jpeg":
+		err = jpeg.Encode(out, m, nil)
+	case "png":
+		err = png.Encode(out, m)
+	default:
+		return "", fmt.Errorf("Unsupported format: %s", format)
+	}
+
+	return resizedFilePath, err
 }
