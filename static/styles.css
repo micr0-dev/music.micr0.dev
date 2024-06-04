@@ -147,8 +147,8 @@ button:hover {
     height: 300px;
     border-radius: 25px;
 
-    box-shadow: 0 0 20px 10px var(--art-color)
-        /* border: 8px solid var(--art-color); */
+    box-shadow: 0 0 20px 10px var(--art-color);
+    /* border: 8px solid var(--art-color); */
 }
 
 #track-info {
