@@ -122,12 +122,21 @@ button:hover {
     width: 100%;
 }
 
+#cover-art-container {
+    position: fixed;
+    bottom: 96px;
+    left: 0px;
+    padding: 10px;
+}
+
 #cover-art {
+
     width: 250px;
     height: 250px;
     border-radius: 25px;
     margin-right: 10px;
     margin-bottom: 10px;
+
 }
 
 #track-info {
