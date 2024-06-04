@@ -181,6 +181,14 @@ button:hover {
     padding: 0px;
 }
 
+#audio-controls button {
+    background: none;
+    color: #fff;
+    font-size: 12px;
+    border: none;
+    cursor: pointer;
+}
+
 #audio-controls svg {
     width: 48px;
     height: 48px;
