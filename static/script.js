@@ -71,14 +71,14 @@ document.addEventListener('DOMContentLoaded', () => {
     audioPlayer.addEventListener('timeupdate', () => {
         const currentTime = Math.floor(audioPlayer.currentTime);
         const duration = Math.floor(audioPlayer.duration);
-        seekSlider.value = (currentTime / duration) * 100;
+        seekSlider.value = (currentTime / duration) * 1000;
         currentTimeLabel.textContent = formatTime(currentTime);
         durationLabel.textContent = formatTime(duration);
     });
 
     seekSlider.addEventListener('input', () => {
         const duration = Math.floor(audioPlayer.duration);
-        audioPlayer.currentTime = (seekSlider.value / 100) * duration;
+        audioPlayer.currentTime = (seekSlider.value / 1000) * duration;
     });
 
     function formatTime(seconds) {
@@ -88,4 +88,28 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     loadMusicList();
+
+    slider.style.setProperty('--value', '0%');
 });
+
+
+document.getElementById('audio-player').addEventListener('timeupdate', updateSlider);
+
+const slider = document.querySelector('.slider');
+slider.addEventListener('input', function () {
+    const value = this.value;
+    const percentage = (value - this.min) / (this.max - this.min) * 100;
+    this.style.setProperty('--value', `${percentage}%`);
+    // Sync the audio player currentTime with slider value
+    document.getElementById('audio-player').currentTime = value;
+});
+
+function updateSlider() {
+    const audioPlayer = document.getElementById('audio-player');
+    const value = audioPlayer.currentTime;
+    const duration = audioPlayer.duration;
+    slider.max = duration;
+    slider.value = value;
+    const percentage = (value - slider.min) / (slider.max - slider.min) * 100;
+    slider.style.setProperty('--value', `${percentage}%`);
+}

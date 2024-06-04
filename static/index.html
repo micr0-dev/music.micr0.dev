@@ -31,6 +31,9 @@
         </main>
 
         <footer>
+            <div class="slidecontainer">
+                <input type="range" min="0" max="1000" value="0" class="slider" id="seek-slider">
+            </div>
             <div id="now-playing">
                 <img id="cover-art" src="" alt="Cover Art" />
                 <div id="track-info">
@@ -39,7 +42,6 @@
                 </div>
                 <div id="audio-controls">
                     <button id="play-pause">Play</button>
-                    <input type="range" id="seek-slider" value="0" max="100" />
                     <span id="current-time">0:00</span> / <span id="duration">0:00</span>
                 </div>
             </div>
