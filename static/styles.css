@@ -57,13 +57,13 @@ button {
 }
 
 button {
-    background-color: var(--art-color);
-    color: #fff;
+    background-color: #fff;
+    color: #000;
     cursor: pointer;
 }
 
 button:hover {
-    background-color: var(--art-color);
+    background-color: #f3f3f3;
 }
 
 #music-list-section {
@@ -86,7 +86,7 @@ button:hover {
     display: flex;
     align-items: center;
     gap: 15px;
-    transition: transform 0.2s, background-image 0.2s;
+    transition: transform 0.4s, background-position 1s ease-out;
 }
 
 .music-item img.cover-art {
@@ -112,7 +112,7 @@ button:hover {
 
 .music-item:hover {
     transform: scale(1.05);
-    background-image: linear-gradient(180deg, #282828, var(--art-color));
+    background-position: -100px;
 }
 
 .music-item .hifi-tag {
@@ -130,8 +130,7 @@ button:hover {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-image: linear-gradient(180deg, var(--art-color), #282828);
-    border-radius: 5px;
+    background-color: var(--art-color);
     padding: 10px;
     width: 100%;
 }
@@ -148,7 +147,8 @@ button:hover {
     height: 300px;
     border-radius: 25px;
 
-    box-shadow: 0 0 16px 8px var(--art-color)
+    /* box-shadow: 0 0 16px 8px var(--art-color) */
+    border: 8px solid var(--art-color);
 }
 
 #track-info {
@@ -174,14 +174,11 @@ button:hover {
     display: flex;
     align-items: center;
     padding: 10px;
-    background-color: #282828;
-    border-radius: 5px;
-    margin-right: 10px;
 }
 
 #audio-controls button {
     background: none;
-    color: var(--art-color);
+    color: #fff;
     font-size: 24px;
     border: none;
     cursor: pointer;
@@ -215,7 +212,7 @@ button:hover {
     width: 100%;
     height: 6px;
     margin: 0px;
-    background: linear-gradient(to right, var(--art-color) 0%, var(--art-color) var(--value), #121212 var(--value), #121212 100%);
+    background: linear-gradient(to right, #fff 0%, #fff var(--value), #12121200 var(--value), #12121200 100%);
     outline: none;
     opacity: 1;
     -webkit-transition: opacity .1s;
