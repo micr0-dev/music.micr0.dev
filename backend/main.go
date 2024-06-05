@@ -40,6 +40,7 @@ func main() {
 	router.POST("/music", musicHandler.UploadMusic)
 	router.GET("/stream/:id", musicHandler.StreamMusic)
 	router.GET("/thumbnail/:id", musicHandler.GetThumbnail)
+	router.GET("/color/:id", musicHandler.GetColor)
 
 	// Playlist routes
 	router.POST("/playlists", musicHandler.CreatePlaylist)
