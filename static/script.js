@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let isPlaying = false;
     let openQueue = [];
     let queue = [];
-    let currentIndex = 0;
+    let currentTrack;
     let shuffleedQueue = [];
     let isShuffle = false;
     let isRepeat = false;
@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function savePlayerState() {
         localStorage.setItem('player-state', JSON.stringify({
             queue,
-            currentIndex,
+            currentTrack,
             isShuffle,
             isRepeat,
             volume: volumeSlider.value,
@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
         data = JSON.parse(state);
 
         openQueue = data.queue;
-        currentIndex = data.currentIndex;
+        currentTrack = data.currentTrack;
         isShuffle = data.isShuffle;
         isRepeat = data.isRepeat;
         volume = data.volume;
@@ -78,11 +78,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (isRepeat)
             repeatButton.classList.toggle('active');
 
-        loadQueue(currentIndex);
+        loadQueue();
 
-        if (queue[currentIndex] == null) return;
-
-        playTrack(queue[currentIndex], false);
+        playTrack(currentTrack, false);
         audioPlayer.pause();
 
         isPlaying = false;
@@ -396,20 +394,36 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    function loadQueue(index) {
+    function loadQueue() {
         queue = openQueue.slice();
-        currentIndex = index;
+        shuffleQueue();
+    }
+
+    // Keep the current index the same when shuffling
+    function shuffleQueue() {
         shuffleedQueue = queue.slice();
-        shuffleedQueue = shuffleedQueue.sort(() => Math.random() - 0.5);
+        shuffleedQueue.sort(() => Math.random() - 0.5);
+        const currentTrack = queue[currentIndex];
+        currentIndex = shuffleedQueue.findIndex(m => m.id === currentTrack.id);
+    }
+
+    function getCurrentIndex() {
+        let currentIndex;
+        if (isShuffle) {
+            currentIndex = shuffleedQueue.findIndex(m => m.id === currentTrack.id);
+        } else {
+            currentIndex = queue.findIndex(m => m.id === currentTrack.id);
+        }
+        return currentIndex;
     }
 
     function playNextTrack() {
+        let currentIndex = getCurrentIndex();
+
         if (isRepeat) {
             playTrack(queue[currentIndex], false);
             return;
         }
-
-        currentIndex = (currentIndex + 1) % queue.length;
 
         if (isShuffle) {
             playTrack(shuffleedQueue[currentIndex], false);
@@ -419,6 +433,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function playPreviousTrack() {
+        let currentIndex = getCurrentIndex();
+
         if (audioPlayer.currentTime > 5) {
             audioPlayer.currentTime = 0;
             return;
@@ -469,8 +485,7 @@ document.addEventListener('DOMContentLoaded', () => {
     shuffleButton.addEventListener('click', () => {
         isShuffle = !isShuffle;
         shuffleButton.classList.toggle('active');
-        shuffleedQueue = queue.slice();
-        shuffleedQueue = shuffleedQueue.sort(() => Math.random() - 0.5);
+        shuffleQueue();
         savePlayerState();
     });
 
