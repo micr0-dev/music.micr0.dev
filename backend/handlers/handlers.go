@@ -175,9 +175,8 @@ func (h *MusicHandler) fetchMetadata(title, artist string) (metadata, error) {
 		return metadata{}, fmt.Errorf("no release year found")
 	}
 
-	log.Print(date)
-	year := strings.Split(date, ",")[0][:4]
-	log.Print(year)
+	year := strings.Split(date, ",")[0]
+	year = year[len(year)-3:]
 
 	genre, ok := track["toptags"].(map[string]interface{})["tag"].([]interface{})
 	if !ok || len(genre) == 0 {
