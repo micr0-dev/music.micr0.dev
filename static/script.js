@@ -57,13 +57,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         nowPlayingContainer.classList.remove('not-playing');
 
-        const { queue, currentIndex, isShuffle, isRepeat, volume } = JSON.parse(state);
+        const { queue, currentIndex, tempisShuffle, tempisRepeat, volume } = JSON.parse(state);
         volumeSlider.value = volume;
         audioPlayer.volume = volume / 100;
         volumeSlider.style.setProperty('--value', volume + '%');
-        isShuffle = isShuffle;
+        isShuffle = (tempisShuffle === 'true')
         shuffleButton.classList.toggle('active');
-        isRepeat = isRepeat;
+        isRepeat = (tempisRepeat === 'true')
         repeatButton.classList.toggle('active');
         openQueue = queue;
         loadQueue(currentIndex);
