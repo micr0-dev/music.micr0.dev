@@ -80,7 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 playTrack(music);
             });
 
-            const addToPlaylistBtn = div.getElementById('add-to-playlist');
+            const addToPlaylistBtn = div.querySelector('#add-to-playlist');
             addToPlaylistBtn.addEventListener('click', (event) => {
                 event.stopPropagation();
                 alert('Add to playlist clicked');
