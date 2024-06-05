@@ -322,10 +322,10 @@ document.addEventListener('DOMContentLoaded', () => {
             isPlaying = false;
         });
         navigator.mediaSession.setActionHandler('previoustrack', () => {
-            // Add logic to play previous track
+            playPreviousTrack();
         });
         navigator.mediaSession.setActionHandler('nexttrack', () => {
-            // Add logic to play next track
+            playNextTrack();
         });
     }
 
@@ -344,6 +344,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function playPreviousTrack() {
+        if (audioPlayer.currentTime > 5) {
+            audioPlayer.currentTime = 0;
+            return;
+        }
+
         if (isShuffle) {
             currentIndex = Math.floor(Math.random() * queue.length);
         } else {
