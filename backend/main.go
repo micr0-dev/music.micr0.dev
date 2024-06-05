@@ -44,8 +44,8 @@ func main() {
 	playlistHandler := handlers.NewPlaylistHandler(db)
 	router.POST("/playlists", playlistHandler.CreatePlaylist)
 	router.GET("/playlists", playlistHandler.GetPlaylists)
-	router.GET("/playlists/:id", playlistHandler.GetPlaylistByID)
-	router.DELETE("/playlists/:id", playlistHandler.DeletePlaylist)
+	router.GET("/playlists/:playlistID", playlistHandler.GetPlaylistByID)
+	router.DELETE("/playlists/:playlistID", playlistHandler.DeletePlaylist)
 	router.POST("/playlists/:playlistID/music/:musicID", playlistHandler.AddMusicToPlaylist)
 	router.DELETE("/playlists/:playlistID/music/:musicID", playlistHandler.RemoveMusicFromPlaylist)
 

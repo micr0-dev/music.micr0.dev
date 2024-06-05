@@ -417,7 +417,7 @@ func (h *PlaylistHandler) GetPlaylists(c *gin.Context) {
 }
 
 func (h *PlaylistHandler) GetPlaylistByID(c *gin.Context) {
-	id := c.Param("id")
+	id := c.Param("playlistID")
 	var playlist models.Playlist
 	err := h.DB.Get(&playlist, "SELECT * FROM playlists WHERE id = ?", id)
 	if err != nil {
@@ -428,7 +428,7 @@ func (h *PlaylistHandler) GetPlaylistByID(c *gin.Context) {
 }
 
 func (h *PlaylistHandler) DeletePlaylist(c *gin.Context) {
-	id := c.Param("id")
+	id := c.Param("playlistID")
 
 	_, err := h.DB.Exec("DELETE FROM playlists WHERE id = ?", id)
 	if err != nil {
