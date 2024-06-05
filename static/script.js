@@ -441,6 +441,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         isPlaying = !isPlaying;
+
+        savePlayerState();
     });
 
     prevButton.addEventListener('click', () => {
@@ -521,6 +523,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const progress = value / 10;
         seekSlider.style.setProperty('--value', `${progress}%`);
+
+        savePlayerState();
     });
 
 
