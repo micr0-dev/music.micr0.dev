@@ -33,13 +33,46 @@ document.addEventListener('DOMContentLoaded', () => {
     const searchResults = document.getElementById('search-results');
 
     let isPlaying = false;
-    let currentTrack = null;
-    let currentScreen = 'home';
     let openQueue = [];
     let queue = [];
     let currentIndex = 0;
     let isShuffle = false;
     let isRepeat = false;
+
+
+    function savePlayerState() {
+        localStorage.setItem('player-state', JSON.stringify({
+            queue,
+            currentIndex,
+            isShuffle,
+            isRepeat,
+            volume: volumeSlider.value,
+        }));
+    }
+
+    function loadPlayerState() {
+        volumeSlider.style.setProperty('--value', '100%');
+        const state = localStorage.getItem('player-state');
+        if (state == null) return;
+
+        nowPlayingContainer.classList.remove('not-playing');
+
+        const { queue, currentIndex, isShuffle, isRepeat, volume } = JSON.parse(state);
+        volumeSlider.value = volume;
+        audioPlayer.volume = volume / 100;
+        volumeSlider.style.setProperty('--value', volume + '%');
+        isShuffle = isShuffle;
+        shuffleButton.classList.toggle('active');
+        isRepeat = isRepeat;
+        repeatButton.classList.toggle('active');
+        openQueue = queue;
+        loadQueue(currentIndex);
+        playTrack(queue[currentIndex], false);
+        audioPlayer.pause();
+        playIcon.style.display = 'inline';
+        pauseIcon.style.display = 'none';
+        isPlaying = false;
+    }
 
     uploadForm.addEventListener('submit', async (event) => {
         event.preventDefault();
@@ -282,6 +315,8 @@ document.addEventListener('DOMContentLoaded', () => {
         trackTitle.textContent = music.title;
         trackArtist.textContent = music.artist;
         audioPlayer.currentTime = 0;
+        seekSlider.value = 0;
+        seekSlider.style.setProperty('--value', `${progress}%`);
         audioPlayer.play();
         playIcon.style.display = 'none';
         pauseIcon.style.display = 'inline';
@@ -307,6 +342,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 artwork: [{ src: thumbnailUrl, sizes: '300x300', type: 'image/jpeg' }]
             });
         }
+
+        savePlayerState();
 
         audioPlayer.onended = playNextTrack;
     }
@@ -399,6 +436,7 @@ document.addEventListener('DOMContentLoaded', () => {
     shuffleButton.addEventListener('click', () => {
         isShuffle = !isShuffle;
         shuffleButton.classList.toggle('active');
+        savePlayerState();
     });
 
     repeatButton.addEventListener('click', () => {
@@ -409,6 +447,8 @@ document.addEventListener('DOMContentLoaded', () => {
     volumeSlider.addEventListener('input', () => {
         audioPlayer.volume = volumeSlider.value / 100;
         volumeSlider.style.setProperty('--value', `${volumeSlider.value}%`);
+
+        savePlayerState();
     });
 
 
@@ -502,8 +542,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     seekSlider.style.setProperty('--value', '0%');
-    volumeSlider.style.setProperty('--value', '100%');
 
+    loadPlayerState();
     loadSidePlaylists();
     loadMusicList();
 });
