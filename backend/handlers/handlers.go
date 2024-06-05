@@ -407,6 +407,14 @@ func (h *MusicHandler) GetPlaylists(c *gin.Context) {
 	c.JSON(http.StatusOK, playlists)
 }
 
+// make returnPlaylist
+type returnPlaylist struct {
+	ID      string         `json:"id"`
+	Name    string         `json:"name"`
+	Songs   []models.Music `json:"songs"`
+	SongIDs []string       `json:"song_ids"`
+}
+
 func (h *MusicHandler) GetPlaylistByID(c *gin.Context) {
 	id := c.Param("id")
 
@@ -429,7 +437,14 @@ func (h *MusicHandler) GetPlaylistByID(c *gin.Context) {
 		songs = append(songs, song)
 	}
 
-	c.JSON(http.StatusOK, songs)
+	returnPlaylist := returnPlaylist{
+		ID:      playlist.ID,
+		Name:    playlist.Name,
+		Songs:   songs,
+		SongIDs: playlist.Songs,
+	}
+
+	c.JSON(http.StatusOK, returnPlaylist)
 }
 
 func (h *MusicHandler) UpdatePlaylist(c *gin.Context) {
