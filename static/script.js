@@ -59,8 +59,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         data = JSON.parse(state);
 
-        const { queue, currentIndex, isShuffle, isRepeat, volume } = data;
-        console.log(queue, currentIndex, isShuffle, isRepeat, volume);
+        const { openQueue, currentIndex, isShuffle, isRepeat, volume } = data;
+        console.log(openQueue, currentIndex, isShuffle, isRepeat, volume);
 
         volumeSlider.value = parseInt(volume);
         volumeSlider.style.setProperty('--value', volume + '%');
@@ -70,6 +70,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (isRepeat)
             repeatButton.classList.toggle('active');
 
+        if (isPlaying) {
+            audioPlayer.play();
+            playIcon.style.display = 'none';
+            pauseIcon.style.display = 'inline';
+        }
+
         loadQueue(currentIndex);
 
         if (queue[currentIndex] == null) return;
@@ -77,11 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
         playTrack(queue[currentIndex], false);
         audioPlayer.pause();
 
-        if (isPlaying) {
-            audioPlayer.play();
-            playIcon.style.display = 'none';
-            pauseIcon.style.display = 'inline';
-        }
+
     }
 
     uploadForm.addEventListener('submit', async (event) => {
