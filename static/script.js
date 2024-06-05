@@ -59,7 +59,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         data = JSON.parse(state);
 
-        const { openQueue, currentIndex, isShuffle, isRepeat, volume } = data;
+        openQueue = data.queue;
+        currentIndex = data.currentIndex;
+        isShuffle = data.isShuffle;
+        isRepeat = data.isRepeat;
+        volume = data.volume;
+
         console.log(openQueue, currentIndex, isShuffle, isRepeat, volume);
 
         volumeSlider.value = parseInt(volume);
