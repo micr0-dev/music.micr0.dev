@@ -16,6 +16,7 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
+	"strings"
 
 	"github.com/dhowden/tag"
 	"github.com/gin-gonic/gin"
@@ -107,6 +108,74 @@ func calculateAverageColor(img image.Image) color.RGBA {
 		B: uint8(b >> 8),
 		A: uint8(a >> 8),
 	}
+}
+
+// Fetch lyrics from an external API
+func fetchLyrics(title, artist string) (string, error) {
+	url := fmt.Sprintf("https://api.lyrics.ovh/v1/%s/%s", artist, title)
+	url = strings.ReplaceAll(url, " ", "+")
+
+	resp, err := http.Get(url)
+	if err != nil {
+		return "", err
+	}
+	defer resp.Body.Close()
+
+	var result map[string]interface{}
+	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
+		return "", err
+	}
+
+	lyrics, ok := result["lyrics"].(string)
+	if !ok {
+		return "No Lyrics", fmt.Errorf("lyrics not found")
+	}
+
+	return lyrics, nil
+}
+
+func (h *MusicHandler) fetchTags(title, artist string) ([]string, error) {
+	url := fmt.Sprintf("http://ws.audioscrobbler.com/2.0/?method=track.getInfo&api_key=%s&artist=%s&track=%s&format=json", h.LastFmAPIKey, artist, title)
+	resp, err := http.Get(url)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	var result map[string]interface{}
+	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
+		return nil, err
+	}
+
+	track, ok := result["track"].(map[string]interface{})
+	if !ok {
+		return nil, fmt.Errorf("track not found")
+	}
+
+	toptags, ok := track["toptags"].(map[string]interface{})
+	if !ok {
+		return nil, fmt.Errorf("toptags not found")
+	}
+
+	tags, ok := toptags["tag"].([]interface{})
+	if !ok {
+		return nil, fmt.Errorf("tags not found")
+	}
+
+	var tagList []string
+	for _, t := range tags {
+		tagMap, ok := t.(map[string]interface{})
+		if !ok {
+			continue
+		}
+		name, ok := tagMap["name"].(string)
+		if !ok {
+			continue
+		}
+		tagList = append(tagList, name)
+	}
+
+	return tagList, nil
 }
 
 func (h *MusicHandler) fetchThumbnail(title, artist string) (string, error) {
@@ -202,6 +271,11 @@ func (h *MusicHandler) UploadMusic(c *gin.Context) {
 		Filename:  filename,
 		Thumbnail: sql.NullString{String: "", Valid: false},
 		Color:     "#000000",
+		Album:     metadata.Album(),
+		Year:      metadata.Year(),
+		Genre:     metadata.Genre(),
+		Tags:      []string{},
+		Lyrics:    "",
 	}
 
 	// Fill details if they are empty
@@ -252,8 +326,24 @@ func (h *MusicHandler) UploadMusic(c *gin.Context) {
 		}
 	}
 
+	// Fetch lyrics
+	lyrics, err := fetchLyrics(music.Title, music.Artist)
+	if err != nil {
+		log.Printf("Error fetching lyrics: %v", err)
+	} else {
+		music.Lyrics = lyrics
+	}
+
+	// Fetch tags
+	tags, err := h.fetchTags(music.Title, music.Artist)
+	if err != nil {
+		log.Printf("Error fetching tags: %v", err)
+	} else {
+		music.Tags = tags
+	}
+
 	// Insert into database
-	if _, err := h.DB.NamedExec(`INSERT INTO music (id, title, artist, filename, thumbnail, color) VALUES (:id, :title, :artist, :filename, :thumbnail, :color)`, music); err != nil {
+	if _, err := h.DB.NamedExec(`INSERT INTO music (id, title, artist, filename, thumbnail, color, album, year, genre, tags, lyrics) VALUES (:id, :title, :artist, :filename, :thumbnail, :color, :album, :year, :genre, :tags, :lyrics)`, music); err != nil {
 		log.Printf("Error inserting music: %v", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to insert into database"})
 		return
