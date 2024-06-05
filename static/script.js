@@ -380,14 +380,18 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     prevButton.addEventListener('click', () => {
-        if (isRepeat)
+        if (isRepeat) {
             isRepeat = !isRepeat;
+            repeatButton.classList.toggle('active');
+        }
         playPreviousTrack();
     });
 
     nextButton.addEventListener('click', () => {
-        if (isRepeat)
+        if (isRepeat) {
             isRepeat = !isRepeat;
+            repeatButton.classList.toggle('active');
+        }
         playNextTrack();
     });
 
