@@ -70,7 +70,58 @@
         </div>
 
         <footer id="now-playing-container" class="not-playing">
-            <!-- Footer remains unchanged -->
+            <div id="cover-art-container">
+                <img id="cover-art" src="" alt="Cover Art" />
+            </div>
+            <div class="slidecontainer">
+                <input type="range" min="0" max="1000" value="0" class="slider" id="seek-slider">
+            </div>
+            <div id="now-playing">
+
+                <div id="track-info">
+                    <h3 id="track-title">No song selected</h3>
+                    <p id="track-artist"></p>
+                </div>
+                <div id="audio-controls">
+                    <button id="repeat-button" class="control-button">
+                        <svg>
+                            <use href="#repeat"></use>
+                        </svg>
+                    </button>
+
+                    <button id="prev-button">
+                        <svg>
+                            <use href="#prev"></use>
+                        </svg>
+                    </button>
+                    <button id="play-pause">
+                        <svg id="play-icon" style="display: none;">
+                            <use href="#play"></use>
+                        </svg>
+                        <svg id="pause-icon">
+                            <use href="#pause"></use>
+                        </svg>
+                    </button>
+                    <button id="next-button">
+                        <svg>
+                            <use href="#next"></use>
+                        </svg>
+                    </button>
+                    <button id="shuffle-button" class="control-button">
+                        <svg>
+                            <use href="#shuffle"></use>
+                        </svg>
+                    </button>
+                </div>
+                <div class="volume">
+                    <input type="range" min="0" max="100" value="100" class="slider" id="volume-slider">
+                </div>
+                <div class="playtime">
+                    <span id="current-time">2:42</span> / <span id="duration">4:20</span>
+                </div>
+            </div>
+
+            <audio id="audio-player"></audio>
         </footer>
     </div>
 
