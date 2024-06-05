@@ -356,6 +356,8 @@ main {
     height: 48px;
     fill: #fff;
     cursor: pointer;
+
+    transition: box-shadow fill 0.6s ease-out;
 }
 
 #audio-controls .control-button svg {
@@ -365,6 +367,7 @@ main {
 
 #audio-controls button.active svg {
     fill: var(--art-color);
+    box-shadow: 0 0 4px 2px var(--art-color);
 }
 
 #audio-controls button:hover {
