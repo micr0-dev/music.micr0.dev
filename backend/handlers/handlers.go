@@ -321,6 +321,7 @@ func (h *MusicHandler) GetThumbnail(c *gin.Context) {
 			}
 		} else {
 			c.File(resizedThumbnailPath)
+			return
 		}
 	}
 	// Return a placeholder image if no thumbnail is available
