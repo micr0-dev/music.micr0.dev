@@ -221,38 +221,6 @@ document.addEventListener('DOMContentLoaded', () => {
         loadMusic(musics);
     }
 
-    function playTrack(music) {
-        audioPlayer.src = `/api/stream/${music.id}`;
-        coverArt.src = `/api/thumbnail/${music.id}`;
-        coverArt.alt = music.title;
-        trackTitle.textContent = music.title;
-        trackArtist.textContent = music.artist;
-        audioPlayer.play();
-        playIcon.style.display = 'none';
-        pauseIcon.style.display = 'inline';
-        isPlaying = true;
-        currentTrack = music;
-
-        nowPlayingContainer.classList.remove('not-playing');
-
-        if (music.color == "#000000") music.color = "#ffffff";
-
-        nowPlayingContainer.style.setProperty('--art-color', music.color);
-    }
-
-    playPauseButton.addEventListener('click', () => {
-        if (isPlaying) {
-            audioPlayer.pause();
-            playIcon.style.display = 'inline';
-            pauseIcon.style.display = 'none';
-        } else {
-            audioPlayer.play();
-            playIcon.style.display = 'none';
-            pauseIcon.style.display = 'inline';
-        }
-        isPlaying = !isPlaying;
-    });
-
     searchInput.addEventListener('input', async () => {
         const query = searchInput.value;
         if (query.length < 3) return;
@@ -299,6 +267,55 @@ document.addEventListener('DOMContentLoaded', () => {
             loadMusic(musicResults, musicDiv);
         }
     });
+
+    function playTrack(music) {
+        audioPlayer.src = `/api/stream/${music.id}`;
+        coverArt.src = `/api/thumbnail/${music.id}`;
+        coverArt.alt = music.title;
+        trackTitle.textContent = music.title;
+        trackArtist.textContent = music.artist;
+        audioPlayer.play();
+        playIcon.style.display = 'none';
+        pauseIcon.style.display = 'inline';
+        isPlaying = true;
+        currentTrack = music;
+
+        nowPlayingContainer.classList.remove('not-playing');
+
+        if (music.color == "#000000") music.color = "#ffffff";
+
+        nowPlayingContainer.style.setProperty('--art-color', music.color);
+
+        if ('mediaSession' in navigator) {
+            navigator.mediaSession.metadata = new MediaMetadata({
+                title: music.title,
+                artist: music.artist,
+                album: 'Album Name',
+                artwork: [{ src: thumbnailUrl, sizes: '300x300', type: 'image/jpeg' }]
+            });
+        }
+    }
+
+    if ('mediaSession' in navigator) {
+        navigator.mediaSession.setActionHandler('play', () => {
+            audioPlayer.play();
+            playIcon.style.display = 'none';
+            pauseIcon.style.display = 'inline';
+            isPlaying = true;
+        });
+        navigator.mediaSession.setActionHandler('pause', () => {
+            audioPlayer.pause();
+            playIcon.style.display = 'inline';
+            pauseIcon.style.display = 'none';
+            isPlaying = false;
+        });
+        navigator.mediaSession.setActionHandler('previoustrack', () => {
+            // Add logic to play previous track
+        });
+        navigator.mediaSession.setActionHandler('nexttrack', () => {
+            // Add logic to play next track
+        });
+    }
 
     prevButton.addEventListener('click', () => {
         //TODO: Implement this
