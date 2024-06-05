@@ -225,7 +225,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const response = await fetch('/api/playlists');
         const playlists = await response.json();
 
-        if (playlists.length === 0) {
+        if (playlists == null) {
             playlistsList.innerHTML = '<li>No playlists found</li>';
             return;
         }

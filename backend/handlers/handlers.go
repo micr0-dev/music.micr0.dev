@@ -378,17 +378,6 @@ func formatErr(format string) error {
 	return fmt.Errorf("unsupported format: %s", format)
 }
 
-func (h *MusicHandler) GetColor(c *gin.Context) {
-	id := c.Param("id")
-	var music models.Music
-	err := h.DB.Get(&music, "SELECT color FROM music WHERE id = ?", id)
-	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "Music not found"})
-		return
-	}
-	c.JSON(http.StatusOK, gin.H{"color": music.Color})
-}
-
 // Playlist Handlers
 func (h *MusicHandler) CreatePlaylist(c *gin.Context) {
 	var playlist models.Playlist
