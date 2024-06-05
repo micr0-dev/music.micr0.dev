@@ -57,6 +57,75 @@ document.addEventListener('DOMContentLoaded', () => {
         loadMusicList();
     });
 
+    createPlaylistForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const playlistName = event.target['playlist-name'].value;
+
+        const response = await fetch('/api/playlists', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name: playlistName })
+        });
+
+        const result = await response.json();
+        if (response.ok) {
+            await fetchPlaylists();
+            alert('Playlist created successfully!');
+        } else {
+            alert('Failed to create playlist: ' + result.error);
+        }
+    });
+
+    async function fetchPlaylists() {
+        const response = await fetch('/api/playlists');
+        const playlists = await response.json();
+
+        existingPlaylists.innerHTML = '';
+        playlists.forEach(playlist => {
+            const div = document.createElement('div');
+            div.className = 'playlist-item';
+            div.textContent = playlist.name;
+            div.addEventListener('click', () => {
+                addSongToPlaylist(playlist.id);
+            });
+            existingPlaylists.appendChild(div);
+        });
+    }
+
+    function showPlaylistMenu(songId) {
+        playlistMenu.classList.remove('hidden');
+        playlistMenu.dataset.songId = songId;
+        fetchPlaylists();
+    }
+
+    async function addSongToPlaylist(playlistId) {
+        const songId = playlistMenu.dataset.songId;
+
+        const response = await fetch(`/api/playlists/${playlistId}`);
+        const playlist = await response.json();
+
+        if (response.ok) {
+            playlist.songs.push(songId);
+
+            const updateResponse = await fetch(`/api/playlists/${playlistId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(playlist)
+            });
+
+            if (updateResponse.ok) {
+                alert('Song added to playlist successfully!');
+                playlistMenu.classList.add('hidden');
+            } else {
+                const result = await updateResponse.json();
+                alert('Failed to update playlist: ' + result.error);
+            }
+        } else {
+            alert('Failed to fetch playlist');
+        }
+    }
+
+
     function loadMusic(musics) {
         musicList.innerHTML = '';
         musics.forEach(music => {
@@ -83,7 +152,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const addToPlaylistBtn = div.querySelector('#add-to-playlist');
             addToPlaylistBtn.addEventListener('click', (event) => {
                 event.stopPropagation();
-                alert('Add to playlist clicked');
+                showPlaylistMenu(music.id);
             });
 
             musicList.appendChild(div);

@@ -203,12 +203,53 @@ main {
     padding: 5px;
     font-size: 12px;
     cursor: pointer;
-    transition: transform 0.4s;
+    background-color: #0000;
+    transition: transform 0.2s;
 }
 
 .music-item #add-to-playlist:hover {
     transform: scale(1.2);
 }
+
+#playlist-menu {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #333;
+    padding: 20px;
+    border-radius: 10px;
+    z-index: 1000;
+}
+
+#playlist-menu h3 {
+    color: #fff;
+}
+
+#playlist-menu form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#playlist-menu input,
+#playlist-menu button {
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: none;
+}
+
+#playlist-menu button {
+    background-color: #1db954;
+    color: #fff;
+    cursor: pointer;
+}
+
+#playlist-menu button:hover {
+    background-color: #1ed760;
+}
+
 
 #now-playing {
     display: flex;
