@@ -57,16 +57,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
         nowPlayingContainer.classList.remove('not-playing');
 
-        const { queue, currentIndex, isShuffle, isRepeat, volume } = JSON.parse(state);
+        openQueue, currentIndex, isShuffle, isRepeat, volume = JSON.parse(state);
         console.log(queue, currentIndex, isShuffle, isRepeat, volume);
+
         volumeSlider.value = volume;
         audioPlayer.volume = volume / 100;
         volumeSlider.style.setProperty('--value', volume + '%');
 
         shuffleButton.classList.toggle('active');
-
         repeatButton.classList.toggle('active');
-        openQueue = queue;
+
         loadQueue(currentIndex);
         playTrack(queue[currentIndex], false);
         audioPlayer.pause();
@@ -440,6 +440,7 @@ document.addEventListener('DOMContentLoaded', () => {
     repeatButton.addEventListener('click', () => {
         isRepeat = !isRepeat;
         repeatButton.classList.toggle('active');
+        savePlayerState();
     });
 
     volumeSlider.addEventListener('input', () => {
