@@ -66,9 +66,10 @@ document.addEventListener('DOMContentLoaded', () => {
         shuffleButton.classList.toggle('active');
         repeatButton.classList.toggle('active');
 
-        music = queue[currentIndex];
-
         loadQueue(currentIndex);
+
+        if (queue[currentIndex] == null) return;
+
         playTrack(queue[currentIndex], false);
         audioPlayer.pause();
     }
