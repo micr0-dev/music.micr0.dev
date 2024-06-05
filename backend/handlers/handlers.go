@@ -417,7 +417,19 @@ func (h *MusicHandler) GetPlaylistByID(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, playlist)
+	var songs []models.Music
+
+	for _, songID := range playlist.Songs {
+		var song models.Music
+		err := h.DB.Get(&song, "SELECT id, title, artist, filename, thumbnail, color FROM music WHERE id = ?", songID)
+		if err != nil {
+			log.Printf("Error fetching song: %v", err)
+			continue
+		}
+		songs = append(songs, song)
+	}
+
+	c.JSON(http.StatusOK, songs)
 }
 
 func (h *MusicHandler) UpdatePlaylist(c *gin.Context) {
