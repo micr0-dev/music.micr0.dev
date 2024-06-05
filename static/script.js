@@ -261,7 +261,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const results = await response.json();
 
         if (results == null) {
-            musicList.innerHTML = '<li>No music found</li>';
+            musicList.innerHTML = 'No music found';
             return;
         }
 
@@ -282,8 +282,20 @@ document.addEventListener('DOMContentLoaded', () => {
         searchResults.appendChild(playlistsDiv);
         searchResults.appendChild(musicDiv);
 
-        loadPlaylists(results.playlists, playlistsDiv);
-        loadMusic(results, musicDiv);
+        const playlistResults = results.playlists;
+        const musicResults = results.songs;
+
+        if (playlistResults.length == null) {
+            playlistsDiv.innerHTML = 'No playlists found';
+        } else {
+            loadPlaylists(playlistResults, playlistsDiv);
+        }
+
+        if (musicResults.length == null) {
+            musicDiv.innerHTML = 'No music found';
+        } else {
+            loadMusic(musicResults, musicDiv);
+        }
     });
 
     prevButton.addEventListener('click', () => {
@@ -390,7 +402,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const playlist = await response.json();
 
         if (playlist == null) {
-            albumsList.innerHTML = '<li>No music found</li>';
+            albumsList.innerHTML = 'No music found';
             return;
         }
 
