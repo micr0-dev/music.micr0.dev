@@ -49,7 +49,7 @@ func main() {
 	router.DELETE("/playlists/:id", musicHandler.DeletePlaylist)
 
 	// Search route
-	router.GET("/api/search", musicHandler.Search)
+	router.GET("/search", musicHandler.Search)
 
 	fmt.Println("Go server listening on port 8084")
 	log.Fatal(http.ListenAndServe(":8084", router))
