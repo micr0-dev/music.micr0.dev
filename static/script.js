@@ -76,9 +76,11 @@ document.addEventListener('DOMContentLoaded', () => {
             repeatButton.classList.toggle('active');
 
         if (isPlaying) {
-            audioPlayer.play();
             playIcon.style.display = 'none';
             pauseIcon.style.display = 'inline';
+        } else {
+            playIcon.style.display = 'inline';
+            pauseIcon.style.display = 'none';
         }
 
         loadQueue(currentIndex);
