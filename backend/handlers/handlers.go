@@ -134,48 +134,60 @@ func fetchLyrics(title, artist string) (string, error) {
 	return lyrics, nil
 }
 
-func (h *MusicHandler) fetchTags(title, artist string) ([]string, error) {
+type metadata struct {
+	Album string `json:"album"`
+	Year  string `json:"year"`
+	Genre string `json:"genre"`
+}
+
+func (h *MusicHandler) fetchMetadata(title, artist string) (metadata, error) {
 	url := fmt.Sprintf("http://ws.audioscrobbler.com/2.0/?method=track.getInfo&api_key=%s&artist=%s&track=%s&format=json", h.LastFmAPIKey, artist, title)
 	resp, err := http.Get(url)
 	if err != nil {
-		return nil, err
+		return metadata{}, err
 	}
 	defer resp.Body.Close()
 
+	if resp.StatusCode != http.StatusOK {
+		return metadata{}, fmt.Errorf("failed to get data from Last.fm")
+	}
+
 	var result map[string]interface{}
 	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
-		return nil, err
+		return metadata{}, err
 	}
 
 	track, ok := result["track"].(map[string]interface{})
 	if !ok {
-		return nil, fmt.Errorf("track not found")
+		return metadata{}, fmt.Errorf("no track data found")
 	}
 
-	toptags, ok := track["toptags"].(map[string]interface{})
+	album, ok := track["album"].(map[string]interface{})
 	if !ok {
-		return nil, fmt.Errorf("toptags not found")
+		return metadata{}, fmt.Errorf("no album data found")
 	}
 
-	tags, ok := toptags["tag"].([]interface{})
+	year, ok := album["@attr"].(map[string]interface{})["released"].(string)
 	if !ok {
-		return nil, fmt.Errorf("tags not found")
+		return metadata{}, fmt.Errorf("no release year found")
 	}
 
-	var tagList []string
-	for _, t := range tags {
-		tagMap, ok := t.(map[string]interface{})
-		if !ok {
-			continue
-		}
-		name, ok := tagMap["name"].(string)
-		if !ok {
-			continue
-		}
-		tagList = append(tagList, name)
+	genre, ok := track["toptags"].(map[string]interface{})["tag"].([]interface{})
+	if !ok || len(genre) == 0 {
+		return metadata{}, fmt.Errorf("no genre found")
 	}
 
-	return tagList, nil
+	tags := make([]string, 0)
+	for _, tag := range genre {
+		tags = append(tags, tag.(map[string]interface{})["name"].(string))
+	}
+
+	return metadata{
+		Album: album["title"].(string),
+		Year:  year,
+		Genre: strings.Join(tags, ", "),
+	}, nil
+
 }
 
 func (h *MusicHandler) fetchThumbnail(title, artist string) (string, error) {
@@ -274,7 +286,6 @@ func (h *MusicHandler) UploadMusic(c *gin.Context) {
 		Album:     metadata.Album(),
 		Year:      metadata.Year(),
 		Genre:     metadata.Genre(),
-		Tags:      []string{},
 		Lyrics:    "",
 	}
 
@@ -326,6 +337,24 @@ func (h *MusicHandler) UploadMusic(c *gin.Context) {
 		}
 	}
 
+	// Fetch Missing Metadata
+	if music.Album == "" || music.Year == 0 || music.Genre == "" {
+		metadata, err := h.fetchMetadata(music.Title, music.Artist)
+		if err != nil {
+			log.Printf("Error fetching metadata: %v", err)
+		} else {
+			if music.Album == "" {
+				music.Album = metadata.Album
+			}
+			if music.Year == 0 {
+				music.Year, _ = strconv.Atoi(metadata.Year)
+			}
+			if music.Genre == "" {
+				music.Genre = metadata.Genre
+			}
+		}
+	}
+
 	// Fetch lyrics
 	lyrics, err := fetchLyrics(music.Title, music.Artist)
 	if err != nil {
@@ -334,16 +363,8 @@ func (h *MusicHandler) UploadMusic(c *gin.Context) {
 		music.Lyrics = lyrics
 	}
 
-	// Fetch tags
-	tags, err := h.fetchTags(music.Title, music.Artist)
-	if err != nil {
-		log.Printf("Error fetching tags: %v", err)
-	} else {
-		music.Tags = tags
-	}
-
 	// Insert into database
-	if _, err := h.DB.NamedExec(`INSERT INTO music (id, title, artist, filename, thumbnail, color, album, year, genre, tags, lyrics) VALUES (:id, :title, :artist, :filename, :thumbnail, :color, :album, :year, :genre, :tags, :lyrics)`, music); err != nil {
+	if _, err := h.DB.NamedExec(`INSERT INTO music (id, title, artist, filename, thumbnail, color, album, year, genre, lyrics) VALUES (:id, :title, :artist, :filename, :thumbnail, :color, :album, :year, :genre, :lyrics)`, music); err != nil {
 		log.Printf("Error inserting music: %v", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to insert into database"})
 		return

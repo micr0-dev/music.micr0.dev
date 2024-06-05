@@ -10,17 +10,16 @@ import (
 )
 
 type Music struct {
-	ID        string          `db:"id" json:"id"`
-	Title     string          `db:"title" json:"title"`
-	Artist    string          `db:"artist" json:"artist"`
-	Filename  string          `db:"filename" json:"filename"`
-	Thumbnail sql.NullString  `db:"thumbnail" json:"thumbnail"`
-	Color     string          `db:"color" json:"color"`
-	Album     string          `db:"album" json:"album"`
-	Year      int             `db:"year" json:"year"`
-	Genre     string          `db:"genre" json:"genre"`
-	Tags      JSONStringArray `db:"tags" json:"tags"`
-	Lyrics    string          `db:"lyrics" json:"lyrics"`
+	ID        string         `db:"id" json:"id"`
+	Title     string         `db:"title" json:"title"`
+	Artist    string         `db:"artist" json:"artist"`
+	Filename  string         `db:"filename" json:"filename"`
+	Thumbnail sql.NullString `db:"thumbnail" json:"thumbnail"`
+	Color     string         `db:"color" json:"color"`
+	Album     string         `db:"album" json:"album"`
+	Year      int            `db:"year" json:"year"`
+	Genre     string         `db:"genre" json:"genre"`
+	Lyrics    string         `db:"lyrics" json:"lyrics"`
 }
 
 type JSONStringArray []string
@@ -53,7 +52,6 @@ func InitializeDatabase(db *sqlx.DB) {
 			album TEXT,
 			year INTEGER,
 			genre TEXT,
-			tags TEXT,
 			lyrics TEXT,
 			filename TEXT,
 			thumbnail TEXT,
