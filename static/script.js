@@ -274,7 +274,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    function playTrack(music) {
+    function playTrack(music, isUserAction = true) {
         audioPlayer.src = `/api/stream/${music.id}`;
         const thumbnailUrl = `/api/thumbnail/${music.id}`;
         coverArt.src = thumbnailUrl;
@@ -287,7 +287,8 @@ document.addEventListener('DOMContentLoaded', () => {
         isPlaying = true;
         currentTrack = music;
 
-        loadQueue();
+        if (isUserAction)
+            loadQueue();
 
         nowPlayingContainer.classList.remove('not-playing');
 
@@ -339,7 +340,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             currentIndex = (currentIndex + 1) % queue.length;
         }
-        playTrack(queue[currentIndex]);
+        playTrack(queue[currentIndex], false);
     }
 
     function playPreviousTrack() {
@@ -348,7 +349,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             currentIndex = (currentIndex - 1 + queue.length) % queue.length;
         }
-        playTrack(queue[currentIndex]);
+        playTrack(queue[currentIndex], false);
     }
 
 
