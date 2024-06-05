@@ -189,6 +189,27 @@ main {
     font-size: 12px;
 }
 
+.music-item svg {
+    width: 24px;
+    height: 24px;
+    fill: #fff;
+    cursor: pointer;
+}
+
+.music-item #add-to-playlist {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    padding: 5px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: transform 0.4s;
+}
+
+.music-item #add-to-playlist:hover {
+    transform: scale(1.2);
+}
+
 #now-playing {
     display: flex;
     justify-content: space-between;

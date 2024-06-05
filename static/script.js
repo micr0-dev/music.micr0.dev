@@ -74,10 +74,18 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="music-item-artist">${music.artist}</div>
                 </div>
                 ${isHiFi ? `<span class="hifi-tag">.${ext}</span>` : ''}
+                <button id="add-to-playlist"><svg><use href="#plus"></use></svg></button>
             `;
             div.addEventListener('click', () => {
                 playTrack(music);
             });
+
+            const addToPlaylistBtn = div.getElementById('add-to-playlist');
+            addToPlaylistBtn.addEventListener('click', (event) => {
+                event.stopPropagation();
+                alert('Add to playlist clicked');
+            });
+
             musicList.appendChild(div);
         });
     }
