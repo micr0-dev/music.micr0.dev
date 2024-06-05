@@ -323,7 +323,7 @@ func (h *MusicHandler) GetThumbnail(c *gin.Context) {
 		c.File(resizedThumbnailPath)
 	} else {
 		// Return a placeholder image if no thumbnail is available
-		originalThumbnailPath := "./static/placeholder.png"
+		originalThumbnailPath := "./placeholder.png"
 		resizedThumbnailPath := getResizedThumbnailPath(originalThumbnailPath, size)
 		if _, err := os.Stat(resizedThumbnailPath); os.IsNotExist(err) {
 			if _, err := resizeAndSaveImage(originalThumbnailPath, resizedThumbnailPath, size); err != nil {
