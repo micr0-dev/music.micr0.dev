@@ -61,8 +61,10 @@ document.addEventListener('DOMContentLoaded', () => {
         volumeSlider.value = volume;
         audioPlayer.volume = volume / 100;
         volumeSlider.style.setProperty('--value', volume + '%');
+        console.log(tempisShuffle);
         isShuffle = (tempisShuffle === 'true')
         shuffleButton.classList.toggle('active');
+        console.log(tempisRepeat);
         isRepeat = (tempisRepeat === 'true')
         repeatButton.classList.toggle('active');
         openQueue = queue;
