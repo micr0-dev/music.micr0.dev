@@ -35,7 +35,11 @@ document.addEventListener('DOMContentLoaded', () => {
     let isPlaying = false;
     let currentTrack = null;
     let currentScreen = 'home';
-
+    let openQueue = [];
+    let queue = [];
+    let currentIndex = 0;
+    let isShuffle = false;
+    let isRepeat = false;
 
     uploadForm.addEventListener('submit', async (event) => {
         event.preventDefault();
@@ -177,6 +181,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function loadMusic(musics, element = musicList) {
+        openQueue = musics;
+
         element.innerHTML = '';
         musics.forEach(music => {
             const div = document.createElement('div');
@@ -281,6 +287,8 @@ document.addEventListener('DOMContentLoaded', () => {
         isPlaying = true;
         currentTrack = music;
 
+        loadQueue();
+
         nowPlayingContainer.classList.remove('not-playing');
 
         if (music.color == "#000000") music.color = "#ffffff";
@@ -295,6 +303,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 artwork: [{ src: thumbnailUrl, sizes: '300x300', type: 'image/jpeg' }]
             });
         }
+
+        audioPlayer.onended = playNextTrack;
     }
 
     if ('mediaSession' in navigator) {
@@ -318,6 +328,30 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    function loadQueue() {
+        queue = openQueue.slice();
+        currentIndex = 0;
+    }
+
+    function playNextTrack() {
+        if (isShuffle) {
+            currentIndex = Math.floor(Math.random() * queue.length);
+        } else {
+            currentIndex = (currentIndex + 1) % queue.length;
+        }
+        playTrack(queue[currentIndex]);
+    }
+
+    function playPreviousTrack() {
+        if (isShuffle) {
+            currentIndex = Math.floor(Math.random() * queue.length);
+        } else {
+            currentIndex = (currentIndex - 1 + queue.length) % queue.length;
+        }
+        playTrack(queue[currentIndex]);
+    }
+
+
     playPauseButton.addEventListener('click', () => {
         if (isPlaying) {
             audioPlayer.pause();
@@ -333,19 +367,21 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     prevButton.addEventListener('click', () => {
-        //TODO: Implement this
+        playPreviousTrack();
     });
 
     nextButton.addEventListener('click', () => {
-        //TODO: Implement this
+        playNextTrack();
     });
 
     shuffleButton.addEventListener('click', () => {
-        //TODO: Implement this
+        isShuffle = !isShuffle;
+        shuffleButton.classList.toggle('active');
     });
 
     repeatButton.addEventListener('click', () => {
-        //TODO: Implement this
+        isRepeat = !isRepeat;
+        repeatButton.classList.toggle('active');
     });
 
     volumeSlider.addEventListener('input', () => {
