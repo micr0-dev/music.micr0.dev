@@ -380,8 +380,6 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        console.log(playlists);
-
         loadPlaylists(playlists);
     }
 
@@ -402,6 +400,6 @@ document.addEventListener('DOMContentLoaded', () => {
     seekSlider.style.setProperty('--value', '0%');
     volumeSlider.style.setProperty('--value', '100%');
 
-    loadPlaylists();
+    loadSidePlaylists();
     loadMusicList();
 });
