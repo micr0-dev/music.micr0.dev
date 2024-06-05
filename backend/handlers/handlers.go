@@ -378,17 +378,27 @@ func formatErr(format string) error {
 	return fmt.Errorf("unsupported format: %s", format)
 }
 
-// Playlist Handlers
 func (h *MusicHandler) CreatePlaylist(c *gin.Context) {
 	var playlist models.Playlist
 	if err := c.ShouldBindJSON(&playlist); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
 	playlist.ID = generateUniqueID()
-	if _, err := h.DB.NamedExec(`INSERT INTO playlists (id, name, description) VALUES (:id, :name, :description)`, playlist); err != nil {
-		log.Printf("Error inserting playlist: %v", err)
+	playlist.Songs = []string{}
+
+	songsJSON, err := json.Marshal(playlist.Songs)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to encode songs"})
+		return
+	}
+
+	if _, err := h.DB.NamedExec(`INSERT INTO playlists (id, name, songs) VALUES (:id, :name, :songs)`, map[string]interface{}{
+		"id":    playlist.ID,
+		"name":  playlist.Name,
+		"songs": string(songsJSON),
+	}); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create playlist"})
 		return
 	}
@@ -396,82 +406,63 @@ func (h *MusicHandler) CreatePlaylist(c *gin.Context) {
 	c.JSON(http.StatusCreated, playlist)
 }
 
-func (h *MusicHandler) AddMusicToPlaylist(c *gin.Context) {
-	var item models.PlaylistItem
-	if err := c.ShouldBindJSON(&item); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
-		return
-	}
-
-	item.ID = generateUniqueID()
-	if _, err := h.DB.NamedExec(`INSERT INTO playlist_items (id, playlist_id, music_id) VALUES (:id, :playlist_id, :music_id)`, item); err != nil {
-		log.Printf("Error inserting playlist item: %v", err)
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to add music to playlist"})
-		return
-	}
-
-	c.JSON(http.StatusCreated, item)
-}
-
 func (h *MusicHandler) GetPlaylists(c *gin.Context) {
 	var playlists []models.Playlist
-	err := h.DB.Select(&playlists, "SELECT * FROM playlists")
+	err := h.DB.Select(&playlists, "SELECT id, name, songs FROM playlists")
 	if err != nil {
-		log.Printf("Error querying playlists: %v", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get playlists"})
 		return
 	}
+
 	c.JSON(http.StatusOK, playlists)
 }
 
 func (h *MusicHandler) GetPlaylistByID(c *gin.Context) {
 	id := c.Param("id")
+
 	var playlist models.Playlist
-	err := h.DB.Get(&playlist, "SELECT * FROM playlists WHERE id = ?", id)
+	err := h.DB.Get(&playlist, "SELECT id, name, songs FROM playlists WHERE id = ?", id)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Playlist not found"})
 		return
 	}
+
 	c.JSON(http.StatusOK, playlist)
 }
 
-func (h *MusicHandler) GetMusicByPlaylistID(c *gin.Context) {
+func (h *MusicHandler) UpdatePlaylist(c *gin.Context) {
 	id := c.Param("id")
-	var musics []models.Music
-	err := h.DB.Select(&musics, `
-		SELECT music.* FROM music
-		JOIN playlist_items ON music.id = playlist_items.music_id
-		WHERE playlist_items.playlist_id = ?
-	`, id)
-	if err != nil {
-		log.Printf("Error querying music in playlist: %v", err)
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get music in playlist"})
-		return
-	}
-	c.JSON(http.StatusOK, musics)
-}
-
-// Grouping Handlers
-func (h *MusicHandler) GroupByArtist(c *gin.Context) {
-	var groups []struct {
-		Artist string         `db:"artist" json:"artist"`
-		Music  []models.Music `json:"music"`
-	}
-
-	err := h.DB.Select(&groups, `
-		SELECT artist, json_group_array(json_object('id', id, 'title', title, 'artist', artist, 'filename', filename, 'thumbnail', thumbnail, 'color', color)) as music
-		FROM music
-		GROUP BY artist
-	`)
-	if err != nil {
-		log.Printf("Error grouping by artist: %v", err)
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to group by artist"})
+	var playlist models.Playlist
+	if err := c.ShouldBindJSON(&playlist); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, groups)
+	songsJSON, err := json.Marshal(playlist.Songs)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to encode songs"})
+		return
+	}
+
+	if _, err := h.DB.NamedExec(`UPDATE playlists SET name = :name, songs = :songs WHERE id = :id`, map[string]interface{}{
+		"id":    id,
+		"name":  playlist.Name,
+		"songs": string(songsJSON),
+	}); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update playlist"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Playlist updated successfully"})
 }
 
-func (h *MusicHandler) GroupByAlbum(c *gin.Context) {
-	// Assuming you have album data in the metadata, you can implement similar to GroupByArtist
+func (h *MusicHandler) DeletePlaylist(c *gin.Context) {
+	id := c.Param("id")
+
+	if _, err := h.DB.Exec("DELETE FROM playlists WHERE id = ?", id); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete playlist"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Playlist deleted successfully"})
 }
