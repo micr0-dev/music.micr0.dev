@@ -252,23 +252,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const response = await fetch(`/api/playlists/${playlistId}`);
         const playlist = await response.json();
 
-        musicList.innerHTML = '';
-        playlist.tracks.forEach(track => {
-            const div = document.createElement('div');
-            div.className = 'music-item';
+        if (playlist == null) {
+            albumsList.innerHTML = '<li>No music found</li>';
+            return;
+        }
 
-            div.innerHTML = `
-                <img src="${`/api/thumbnail/${track.id}?size=80`}" alt="cover art" class="cover-art">
-                <div class="music-info">
-                    <div class="music-item-title">${track.title} </div>
-                    <div class="music-item-artist">${track.artist}</div>
-                </div>
-            `;
-            div.addEventListener('click', () => {
-                playTrack(track);
-            });
-            musicList.appendChild(div);
-        });
+        // loadMusic(playlist.musics);
     }
 
     seekSlider.style.setProperty('--value', '0%');
