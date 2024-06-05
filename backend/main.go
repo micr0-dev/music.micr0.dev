@@ -48,7 +48,8 @@ func main() {
 	router.PUT("/playlists/:id", musicHandler.UpdatePlaylist)
 	router.DELETE("/playlists/:id", musicHandler.DeletePlaylist)
 
-	// TODO: Add query parameter to get paginated results and search
+	// Search route
+	router.GET("/api/search", musicHandler.Search)
 
 	fmt.Println("Go server listening on port 8084")
 	log.Fatal(http.ListenAndServe(":8084", router))

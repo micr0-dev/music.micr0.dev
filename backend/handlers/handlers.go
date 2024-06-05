@@ -488,3 +488,37 @@ func (h *MusicHandler) DeletePlaylist(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"message": "Playlist deleted successfully"})
 }
+
+func (h *MusicHandler) Search(c *gin.Context) {
+	query := c.Query("q")
+	if query == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Query parameter 'q' is required"})
+		return
+	}
+
+	// Search songs
+	var songs []models.Music
+	err := h.DB.Select(&songs, "SELECT * FROM music WHERE title LIKE ? OR artist LIKE ?", "%"+query+"%", "%"+query+"%")
+	if err != nil {
+		log.Printf("Error querying songs: %v", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to search songs"})
+		return
+	}
+
+	// Search playlists
+	var playlists []models.Playlist
+	err = h.DB.Select(&playlists, "SELECT * FROM playlists WHERE name LIKE ?", "%"+query+"%")
+	if err != nil {
+		log.Printf("Error querying playlists: %v", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to search playlists"})
+		return
+	}
+
+	// Combine results
+	result := map[string]interface{}{
+		"songs":     songs,
+		"playlists": playlists,
+	}
+
+	c.JSON(http.StatusOK, result)
+}
