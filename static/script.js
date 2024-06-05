@@ -419,8 +419,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         if (isShuffle) {
+            currentIndex = (currentIndex + 1) % shuffleedQueue.length;
             playTrack(shuffleedQueue[currentIndex], false);
         } else {
+            currentIndex = (currentIndex + 1) % queue.length;
             playTrack(queue[currentIndex], false);
         }
     }
@@ -433,11 +435,11 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        currentIndex = (currentIndex - 1 + queue.length) % queue.length;
-
         if (isShuffle) {
+            currentIndex = currentIndex - 1 < 0 ? shuffleedQueue.length - 1 : currentIndex - 1;
             playTrack(shuffleedQueue[currentIndex], false);
         } else {
+            currentIndex = currentIndex - 1 < 0 ? queue.length - 1 : currentIndex - 1;
             playTrack(queue[currentIndex], false);
         }
     }
