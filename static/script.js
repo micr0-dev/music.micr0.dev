@@ -271,15 +271,17 @@ document.addEventListener('DOMContentLoaded', () => {
         playlistsDiv.className = 'search-results-playlists';
         const musicDiv = document.createElement('div');
         musicDiv.className = 'search-results-music';
+        musicDiv.classList.add('music-list');
 
         const playlistsTitle = document.createElement('h2');
         playlistsTitle.textContent = 'Playlists';
-        playlistsDiv.appendChild(playlistsTitle);
+
         const musicTitle = document.createElement('h2');
         musicTitle.textContent = 'Music';
-        musicDiv.appendChild(musicTitle);
 
+        searchResults.appendChild(playlistsTitle);
         searchResults.appendChild(playlistsDiv);
+        searchResults.appendChild(musicTitle);
         searchResults.appendChild(musicDiv);
 
         const playlistResults = results.playlists;

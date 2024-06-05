@@ -138,11 +138,11 @@ main {
     padding: 20px;
 }
 
-#music-list-section {
+.music-list-section {
     margin-top: 20px;
 }
 
-#music-list {
+.music-list {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 20px;
@@ -229,6 +229,19 @@ main {
     background-color: #000;
     color: #fff;
     font-family: "Urbanist"
+}
+
+#search-input::placeholder {
+    color: #fff;
+}
+
+#search-input:focus {
+    outline: none;
+}
+
+#search-results {
+    margin-top: 20px;
+    padding: 20px;
 }
 
 #playlist-menu {
