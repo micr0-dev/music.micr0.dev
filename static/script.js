@@ -73,7 +73,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const result = await response.json();
         if (response.ok) {
             await fetchPlaylists();
-            alert('Playlist created successfully!');
+            const playlistId = result.id;
+            addSongToPlaylist(playlistId);
         } else {
             alert('Failed to create playlist: ' + result.error);
         }
