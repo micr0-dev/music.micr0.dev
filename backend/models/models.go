@@ -28,7 +28,6 @@ func InitializeDatabase(db *sqlx.DB) {
 			title TEXT,
 			artist TEXT,
 			filename TEXT,
-			duration INTEGER,
 			thumbnail TEXT,
 			color TEXT
 		)
