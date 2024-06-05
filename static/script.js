@@ -380,6 +380,8 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        console.log(playlists);
+
         loadPlaylists(playlists);
     }
 
