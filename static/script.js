@@ -192,8 +192,115 @@ document.addEventListener('DOMContentLoaded', () => {
         return `${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
     }
 
+
+
+    const newPlaylistBtn = document.getElementById('new-playlist-btn');
+    const playlistsList = document.getElementById('playlists-list');
+    const albumsList = document.getElementById('albums-list');
+
+    newPlaylistBtn.addEventListener('click', () => {
+        const playlistName = prompt('Enter playlist name:');
+        if (playlistName) {
+            createPlaylist(playlistName);
+        }
+    });
+
+    async function createPlaylist(name) {
+        const response = await fetch('/api/playlists', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ name })
+        });
+
+        if (response.ok) {
+            loadPlaylists();
+        } else {
+            alert('Failed to create playlist.');
+        }
+    }
+
+    async function loadPlaylists() {
+        const response = await fetch('/api/playlists');
+        const playlists = await response.json();
+
+        playlistsList.innerHTML = '';
+        playlists.forEach(playlist => {
+            const li = document.createElement('li');
+            li.textContent = playlist.name;
+            li.addEventListener('click', () => {
+                loadPlaylist(playlist.id);
+            });
+            playlistsList.appendChild(li);
+        });
+    }
+
+    async function loadPlaylist(playlistId) {
+        const response = await fetch(`/api/playlists/${playlistId}`);
+        const playlist = await response.json();
+
+        musicList.innerHTML = '';
+        playlist.tracks.forEach(track => {
+            const div = document.createElement('div');
+            div.className = 'music-item';
+
+            div.innerHTML = `
+                <img src="${`/api/thumbnail/${track.id}?size=80`}" alt="cover art" class="cover-art">
+                <div class="music-info">
+                    <div class="music-item-title">${track.title} </div>
+                    <div class="music-item-artist">${track.artist}</div>
+                </div>
+            `;
+            div.addEventListener('click', () => {
+                playTrack(track);
+            });
+            musicList.appendChild(div);
+        });
+    }
+
+    async function loadAlbums() {
+        const response = await fetch('/api/albums');
+        const albums = await response.json();
+
+        albumsList.innerHTML = '';
+        albums.forEach(album => {
+            const li = document.createElement('li');
+            li.textContent = album.name;
+            li.addEventListener('click', () => {
+                loadAlbum(album.id);
+            });
+            albumsList.appendChild(li);
+        });
+    }
+
+    async function loadAlbum(albumId) {
+        const response = await fetch(`/api/albums/${albumId}`);
+        const album = await response.json();
+
+        musicList.innerHTML = '';
+        album.tracks.forEach(track => {
+            const div = document.createElement('div');
+            div.className = 'music-item';
+
+            div.innerHTML = `
+                <img src="${`/api/thumbnail/${track.id}?size=80`}" alt="cover art" class="cover-art">
+                <div class="music-info">
+                    <div class="music-item-title">${track.title} </div>
+                    <div class="music-item-artist">${track.artist}</div>
+                </div>
+            `;
+            div.addEventListener('click', () => {
+                playTrack(track);
+            });
+            musicList.appendChild(div);
+        });
+    }
+
     seekSlider.style.setProperty('--value', '0%');
     volumeSlider.style.setProperty('--value', '100%');
 
+    loadPlaylists();
+    loadAlbums();
     loadMusicList();
 });

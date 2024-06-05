@@ -70,6 +70,65 @@ button:hover {
     background-color: #f3f3f3;
 }
 
+
+.content {
+    display: flex;
+}
+
+aside {
+    width: 250px;
+    background-color: #1e1e1e;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+aside h2,
+aside h3 {
+    color: #fff;
+}
+
+aside button {
+    display: block;
+    width: 100%;
+    margin-bottom: 20px;
+    padding: 10px;
+    font-size: 16px;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+aside button:hover {
+    background-color: #444;
+}
+
+#playlists-list,
+#albums-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+#playlists-list li,
+#albums-list li {
+    padding: 10px;
+    cursor: pointer;
+    color: #ccc;
+}
+
+#playlists-list li:hover,
+#albums-list li:hover {
+    background-color: #333;
+    color: #fff;
+}
+
+/* Main content adjustments */
+main {
+    flex: 1;
+    padding: 20px;
+}
+
 #music-list-section {
     margin-top: 20px;
 }
