@@ -388,17 +388,7 @@ func (h *MusicHandler) CreatePlaylist(c *gin.Context) {
 	playlist.ID = generateUniqueID()
 	playlist.Songs = []string{}
 
-	songsJSON, err := json.Marshal(playlist.Songs)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to encode songs"})
-		return
-	}
-
-	if _, err := h.DB.NamedExec(`INSERT INTO playlists (id, name, songs) VALUES (:id, :name, :songs)`, map[string]interface{}{
-		"id":    playlist.ID,
-		"name":  playlist.Name,
-		"songs": string(songsJSON),
-	}); err != nil {
+	if _, err := h.DB.NamedExec(`INSERT INTO playlists (id, name, songs) VALUES (:id, :name, :songs)`, playlist); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create playlist"})
 		return
 	}
@@ -410,7 +400,6 @@ func (h *MusicHandler) GetPlaylists(c *gin.Context) {
 	var playlists []models.Playlist
 	err := h.DB.Select(&playlists, "SELECT id, name, songs FROM playlists")
 	if err != nil {
-		log.Printf("Error querying playlists: %v", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get playlists"})
 		return
 	}
@@ -439,16 +428,10 @@ func (h *MusicHandler) UpdatePlaylist(c *gin.Context) {
 		return
 	}
 
-	songsJSON, err := json.Marshal(playlist.Songs)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to encode songs"})
-		return
-	}
-
 	if _, err := h.DB.NamedExec(`UPDATE playlists SET name = :name, songs = :songs WHERE id = :id`, map[string]interface{}{
 		"id":    id,
 		"name":  playlist.Name,
-		"songs": string(songsJSON),
+		"songs": playlist.Songs,
 	}); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update playlist"})
 		return

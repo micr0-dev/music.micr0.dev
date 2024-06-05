@@ -2,6 +2,9 @@ package models
 
 import (
 	"database/sql"
+	"database/sql/driver"
+	"encoding/json"
+	"fmt"
 
 	"github.com/jmoiron/sqlx"
 )
@@ -15,10 +18,25 @@ type Music struct {
 	Color     string         `db:"color" json:"color"`
 }
 
+type JSONStringArray []string
+
+func (j *JSONStringArray) Scan(value interface{}) error {
+	bytes, ok := value.([]byte)
+	if !ok {
+		return fmt.Errorf("type assertion to []byte failed")
+	}
+
+	return json.Unmarshal(bytes, j)
+}
+
+func (j JSONStringArray) Value() (driver.Value, error) {
+	return json.Marshal(j)
+}
+
 type Playlist struct {
-	ID    string   `db:"id" json:"id"`
-	Name  string   `db:"name" json:"name"`
-	Songs []string `db:"songs" json:"songs"`
+	ID    string          `db:"id" json:"id"`
+	Name  string          `db:"name" json:"name"`
+	Songs JSONStringArray `db:"songs" json:"songs"`
 }
 
 func InitializeDatabase(db *sqlx.DB) {
@@ -37,12 +55,12 @@ func InitializeDatabase(db *sqlx.DB) {
 	}
 
 	_, err = db.Exec(`
-		CREATE TABLE IF NOT EXISTS playlists (
-			id TEXT PRIMARY KEY,
-			name TEXT,
-			songs TEXT
-		)
-	`)
+        CREATE TABLE IF NOT EXISTS playlists (
+            id TEXT PRIMARY KEY,
+            name TEXT,
+            songs TEXT
+        )
+    `)
 	if err != nil {
 		panic(err)
 	}
