@@ -354,6 +354,9 @@ func resizeAndSaveImage(originalPath, resizedPath string, width int) (string, er
 		return "", err
 	}
 
+	log.Printf("Resizing image to width %d", width)
+	log.Printf("Image format: %s", format)
+
 	resizedImg := resize.Resize(uint(width), 0, img, resize.Lanczos3)
 
 	out, err := os.Create(resizedPath)
