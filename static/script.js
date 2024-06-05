@@ -1,172 +1,257 @@
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', () => {
     const uploadForm = document.getElementById('upload-form');
     const uploadProgress = document.getElementById('upload-progress');
+    const fileProgress = document.getElementById('file-progress');
     const musicList = document.getElementById('music-list');
     const audioPlayer = document.getElementById('audio-player');
     const playPauseButton = document.getElementById('play-pause');
     const playIcon = document.getElementById('play-icon');
     const pauseIcon = document.getElementById('pause-icon');
+    const prevButton = document.getElementById('prev-button');
+    const nextButton = document.getElementById('next-button');
+    const shuffleButton = document.getElementById('shuffle-button');
+    const repeatButton = document.getElementById('repeat-button');
+    const seekSlider = document.getElementById('seek-slider');
+    const volumeSlider = document.getElementById('volume-slider');
+    const currentTimeLabel = document.getElementById('current-time');
+    const durationLabel = document.getElementById('duration');
+    const coverArt = document.getElementById('cover-art');
     const trackTitle = document.getElementById('track-title');
     const trackArtist = document.getElementById('track-artist');
     const nowPlayingContainer = document.getElementById('now-playing-container');
-    const seekSlider = document.getElementById('seek-slider');
-    const volumeSlider = document.getElementById('volume-slider');
-    const currentTimeDisplay = document.getElementById('current-time');
-    const durationDisplay = document.getElementById('duration');
-    const playlistList = document.getElementById('playlist-list');
-    const newPlaylistButton = document.getElementById('new-playlist-button');
-    const playlistModal = document.getElementById('playlist-modal');
-    const closeModalButton = document.querySelector('.close-button');
-    const createPlaylistButton = document.getElementById('create-playlist-button');
-    const playlistNameInput = document.getElementById('playlist-name-input');
 
-    const playlists = [];
-    let currentTrack = null;
     let isPlaying = false;
-    let intervalId;
+    let currentTrack = null;
 
-    uploadForm.addEventListener('submit', function (e) {
-        e.preventDefault();
+
+
+    uploadForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const files = event.target.files.files;  // get the files from the input
+        if (files.length === 0) {
+            alert('Please select at least one file.');
+            return;
+        }
+
         uploadProgress.classList.remove('hidden');
-        const formData = new FormData(uploadForm);
 
-        fetch('upload.php', {
-            method: 'POST',
-            body: formData
-        })
-            .then(response => response.json())
-            .then(data => {
-                uploadProgress.classList.add('hidden');
-                if (data.success) {
-                    data.files.forEach(file => {
-                        const div = document.createElement('div');
-                        div.className = 'music-item';
-                        div.dataset.path = file.path;
-                        div.dataset.title = file.title;
-                        div.dataset.artist = file.artist;
-                        div.dataset.album = file.album;
-                        div.dataset.cover = file.cover;
-                        div.dataset.duration = file.duration;
-                        div.innerHTML = `
-                            <h3>${file.title}</h3>
-                            <p>${file.artist}</p>
-                        `;
-                        div.style.setProperty('--art-color', getAverageColorFromImage(file.cover));
+        for (let i = 0; i < files.length; i++) {
+            fileProgress.textContent = `Uploading ${i + 1}/${files.length} files`;
+            const formData = new FormData();
+            formData.append('file', files[i]);
 
-                        div.addEventListener('click', () => {
-                            playTrack(file);
-                        });
-                        musicList.appendChild(div);
-                    });
-                } else {
-                    alert('Error uploading files.');
-                }
-            })
-            .catch(error => {
-                uploadProgress.classList.add('hidden');
-                console.error('Error uploading files:', error);
+            const response = await fetch('/api/music', {
+                method: 'POST',
+                body: formData,
             });
-    });
 
-    playPauseButton.addEventListener('click', function () {
-        if (isPlaying) {
-            audioPlayer.pause();
-        } else if (currentTrack) {
-            audioPlayer.play();
+            if (!response.ok) {
+                const result = await response.json();
+                alert('Failed to upload music: ' + (result.error || 'Unknown error'));
+                break;
+            }
         }
+
+        uploadProgress.classList.add('hidden');
+        alert('All music files uploaded successfully!');
+        loadMusicList();
     });
 
-    audioPlayer.addEventListener('play', function () {
-        isPlaying = true;
-        playIcon.style.display = 'none';
-        pauseIcon.style.display = 'block';
-        nowPlayingContainer.classList.remove('not-playing');
-        intervalId = setInterval(updateSeekBar, 500);
-    });
 
-    audioPlayer.addEventListener('pause', function () {
-        isPlaying = false;
-        playIcon.style.display = 'block';
-        pauseIcon.style.display = 'none';
-        clearInterval(intervalId);
-    });
 
-    audioPlayer.addEventListener('ended', function () {
-        isPlaying = false;
-        playIcon.style.display = 'block';
-        pauseIcon.style.display = 'none';
-        clearInterval(intervalId);
-        seekSlider.value = 0;
-        currentTimeDisplay.textContent = formatTime(0);
-    });
+    async function loadMusicList() {
+        const response = await fetch('/api/music');
+        const musics = await response.json();
 
-    audioPlayer.addEventListener('loadedmetadata', function () {
-        seekSlider.max = audioPlayer.duration * 1000;
-        durationDisplay.textContent = formatTime(audioPlayer.duration);
-    });
+        musicList.innerHTML = '';
+        musics.forEach(music => {
+            const div = document.createElement('div');
+            div.className = 'music-item';
+            const ext = music.filename.split('.').pop().toUpperCase();
+            const isHiFi = ext === 'FLAC' || ext === 'WAV' || ext === 'AIFF' || ext === 'ALAC' || ext === 'DSD';
 
-    seekSlider.addEventListener('input', function () {
-        audioPlayer.currentTime = seekSlider.value / 1000;
-    });
+            div.style.setProperty('--art-color', music.color);
 
-    volumeSlider.addEventListener('input', function () {
-        audioPlayer.volume = volumeSlider.value / 100;
-    });
-
-    newPlaylistButton.addEventListener('click', function () {
-        playlistModal.classList.remove('hidden');
-    });
-
-    closeModalButton.addEventListener('click', function () {
-        playlistModal.classList.add('hidden');
-    });
-
-    createPlaylistButton.addEventListener('click', function () {
-        const playlistName = playlistNameInput.value.trim();
-        if (playlistName) {
-            const playlist = {
-                name: playlistName,
-                tracks: []
-            };
-            playlists.push(playlist);
-            updatePlaylistList();
-            playlistModal.classList.add('hidden');
-            playlistNameInput.value = '';
-        } else {
-            alert('Please enter a playlist name.');
-        }
-    });
-
-    function updatePlaylistList() {
-        playlistList.innerHTML = '';
-        playlists.forEach((playlist, index) => {
-            const li = document.createElement('li');
-            li.textContent = playlist.name;
-            li.addEventListener('click', () => {
-                loadPlaylist(index);
+            div.innerHTML = `
+                <img src="${`/api/thumbnail/${music.id}?size=80`}" alt="cover art" class="cover-art">
+                <div class="music-info">
+                    <div class="music-item-title">${music.title} </div>
+                    <div class="music-item-artist">${music.artist}</div>
+                </div>
+                ${isHiFi ? `<span class="hifi-tag">.${ext}</span>` : ''}
+            `;
+            div.addEventListener('click', () => {
+                playTrack(music);
             });
-            playlistList.appendChild(li);
+            musicList.appendChild(div);
         });
     }
 
-    function loadPlaylist(index) {
-        const playlist = playlists[index];
+    function playTrack(music) {
+        audioPlayer.src = `/api/stream/${music.id}`;
+        coverArt.src = `/api/thumbnail/${music.id}`;
+        coverArt.alt = music.title;
+        trackTitle.textContent = music.title;
+        trackArtist.textContent = music.artist;
+        audioPlayer.play();
+        playIcon.style.display = 'none';
+        pauseIcon.style.display = 'inline';
+        isPlaying = true;
+        currentTrack = music;
+
+        nowPlayingContainer.classList.remove('not-playing');
+
+        if (music.color == "#000000") music.color = "#ffffff";
+
+        nowPlayingContainer.style.setProperty('--art-color', music.color);
+    }
+
+    playPauseButton.addEventListener('click', () => {
+        if (isPlaying) {
+            audioPlayer.pause();
+            playIcon.style.display = 'inline';
+            pauseIcon.style.display = 'none';
+        } else {
+            audioPlayer.play();
+            playIcon.style.display = 'none';
+            pauseIcon.style.display = 'inline';
+        }
+        isPlaying = !isPlaying;
+    });
+
+    prevButton.addEventListener('click', () => {
+        //TODO: Implement this
+    });
+
+    nextButton.addEventListener('click', () => {
+        //TODO: Implement this
+    });
+
+    shuffleButton.addEventListener('click', () => {
+        //TODO: Implement this
+    });
+
+    repeatButton.addEventListener('click', () => {
+        //TODO: Implement this
+    });
+
+    volumeSlider.addEventListener('input', () => {
+        audioPlayer.volume = volumeSlider.value / 100;
+        volumeSlider.style.setProperty('--value', `${volumeSlider.value}%`);
+    });
+
+
+    let isDragging = false;
+
+    seekSlider.addEventListener('input', () => {
+        if (!isDragging) return;
+
+        const duration = Math.floor(audioPlayer.duration);
+        const progress = seekSlider.value / 10;
+        seekSlider.style.setProperty('--value', `${progress}%`);
+    });
+
+    seekSlider.addEventListener('mousedown', () => {
+        isDragging = true;
+    });
+
+    seekSlider.addEventListener('mouseup', () => {
+        if (!isDragging) return;
+
+        isDragging = false;
+        const duration = Math.floor(audioPlayer.duration);
+        audioPlayer.currentTime = (seekSlider.value / 1000) * duration;
+
+        currentTimeLabel.textContent = formatTime(Math.floor(audioPlayer.currentTime));
+
+        const progress = seekSlider.value / 10;
+        seekSlider.style.setProperty('--value', `${progress}%`);
+    });
+
+    audioPlayer.addEventListener('timeupdate', () => {
+        if (isDragging) return;
+
+        const duration = Math.floor(audioPlayer.duration);
+        if (isNaN(duration)) return;
+        durationLabel.textContent = formatTime(duration);
+        const currentTime = Math.floor(audioPlayer.currentTime);
+        const value = (currentTime / duration) * 1000;
+        if (isNaN(value)) return;
+        seekSlider.value = value;
+
+        currentTimeLabel.textContent = formatTime(Math.floor(audioPlayer.currentTime));
+
+        const progress = value / 10;
+        seekSlider.style.setProperty('--value', `${progress}%`);
+    });
+
+
+    function formatTime(seconds) {
+        const minutes = Math.floor(seconds / 60);
+        seconds = seconds % 60;
+        return `${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
+    }
+
+
+
+    const newPlaylistBtn = document.getElementById('new-playlist-btn');
+    const playlistsList = document.getElementById('playlists-list');
+    const albumsList = document.getElementById('albums-list');
+
+    newPlaylistBtn.addEventListener('click', () => {
+        const playlistName = prompt('Enter playlist name:');
+        if (playlistName) {
+            createPlaylist(playlistName);
+        }
+    });
+
+    async function createPlaylist(name) {
+        const response = await fetch('/api/playlists', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ name })
+        });
+
+        if (response.ok) {
+            loadPlaylists();
+        } else {
+            alert('Failed to create playlist.');
+        }
+    }
+
+    async function loadPlaylists() {
+        const response = await fetch('/api/playlists');
+        const playlists = await response.json();
+
+        playlistsList.innerHTML = '';
+        playlists.forEach(playlist => {
+            const li = document.createElement('li');
+            li.textContent = playlist.name;
+            li.addEventListener('click', () => {
+                loadPlaylist(playlist.id);
+            });
+            playlistsList.appendChild(li);
+        });
+    }
+
+    async function loadPlaylist(playlistId) {
+        const response = await fetch(`/api/playlists/${playlistId}`);
+        const playlist = await response.json();
+
         musicList.innerHTML = '';
         playlist.tracks.forEach(track => {
             const div = document.createElement('div');
             div.className = 'music-item';
-            div.dataset.path = track.path;
-            div.dataset.title = track.title;
-            div.dataset.artist = track.artist;
-            div.dataset.album = track.album;
-            div.dataset.cover = track.cover;
-            div.dataset.duration = track.duration;
-            div.innerHTML = `
-                <h3>${track.title}</h3>
-                <p>${track.artist}</p>
-            `;
-            div.style.setProperty('--art-color', getAverageColorFromImage(track.cover));
 
+            div.innerHTML = `
+                <img src="${`/api/thumbnail/${track.id}?size=80`}" alt="cover art" class="cover-art">
+                <div class="music-info">
+                    <div class="music-item-title">${track.title} </div>
+                    <div class="music-item-artist">${track.artist}</div>
+                </div>
+            `;
             div.addEventListener('click', () => {
                 playTrack(track);
             });
@@ -174,49 +259,48 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    function playTrack(track) {
-        currentTrack = track;
-        audioPlayer.src = track.path;
-        trackTitle.textContent = track.title;
-        trackArtist.textContent = track.artist;
-        document.getElementById('cover-art').src = track.cover;
-        audioPlayer.play();
+    async function loadAlbums() {
+        const response = await fetch('/api/albums');
+        const albums = await response.json();
+
+        albumsList.innerHTML = '';
+        albums.forEach(album => {
+            const li = document.createElement('li');
+            li.textContent = album.name;
+            li.addEventListener('click', () => {
+                loadAlbum(album.id);
+            });
+            albumsList.appendChild(li);
+        });
     }
 
-    function updateSeekBar() {
-        seekSlider.value = audioPlayer.currentTime * 1000;
-        currentTimeDisplay.textContent = formatTime(audioPlayer.currentTime);
+    async function loadAlbum(albumId) {
+        const response = await fetch(`/api/albums/${albumId}`);
+        const album = await response.json();
+
+        musicList.innerHTML = '';
+        album.tracks.forEach(track => {
+            const div = document.createElement('div');
+            div.className = 'music-item';
+
+            div.innerHTML = `
+                <img src="${`/api/thumbnail/${track.id}?size=80`}" alt="cover art" class="cover-art">
+                <div class="music-info">
+                    <div class="music-item-title">${track.title} </div>
+                    <div class="music-item-artist">${track.artist}</div>
+                </div>
+            `;
+            div.addEventListener('click', () => {
+                playTrack(track);
+            });
+            musicList.appendChild(div);
+        });
     }
 
-    function formatTime(seconds) {
-        const minutes = Math.floor(seconds / 60);
-        const secs = Math.floor(seconds % 60);
-        return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
-    }
+    seekSlider.style.setProperty('--value', '0%');
+    volumeSlider.style.setProperty('--value', '100%');
 
-    function getAverageColorFromImage(url) {
-        const img = new Image();
-        img.src = url;
-        img.crossOrigin = 'Anonymous';
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        img.onload = () => {
-            canvas.width = img.width;
-            canvas.height = img.height;
-            ctx.drawImage(img, 0, 0, img.width, img.height);
-            const imageData = ctx.getImageData(0, 0, img.width, img.height);
-            const data = imageData.data;
-            let r = 0, g = 0, b = 0;
-            for (let i = 0; i < data.length; i += 4) {
-                r += data[i];
-                g += data[i + 1];
-                b += data[i + 2];
-            }
-            r = Math.floor(r / (data.length / 4));
-            g = Math.floor(g / (data.length / 4));
-            b = Math.floor(b / (data.length / 4));
-            return `rgb(${r},${g},${b})`;
-        };
-        return 'rgb(128,128,128)';
-    }
+    loadPlaylists();
+    loadAlbums();
+    loadMusicList();
 });
