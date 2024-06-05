@@ -346,10 +346,8 @@ document.addEventListener('DOMContentLoaded', () => {
         isPlaying = true;
         currentTrack = music;
 
-        const index = openQueue.findIndex(m => m.id === music.id);
-
         if (isUserAction)
-            loadQueue(index);
+            loadQueue();
 
         nowPlayingContainer.classList.remove('not-playing');
 
@@ -397,12 +395,9 @@ document.addEventListener('DOMContentLoaded', () => {
         shuffleQueue();
     }
 
-    // Keep the current index the same when shuffling
     function shuffleQueue() {
         shuffleedQueue = queue.slice();
         shuffleedQueue.sort(() => Math.random() - 0.5);
-        const currentTrack = queue[currentIndex];
-        currentIndex = shuffleedQueue.findIndex(m => m.id === currentTrack.id);
     }
 
     function getCurrentIndex() {
