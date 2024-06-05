@@ -81,6 +81,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         playTrack(queue[currentIndex], false);
         audioPlayer.pause();
+
+        isPlaying = false;
+        playIcon.style.display = 'inline';
+        pauseIcon.style.display = 'none';
+
     }
 
     uploadForm.addEventListener('submit', async (event) => {
