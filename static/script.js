@@ -268,6 +268,5 @@ document.addEventListener('DOMContentLoaded', () => {
     volumeSlider.style.setProperty('--value', '100%');
 
     loadPlaylists();
-    loadAlbums();
     loadMusicList();
 });
