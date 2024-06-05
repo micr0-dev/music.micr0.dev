@@ -149,6 +149,7 @@ func (h *MusicHandler) fetchMetadata(title, artist string) (metadata, error) {
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
+		log.Print(resp, err)
 		return metadata{}, fmt.Errorf("failed to get data from Last.fm")
 	}
 
