@@ -65,8 +65,6 @@ document.addEventListener('DOMContentLoaded', () => {
         isRepeat = data.isRepeat;
         volume = data.volume;
 
-        isPlaying = false;
-
         console.log(openQueue, currentIndex, isShuffle, isRepeat, volume);
 
         volumeSlider.value = parseInt(volume);
@@ -77,22 +75,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (isRepeat)
             repeatButton.classList.toggle('active');
 
-        if (isPlaying) {
-            playIcon.style.display = 'none';
-            pauseIcon.style.display = 'inline';
-        } else {
-            playIcon.style.display = 'inline';
-            pauseIcon.style.display = 'none';
-        }
-
         loadQueue(currentIndex);
 
         if (queue[currentIndex] == null) return;
 
         playTrack(queue[currentIndex], false);
         audioPlayer.pause();
-
-
     }
 
     uploadForm.addEventListener('submit', async (event) => {
