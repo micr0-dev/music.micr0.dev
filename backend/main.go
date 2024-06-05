@@ -41,19 +41,13 @@ func main() {
 	router.GET("/stream/:id", musicHandler.StreamMusic)
 	router.GET("/thumbnail/:id", musicHandler.GetThumbnail)
 
-	router.GET("/albums", musicHandler.GetAlbums)
-	router.POST("/albums", musicHandler.CreateAlbum)
-	router.GET("/albums/:album_id/music", musicHandler.GetMusicByAlbum)
-
-	router.GET("/playlists", musicHandler.GetPlaylists)
-	router.POST("/playlists", musicHandler.CreatePlaylist)
-	router.GET("/playlists/:id", musicHandler.GetPlaylistByID)
-	router.PUT("/playlists/:id", musicHandler.UpdatePlaylist)
-	router.DELETE("/playlists/:id", musicHandler.DeletePlaylist)
-
-	router.POST("/playlists/:playlist_id/music/:music_id", musicHandler.AddMusicToPlaylist)
-	router.DELETE("/playlists/:playlist_id/music/:music_id", musicHandler.RemoveMusicFromPlaylist)
-	router.GET("/playlists/:playlist_id/music", musicHandler.GetMusicByPlaylist)
+	playlistHandler := handlers.NewPlaylistHandler(db)
+	router.POST("/playlists", playlistHandler.CreatePlaylist)
+	router.GET("/playlists", playlistHandler.GetPlaylists)
+	router.GET("/playlists/:id", playlistHandler.GetPlaylistByID)
+	router.DELETE("/playlists/:id", playlistHandler.DeletePlaylist)
+	router.POST("/playlists/:playlistID/music/:musicID", playlistHandler.AddMusicToPlaylist)
+	router.DELETE("/playlists/:playlistID/music/:musicID", playlistHandler.RemoveMusicFromPlaylist)
 
 	fmt.Println("Go server listening on port 8084")
 	log.Fatal(http.ListenAndServe(":8084", router))
