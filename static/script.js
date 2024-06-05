@@ -225,6 +225,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const response = await fetch('/api/playlists');
         const playlists = await response.json();
 
+        if (playlists.length === 0) {
+            playlistsList.innerHTML = '<li>No playlists found</li>';
+            return;
+        }
+
         playlistsList.innerHTML = '';
         playlists.forEach(playlist => {
             const li = document.createElement('li');
@@ -242,44 +247,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         musicList.innerHTML = '';
         playlist.tracks.forEach(track => {
-            const div = document.createElement('div');
-            div.className = 'music-item';
-
-            div.innerHTML = `
-                <img src="${`/api/thumbnail/${track.id}?size=80`}" alt="cover art" class="cover-art">
-                <div class="music-info">
-                    <div class="music-item-title">${track.title} </div>
-                    <div class="music-item-artist">${track.artist}</div>
-                </div>
-            `;
-            div.addEventListener('click', () => {
-                playTrack(track);
-            });
-            musicList.appendChild(div);
-        });
-    }
-
-    async function loadAlbums() {
-        const response = await fetch('/api/albums');
-        const albums = await response.json();
-
-        albumsList.innerHTML = '';
-        albums.forEach(album => {
-            const li = document.createElement('li');
-            li.textContent = album.name;
-            li.addEventListener('click', () => {
-                loadAlbum(album.id);
-            });
-            albumsList.appendChild(li);
-        });
-    }
-
-    async function loadAlbum(albumId) {
-        const response = await fetch(`/api/albums/${albumId}`);
-        const album = await response.json();
-
-        musicList.innerHTML = '';
-        album.tracks.forEach(track => {
             const div = document.createElement('div');
             div.className = 'music-item';
 
