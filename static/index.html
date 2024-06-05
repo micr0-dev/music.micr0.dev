@@ -38,36 +38,29 @@
         <header>
             <h1>Music Streaming</h1>
         </header>
-        <div class="content">
-            <aside id="sidebar">
-                <h2>My Library</h2>
-                <button id="new-playlist-btn">+ New Playlist</button>
-                <div id="playlists-section">
-                    <h3>Playlists</h3>
-                    <ul id="playlists-list"></ul>
-                </div>
-                <div id="albums-section">
-                    <h3>Albums</h3>
-                    <ul id="albums-list"></ul>
-                </div>
-            </aside>
-            <main>
-                <section id="upload-section">
-                    <h2>Upload Music</h2>
-                    <form id="upload-form" enctype="multipart/form-data">
-                        <input type="file" name="files" multiple required>
-                        <button type="submit" name="upload">Upload</button>
-                        <label for="files" id="file-progress"></label>
-                    </form>
-                    <div id="upload-progress" class="loader hidden"></div>
-                </section>
-
-                <section id="music-list-section">
-                    <h2>Music List</h2>
-                    <div id="music-list"></div>
-                </section>
-            </main>
+        <div class="sidebar">
+            <h3>Playlists</h3>
+            <ul id="playlist-list"></ul>
+            <button id="new-playlist-button">New Playlist</button>
+            <h3>Albums</h3>
+            <ul id="album-list"></ul>
         </div>
+        <main>
+            <section id="upload-section">
+                <h2>Upload Music</h2>
+                <form id="upload-form" enctype="multipart/form-data">
+                    <input type="file" name="files" multiple required>
+                    <button type="submit" name="upload">Upload</button>
+                    <label for="files" id="file-progress"></label>
+                </form>
+                <div id="upload-progress" class="loader hidden"></div>
+            </section>
+
+            <section id="music-list-section">
+                <h2>Music List</h2>
+                <div id="music-list"></div>
+            </section>
+        </main>
 
         <footer id="now-playing-container" class="not-playing">
             <div id="cover-art-container">
@@ -77,7 +70,6 @@
                 <input type="range" min="0" max="1000" value="0" class="slider" id="seek-slider">
             </div>
             <div id="now-playing">
-
                 <div id="track-info">
                     <h3 id="track-title">No song selected</h3>
                     <p id="track-artist"></p>
@@ -123,6 +115,15 @@
 
             <audio id="audio-player"></audio>
         </footer>
+    </div>
+
+    <div id="playlist-modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2>Create New Playlist</h2>
+            <input type="text" id="playlist-name-input" placeholder="Playlist Name">
+            <button id="create-playlist-button">Create Playlist</button>
+        </div>
     </div>
 
     <script src="script.js"></script>
