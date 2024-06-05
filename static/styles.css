@@ -369,6 +369,14 @@ main {
     fill: var(--art-color);
 }
 
+#audio-controls button:hover {
+    transform: scale(1.2);
+}
+
+.control-button {
+    position: relative;
+}
+
 .control-button.active::after {
     content: '';
     position: absolute;
@@ -380,12 +388,6 @@ main {
     border-radius: 50%;
     background-color: red;
 }
-
-#audio-controls button:hover {
-    transform: scale(1.2);
-}
-
-
 
 .volume {
     position: absolute;
