@@ -410,6 +410,7 @@ func (h *MusicHandler) GetPlaylists(c *gin.Context) {
 	var playlists []models.Playlist
 	err := h.DB.Select(&playlists, "SELECT id, name, songs FROM playlists")
 	if err != nil {
+		log.Printf("Error querying playlists: %v", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get playlists"})
 		return
 	}
