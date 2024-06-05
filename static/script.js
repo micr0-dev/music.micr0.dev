@@ -68,8 +68,6 @@ document.addEventListener('DOMContentLoaded', () => {
         volume = data.volume;
         const currentTime = parseInt(data.currentTime);
 
-        console.log(openQueue, currentIndex, isShuffle, isRepeat, volume);
-
         volumeSlider.value = parseInt(volume);
         volumeSlider.style.setProperty('--value', volume + '%');
 
