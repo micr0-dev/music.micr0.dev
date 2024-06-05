@@ -363,7 +363,7 @@ main {
     height: 24px;
 }
 
-#audio-controls svg.active {
+#audio-controls button.active svg {
     fill: var(--art-color);
 }
 
