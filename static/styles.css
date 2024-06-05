@@ -194,7 +194,7 @@ main {
     justify-content: space-between;
     align-items: center;
     background-color: #000;
-    padding: 10px;
+    padding: 20px 0;
     width: 100%;
 
     box-shadow: 0 0 40px 20px var(--art-color);
