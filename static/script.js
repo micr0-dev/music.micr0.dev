@@ -339,7 +339,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        loadMusic(playlist);
+        loadMusic(playlist.songs);
     }
 
     seekSlider.style.setProperty('--value', '0%');
