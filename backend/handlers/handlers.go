@@ -141,7 +141,8 @@ type metadata struct {
 }
 
 func (h *MusicHandler) fetchMetadata(title, artist string) (metadata, error) {
-	url := fmt.Sprintf("http://ws.audioscrobbler.com/2.0/?method=track.getInfo&api_key=%s&artist=%s&track=%s&format=json", h.LastFmAPIKey, artist, title)
+	url := fmt.Sprintf("http://ws.audioscrobbler.com/2.0/?method=track.getInfo&api_key=" + h.LastFmAPIKey + "&artist=" + artist + "&track=" + title + "&format=json&autocorrect=1")
+
 	resp, err := http.Get(url)
 	if err != nil {
 		return metadata{}, err
@@ -149,7 +150,7 @@ func (h *MusicHandler) fetchMetadata(title, artist string) (metadata, error) {
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		log.Print(resp, err)
+		log.Print(url)
 		return metadata{}, fmt.Errorf("failed to get data from Last.fm")
 	}
 
