@@ -61,7 +61,6 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log(queue, currentIndex, isShuffle, isRepeat, volume);
 
         volumeSlider.value = parseInt(volume);
-        audioPlayer.volume = parseInt(volume) / 100;
         volumeSlider.style.setProperty('--value', volume + '%');
 
         shuffleButton.classList.toggle('active');
@@ -315,6 +314,7 @@ document.addEventListener('DOMContentLoaded', () => {
         audioPlayer.currentTime = 0;
         seekSlider.value = 0;
         seekSlider.style.setProperty('--value', `0%`);
+        audioPlayer.volume = volumeSlider.value / 100;
         audioPlayer.play();
         playIcon.style.display = 'none';
         pauseIcon.style.display = 'inline';
