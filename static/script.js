@@ -270,7 +270,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function playTrack(music) {
         audioPlayer.src = `/api/stream/${music.id}`;
-        coverArt.src = `/api/thumbnail/${music.id}`;
+        const thumbnailUrl = `/api/thumbnail/${music.id}`;
+        coverArt.src = thumbnailUrl;
         coverArt.alt = music.title;
         trackTitle.textContent = music.title;
         trackArtist.textContent = music.artist;
