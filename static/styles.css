@@ -54,27 +54,9 @@ form {
 }
 
 button {
-    display: block;
-    width: 100%;
-    padding: 10px;
-    font-size: 16px;
-    background-color: #000;
-    color: #fff;
-    border: 1px solid #000;
+    background-color: #fff;
+    color: #000;
     cursor: pointer;
-    transition: border 0.2s;
-}
-
-button:hover {
-    background-color: #fff;
-    color: #000;
-    border: 1px solid #fff;
-}
-
-button.selected {
-    background-color: #fff;
-    color: #000;
-    border: 1px solid #fff;
 }
 
 .content {
@@ -99,6 +81,27 @@ aside h3 {
 
 aside button {
     text-align: left;
+    display: block;
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    background-color: #000;
+    color: #fff;
+    border: 1px solid #000;
+    cursor: pointer;
+    transition: border 0.2s;
+}
+
+aside button:hover {
+    background-color: #fff;
+    color: #000;
+    border: 1px solid #fff;
+}
+
+aside button.selected {
+    background-color: #fff;
+    color: #000;
+    border: 1px solid #fff;
 }
 
 #playlists-list,
