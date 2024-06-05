@@ -36,6 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let openQueue = [];
     let queue = [];
     let currentIndex = 0;
+    let shuffleedQueue = [];
     let isShuffle = false;
     let isRepeat = false;
 
@@ -398,6 +399,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function loadQueue(index) {
         queue = openQueue.slice();
         currentIndex = index;
+        shuffleedQueue = queue.slice();
+        shuffleedQueue = shuffleedQueue.sort(() => Math.random() - 0.5);
     }
 
     function playNextTrack() {
@@ -406,12 +409,13 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        currentIndex = (currentIndex + 1) % queue.length;
+
         if (isShuffle) {
-            currentIndex = Math.floor(Math.random() * queue.length);
+            playTrack(shuffleedQueue[currentIndex], false);
         } else {
-            currentIndex = (currentIndex + 1) % queue.length;
+            playTrack(queue[currentIndex], false);
         }
-        playTrack(queue[currentIndex], false);
     }
 
     function playPreviousTrack() {
@@ -420,12 +424,13 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        currentIndex = (currentIndex - 1 + queue.length) % queue.length;
+
         if (isShuffle) {
-            currentIndex = Math.floor(Math.random() * queue.length);
+            playTrack(shuffleedQueue[currentIndex], false);
         } else {
-            currentIndex = (currentIndex - 1 + queue.length) % queue.length;
+            playTrack(queue[currentIndex], false);
         }
-        playTrack(queue[currentIndex], false);
     }
 
 
@@ -464,6 +469,8 @@ document.addEventListener('DOMContentLoaded', () => {
     shuffleButton.addEventListener('click', () => {
         isShuffle = !isShuffle;
         shuffleButton.classList.toggle('active');
+        shuffleedQueue = queue.slice();
+        shuffleedQueue = shuffleedQueue.sort(() => Math.random() - 0.5);
         savePlayerState();
     });
 
