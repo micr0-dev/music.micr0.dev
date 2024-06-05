@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
             isShuffle,
             isRepeat,
             volume: volumeSlider.value,
-            progress: seekSlider.value
+            currentTime: audioPlayer.currentTime
         }));
     }
 
@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
         isShuffle = data.isShuffle;
         isRepeat = data.isRepeat;
         volume = data.volume;
-        const progress = parseInt(data.progress);
+        const currentTime = parseInt(data.currentTime);
 
         console.log(openQueue, currentIndex, isShuffle, isRepeat, volume);
 
@@ -88,12 +88,15 @@ document.addEventListener('DOMContentLoaded', () => {
         playIcon.style.display = 'inline';
         pauseIcon.style.display = 'none';
 
+        audioPlayer.currentTime = currentTime;
+        currentTimeLabel.textContent = formatTime(currentTime);
         const duration = Math.floor(audioPlayer.duration);
-        const value = (progress / 1000) * duration;
-        audioPlayer.currentTime = value;
-        currentTimeLabel.textContent = formatTime(Math.floor(value));
+        if (isNaN(duration)) return;
         durationLabel.textContent = formatTime(duration);
-        seekSlider.style.setProperty('--value', `${progress / 10}%`);
+        const value = (currentTime / duration) * 1000;
+        if (isNaN(value)) return;
+        seekSlider.value = value;
+        seekSlider.style.setProperty('--value', `${value / 10}%`);
     }
 
     uploadForm.addEventListener('submit', async (event) => {
