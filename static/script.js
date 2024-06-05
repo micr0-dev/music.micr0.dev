@@ -60,8 +60,8 @@ document.addEventListener('DOMContentLoaded', () => {
         openQueue, currentIndex, isShuffle, isRepeat, volume = JSON.parse(state);
         console.log(queue, currentIndex, isShuffle, isRepeat, volume);
 
-        volumeSlider.value = volume;
-        audioPlayer.volume = volume / 100;
+        volumeSlider.value = parseInt(volume);
+        audioPlayer.volume = parseInt(volume) / 100;
         volumeSlider.style.setProperty('--value', volume + '%');
 
         shuffleButton.classList.toggle('active');
