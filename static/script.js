@@ -285,13 +285,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const playlistResults = results.playlists;
         const musicResults = results.songs;
 
-        if (playlistResults.length == null) {
+        if (playlistResults == null) {
             playlistsDiv.innerHTML = 'No playlists found';
         } else {
             loadPlaylists(playlistResults, playlistsDiv);
         }
 
-        if (musicResults.length == null) {
+        if (musicResults == null) {
             musicDiv.innerHTML = 'No music found';
         } else {
             loadMusic(musicResults, musicDiv);
