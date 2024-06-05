@@ -281,6 +281,7 @@ document.addEventListener('DOMContentLoaded', () => {
         coverArt.alt = music.title;
         trackTitle.textContent = music.title;
         trackArtist.textContent = music.artist;
+        audioPlayer.currentTime = 0;
         audioPlayer.play();
         playIcon.style.display = 'none';
         pauseIcon.style.display = 'inline';
