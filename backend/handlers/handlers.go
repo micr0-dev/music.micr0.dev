@@ -171,6 +171,7 @@ func downloadImage(url, filepath string) error {
 func (h *MusicHandler) UploadMusic(c *gin.Context) {
 	title := c.PostForm("title")
 	artist := c.PostForm("artist")
+	album := c.PostForm("album")
 
 	file, err := c.FormFile("file")
 	if err != nil {
@@ -199,6 +200,7 @@ func (h *MusicHandler) UploadMusic(c *gin.Context) {
 		ID:        id,
 		Title:     title,
 		Artist:    artist,
+		Album:     album,
 		Filename:  filename,
 		Thumbnail: sql.NullString{String: "", Valid: false},
 		Color:     "#000000",
@@ -211,6 +213,10 @@ func (h *MusicHandler) UploadMusic(c *gin.Context) {
 
 	if music.Artist == "" {
 		music.Artist = metadata.Artist()
+	}
+
+	if music.Album == "" {
+		music.Album = metadata.Album()
 	}
 
 	// Fetch or extract thumbnail
@@ -250,7 +256,7 @@ func (h *MusicHandler) UploadMusic(c *gin.Context) {
 	}
 
 	// Insert into database
-	if _, err := h.DB.NamedExec(`INSERT INTO music (id, title, artist, filename, thumbnail, color) VALUES (:id, :title, :artist, :filename, :thumbnail, :color)`, music); err != nil {
+	if _, err := h.DB.NamedExec(`INSERT INTO music (id, title, artist, album, filename, thumbnail, color) VALUES (:id, :title, :artist, :album, :filename, :thumbnail, :color)`, music); err != nil {
 		log.Printf("Error inserting music: %v", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to insert into database"})
 		return
