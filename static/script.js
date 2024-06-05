@@ -316,7 +316,7 @@ document.addEventListener('DOMContentLoaded', () => {
         trackArtist.textContent = music.artist;
         audioPlayer.currentTime = 0;
         seekSlider.value = 0;
-        seekSlider.style.setProperty('--value', `${progress}%`);
+        seekSlider.style.setProperty('--value', `0%`);
         audioPlayer.play();
         playIcon.style.display = 'none';
         pauseIcon.style.display = 'inline';
