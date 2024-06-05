@@ -57,12 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
         loadMusicList();
     });
 
-
-
-    async function loadMusicList() {
-        const response = await fetch('/api/music');
-        const musics = await response.json();
-
+    function loadMusic(musics) {
         musicList.innerHTML = '';
         musics.forEach(music => {
             const div = document.createElement('div');
@@ -85,6 +80,18 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             musicList.appendChild(div);
         });
+    }
+
+    async function loadMusicList() {
+        const response = await fetch('/api/music');
+        const musics = await response.json();
+
+        if (musics == null) {
+            musicList.innerHTML = '<li>No music found</li>';
+            return;
+        }
+
+        loadMusic(musics);
     }
 
     function playTrack(music) {
