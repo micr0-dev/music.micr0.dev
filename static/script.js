@@ -380,10 +380,14 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     prevButton.addEventListener('click', () => {
+        if (isRepeat)
+            isRepeat = !isRepeat;
         playPreviousTrack();
     });
 
     nextButton.addEventListener('click', () => {
+        if (isRepeat)
+            isRepeat = !isRepeat;
         playNextTrack();
     });
 
