@@ -343,6 +343,10 @@ func getResizedThumbnailPath(originalPath string, width int) string {
 }
 
 func resizeAndSaveImage(originalPath, resizedPath string, width int) (string, error) {
+	log.Printf("Resizing image: %s", originalPath)
+	log.Printf("Resized image: %s", resizedPath)
+	log.Printf("Width: %d", width)
+
 	file, err := os.Open(originalPath)
 	if err != nil {
 		return "", err
