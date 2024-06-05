@@ -65,6 +65,8 @@ document.addEventListener('DOMContentLoaded', () => {
         isRepeat = data.isRepeat;
         volume = data.volume;
 
+        isPlaying = false;
+
         console.log(openQueue, currentIndex, isShuffle, isRepeat, volume);
 
         volumeSlider.value = parseInt(volume);
