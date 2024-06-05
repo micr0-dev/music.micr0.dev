@@ -287,8 +287,10 @@ document.addEventListener('DOMContentLoaded', () => {
         isPlaying = true;
         currentTrack = music;
 
+        const index = openQueue.findIndex(m => m.id === music.id);
+
         if (isUserAction)
-            loadQueue();
+            loadQueue(index);
 
         nowPlayingContainer.classList.remove('not-playing');
 
@@ -329,9 +331,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    function loadQueue() {
+    function loadQueue(index) {
         queue = openQueue.slice();
-        currentIndex = 0;
+        currentIndex = index;
     }
 
     function playNextTrack() {
