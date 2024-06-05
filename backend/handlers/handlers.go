@@ -318,24 +318,33 @@ func (h *MusicHandler) GetThumbnail(c *gin.Context) {
 		if _, err := os.Stat(resizedThumbnailPath); os.IsNotExist(err) {
 			if _, err := resizeAndSaveImage(originalThumbnailPath, resizedThumbnailPath, size); err != nil {
 				log.Printf("Error resizing image: %v", err)
+				originalThumbnailPath := "./placeholder.png"
+				resizedThumbnailPath := getResizedThumbnailPath(originalThumbnailPath, size)
+				if _, err := os.Stat(resizedThumbnailPath); os.IsNotExist(err) {
+					if _, err := resizeAndSaveImage(originalThumbnailPath, resizedThumbnailPath, size); err != nil {
+						log.Printf("Error resizing image: %v", err)
+						c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to resize image"})
+						return
+					}
+				}
+				c.File(resizedThumbnailPath)
 			}
-		} else {
-			c.File(resizedThumbnailPath)
-			return
 		}
-	}
-	// Return a placeholder image if no thumbnail is available
-	originalThumbnailPath := "./placeholder.png"
-	resizedThumbnailPath := getResizedThumbnailPath(originalThumbnailPath, size)
-	if _, err := os.Stat(resizedThumbnailPath); os.IsNotExist(err) {
-		if _, err := resizeAndSaveImage(originalThumbnailPath, resizedThumbnailPath, size); err != nil {
-			log.Printf("Error resizing image: %v", err)
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to resize image"})
-			return
-		}
-	}
-	c.File(resizedThumbnailPath)
 
+		c.File(resizedThumbnailPath)
+	} else {
+		// Return a placeholder image if no thumbnail is available
+		originalThumbnailPath := "./placeholder.png"
+		resizedThumbnailPath := getResizedThumbnailPath(originalThumbnailPath, size)
+		if _, err := os.Stat(resizedThumbnailPath); os.IsNotExist(err) {
+			if _, err := resizeAndSaveImage(originalThumbnailPath, resizedThumbnailPath, size); err != nil {
+				log.Printf("Error resizing image: %v", err)
+				c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to resize image"})
+				return
+			}
+		}
+		c.File(resizedThumbnailPath)
+	}
 }
 
 func getResizedThumbnailPath(originalPath string, width int) string {
