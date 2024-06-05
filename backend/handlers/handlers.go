@@ -246,6 +246,9 @@ func (h *MusicHandler) UploadMusic(c *gin.Context) {
 		if music.Thumbnail.Valid {
 			thumbnailPath := "./static/" + music.Thumbnail.String
 			music.Color = getPrimaryColor(thumbnailPath)
+			if music.Color == "" {
+				music.Color = "#000000"
+			}
 		}
 	}
 
