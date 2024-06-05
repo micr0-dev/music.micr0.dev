@@ -57,7 +57,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         nowPlayingContainer.classList.remove('not-playing');
 
-        openQueue, currentIndex, isShuffle, isRepeat, volume = JSON.parse(state);
+        data = JSON.parse(state);
+
+        const { queue, currentIndex, isShuffle, isRepeat, volume } = data;
         console.log(queue, currentIndex, isShuffle, isRepeat, volume);
 
         volumeSlider.value = parseInt(volume);
