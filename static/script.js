@@ -65,8 +65,10 @@ document.addEventListener('DOMContentLoaded', () => {
         volumeSlider.value = parseInt(volume);
         volumeSlider.style.setProperty('--value', volume + '%');
 
-        shuffleButton.classList.toggle('active');
-        repeatButton.classList.toggle('active');
+        if (isShuffle)
+            shuffleButton.classList.toggle('active');
+        if (isRepeat)
+            repeatButton.classList.toggle('active');
 
         loadQueue(currentIndex);
 
@@ -74,6 +76,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         playTrack(queue[currentIndex], false);
         audioPlayer.pause();
+
+        if (isPlaying) {
+            audioPlayer.play();
+            playIcon.style.display = 'none';
+            pauseIcon.style.display = 'inline';
+        }
     }
 
     uploadForm.addEventListener('submit', async (event) => {
