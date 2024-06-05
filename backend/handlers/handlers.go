@@ -110,7 +110,7 @@ func calculateAverageColor(img image.Image) color.RGBA {
 }
 
 func (h *MusicHandler) fetchThumbnail(title, artist string) (string, error) {
-	url := fmt.Sprintf("http://ws.audioscrobbler.com/2.0/?method=track.getInfo&api_key=%s&artist=%s&track=%s&format=json", h.LastFmAPIKey, artist, title)
+	url := fmt.Sprintf("http://ws.audioscrobbler.com/2.0/?method=track.getInfo&api_key=%s&artist=%s&track=%s&format=json&autocorrect=1", h.LastFmAPIKey, artist, title)
 	resp, err := http.Get(url)
 	if err != nil {
 		return "", err
@@ -343,10 +343,6 @@ func getResizedThumbnailPath(originalPath string, width int) string {
 }
 
 func resizeAndSaveImage(originalPath, resizedPath string, width int) (string, error) {
-	log.Printf("Resizing image: %s", originalPath)
-	log.Printf("Resized image: %s", resizedPath)
-	log.Printf("Width: %d", width)
-
 	file, err := os.Open(originalPath)
 	if err != nil {
 		return "", err
@@ -357,9 +353,6 @@ func resizeAndSaveImage(originalPath, resizedPath string, width int) (string, er
 	if err != nil {
 		return "", err
 	}
-
-	log.Printf("Resizing image to width %d", width)
-	log.Printf("Image format: %s", format)
 
 	resizedImg := resize.Resize(uint(width), 0, img, resize.Lanczos3)
 
