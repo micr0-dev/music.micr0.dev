@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const uploadProgress = document.getElementById('upload-progress');
     const fileProgress = document.getElementById('file-progress');
     const musicList = document.getElementById('music-list');
+    const playlistsList = document.getElementById('playlists-list');
     const playlistMenu = document.getElementById('playlist-menu');
     const existingPlaylists = document.getElementById('existing-playlists');
     const createPlaylistForm = document.getElementById('create-playlist-form');
@@ -22,10 +23,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const trackTitle = document.getElementById('track-title');
     const trackArtist = document.getElementById('track-artist');
     const nowPlayingContainer = document.getElementById('now-playing-container');
+    const homeButton = document.getElementById('home-button');
+    const searchButton = document.getElementById('search-button');
+    const uploadButton = document.getElementById('upload-button');
+    const uploadSection = document.getElementById('upload-section');
+    const searchSection = document.getElementById('search-section');
+    const musicSection = document.getElementById('music-list-section');
+    const searchInput = document.getElementById('search-input');
+    const searchResults = document.getElementById('search-results');
 
     let isPlaying = false;
     let currentTrack = null;
-
+    let currentScreen = 'home';
 
 
     uploadForm.addEventListener('submit', async (event) => {
@@ -131,9 +140,44 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    //Sidebar navigation
+    homeButton.addEventListener('click', () => {
+        currentScreen = 'home';
+        uploadSection.classList.add('hidden');
+        searchSection.classList.add('hidden');
+        musicSection.classList.remove('hidden');
 
-    function loadMusic(musics) {
-        musicList.innerHTML = '';
+        homeButton.classList.add('selected');
+        searchButton.classList.remove('selected');
+        uploadButton.classList.remove('selected');
+
+        loadMusicList();
+    });
+
+    uploadButton.addEventListener('click', () => {
+        currentScreen = 'upload';
+        musicSection.classList.add('hidden');
+        searchSection.classList.add('hidden');
+        uploadSection.classList.remove('hidden');
+
+        uploadButton.classList.add('selected');
+        searchButton.classList.remove('selected');
+        homeButton.classList.remove('selected');
+    });
+
+    searchButton.addEventListener('click', () => {
+        currentScreen = 'search';
+        musicSection.classList.add('hidden');
+        uploadSection.classList.add('hidden');
+        searchSection.classList.remove('hidden');
+
+        searchButton.classList.add('selected');
+        uploadButton.classList.remove('selected');
+        homeButton.classList.remove('selected');
+    });
+
+    function loadMusic(musics, element = musicList) {
+        element.innerHTML = '';
         musics.forEach(music => {
             const div = document.createElement('div');
             div.className = 'music-item';
@@ -161,7 +205,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 showPlaylistMenu(music.id);
             });
 
-            musicList.appendChild(div);
+            element.appendChild(div);
         });
     }
 
@@ -207,6 +251,39 @@ document.addEventListener('DOMContentLoaded', () => {
             pauseIcon.style.display = 'inline';
         }
         isPlaying = !isPlaying;
+    });
+
+    searchInput.addEventListener('input', async () => {
+        const query = searchInput.value;
+        if (query.length < 3) return;
+
+        const response = await fetch(`/api/search?q=${query}`);
+        const results = await response.json();
+
+        if (results == null) {
+            musicList.innerHTML = '<li>No music found</li>';
+            return;
+        }
+
+        searchResults.innerHTML = '';
+
+        const playlistsDiv = document.createElement('div');
+        playlistsDiv.className = 'search-results-playlists';
+        const musicDiv = document.createElement('div');
+        musicDiv.className = 'search-results-music';
+
+        const playlistsTitle = document.createElement('h2');
+        playlistsTitle.textContent = 'Playlists';
+        playlistsDiv.appendChild(playlistsTitle);
+        const musicTitle = document.createElement('h2');
+        musicTitle.textContent = 'Music';
+        musicDiv.appendChild(musicTitle);
+
+        searchResults.appendChild(playlistsDiv);
+        searchResults.appendChild(musicDiv);
+
+        loadPlaylists(results.playlists, playlistsDiv);
+        loadMusic(results, musicDiv);
     });
 
     prevButton.addEventListener('click', () => {
@@ -282,36 +359,19 @@ document.addEventListener('DOMContentLoaded', () => {
         return `${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
     }
 
-
-
-    const newPlaylistBtn = document.getElementById('new-playlist-btn');
-    const playlistsList = document.getElementById('playlists-list');
-    const albumsList = document.getElementById('albums-list');
-
-    newPlaylistBtn.addEventListener('click', () => {
-        const playlistName = prompt('Enter playlist name:');
-        if (playlistName) {
-            createPlaylist(playlistName);
-        }
-    });
-
-    async function createPlaylist(name) {
-        const response = await fetch('/api/playlists', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ name })
+    async function loadPlaylists(playlists, element = playlistsList) {
+        element.innerHTML = '';
+        playlists.forEach(playlist => {
+            const li = document.createElement('li');
+            li.textContent = playlist.name;
+            li.addEventListener('click', () => {
+                loadPlaylist(playlist.id);
+            });
+            element.appendChild(li);
         });
-
-        if (response.ok) {
-            loadPlaylists();
-        } else {
-            alert('Failed to create playlist.');
-        }
     }
 
-    async function loadPlaylists() {
+    async function loadSidePlaylists() {
         const response = await fetch('/api/playlists');
         const playlists = await response.json();
 
@@ -320,16 +380,10 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        playlistsList.innerHTML = '';
-        playlists.forEach(playlist => {
-            const li = document.createElement('li');
-            li.textContent = playlist.name;
-            li.addEventListener('click', () => {
-                loadPlaylist(playlist.id);
-            });
-            playlistsList.appendChild(li);
-        });
+        loadPlaylists(playlists);
     }
+
+
 
     async function loadPlaylist(playlistId) {
         const response = await fetch(`/api/playlists/${playlistId}`);

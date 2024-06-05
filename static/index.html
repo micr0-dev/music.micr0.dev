@@ -46,6 +46,21 @@
 </svg>
 
 <body>
+    <aside id="sidebar">
+        <button id="home-button" class="selected">
+            Home
+        </button>
+        <button id="search-button">
+            Search
+        </button>
+        <button id="upload-button">
+            Upload
+        </button>
+        <h2>My Library</h2>
+        <div id="playlists-section">
+            <ul id="playlists-list"></ul>
+        </div>
+    </aside>
     <div class="container">
         <header>
             <svg id="logo">
@@ -53,20 +68,9 @@
             </svg>
         </header>
         <div class="content">
-            <aside id="sidebar">
-                <h2>My Library</h2>
-                <button id="new-playlist-btn">+ New Playlist</button>
-                <div id="playlists-section">
-                    <h3>Playlists</h3>
-                    <ul id="playlists-list"></ul>
-                </div>
-                <div id="albums-section">
-                    <h3>Albums</h3>
-                    <ul id="albums-list"></ul>
-                </div>
-            </aside>
+
             <main>
-                <section id="upload-section">
+                <section id="upload-section" class="hidden">
                     <h2>Upload Music</h2>
                     <form id="upload-form" enctype="multipart/form-data">
                         <input type="file" name="files" multiple required>
@@ -74,6 +78,12 @@
                         <label for="files" id="file-progress"></label>
                     </form>
                     <div id="upload-progress" class="loader hidden"></div>
+                </section>
+
+                <section id="search-section" class="hidden">
+                    <h2>Search</h2>
+                    <input type="text" id="search-input" placeholder="Search for music">
+                    <div id="search-results"></div>
                 </section>
 
                 <section id="music-list-section">

@@ -20,6 +20,7 @@ body {
     max-width: 800px;
     width: 100%;
     padding: 20px;
+    margin-left: 300px;
 }
 
 header {
@@ -52,32 +53,41 @@ form {
     gap: 10px;
 }
 
-input[type="text"],
-input[type="file"],
 button {
+    display: block;
+    width: 100%;
     padding: 10px;
-    border: none;
     font-size: 16px;
-}
-
-button {
-    background-color: #fff;
-    color: #000;
+    background-color: #000;
+    color: #fff;
+    border: 1px solid #000;
     cursor: pointer;
+    transition: border 0.2s;
 }
 
 button:hover {
-    background-color: #f3f3f3;
+    background-color: #fff;
+    color: #000;
+    border: 1px solid #fff;
 }
 
+button.selected {
+    background-color: #fff;
+    color: #000;
+    border: 1px solid #fff;
+}
 
 .content {
     display: flex;
 }
 
 aside {
-    width: 250px;
-    background-color: #1e1e1e;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 300px;
+    height: 100vh;
+    background-color: #000;
     padding: 20px;
     box-sizing: border-box;
 }
@@ -88,19 +98,7 @@ aside h3 {
 }
 
 aside button {
-    display: block;
-    width: 100%;
-    margin-bottom: 20px;
-    padding: 10px;
-    font-size: 16px;
-    background-color: #333;
-    color: #fff;
-    border: none;
-    cursor: pointer;
-}
-
-aside button:hover {
-    background-color: #444;
+    text-align: left;
 }
 
 #playlists-list,
@@ -209,6 +207,16 @@ main {
 
 .music-item #add-to-playlist:hover {
     transform: scale(1.2);
+}
+
+#search-input {
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    width: 100%;
+    background-color: #000;
+    color: #fff;
+    font-family: "Urbanist"
 }
 
 #playlist-menu {
