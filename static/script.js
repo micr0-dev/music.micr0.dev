@@ -47,6 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
             isShuffle,
             isRepeat,
             volume: volumeSlider.value,
+            progress: seekSlider.value
         }));
     }
 
@@ -86,6 +87,12 @@ document.addEventListener('DOMContentLoaded', () => {
         playIcon.style.display = 'inline';
         pauseIcon.style.display = 'none';
 
+        const duration = Math.floor(audioPlayer.duration);
+        const value = (data.progress / 1000) * duration;
+        audioPlayer.currentTime = value;
+        currentTimeLabel.textContent = formatTime(Math.floor(value));
+        durationLabel.textContent = formatTime(duration);
+        seekSlider.style.setProperty('--value', `${data.progress / 10}%`);
     }
 
     uploadForm.addEventListener('submit', async (event) => {
