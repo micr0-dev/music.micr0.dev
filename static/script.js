@@ -109,6 +109,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (response.ok) {
             playlist.song_ids.push(songId);
+            playlist.songs = playlist.song_ids;
+            playlist.song_ids = undefined;
 
             const updateResponse = await fetch(`/api/playlists/${playlistId}`, {
                 method: 'PUT',
