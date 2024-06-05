@@ -337,6 +337,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function playNextTrack() {
+        if (isRepeat) {
+            playTrack(queue[currentIndex], false);
+            return;
+        }
+
         if (isShuffle) {
             currentIndex = Math.floor(Math.random() * queue.length);
         } else {
