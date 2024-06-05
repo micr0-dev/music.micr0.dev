@@ -57,23 +57,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
         nowPlayingContainer.classList.remove('not-playing');
 
-        const { queue, currentIndex, tempisShuffle, tempisRepeat, volume } = JSON.parse(state);
+        const { queue, currentIndex, isShuffle, isRepeat, volume } = JSON.parse(state);
+        console.log(queue, currentIndex, isShuffle, isRepeat, volume);
         volumeSlider.value = volume;
         audioPlayer.volume = volume / 100;
         volumeSlider.style.setProperty('--value', volume + '%');
-        console.log(tempisShuffle);
-        isShuffle = (tempisShuffle === 'true')
+
         shuffleButton.classList.toggle('active');
-        console.log(tempisRepeat);
-        isRepeat = (tempisRepeat === 'true')
+
         repeatButton.classList.toggle('active');
         openQueue = queue;
         loadQueue(currentIndex);
         playTrack(queue[currentIndex], false);
         audioPlayer.pause();
-        playIcon.style.display = 'inline';
-        pauseIcon.style.display = 'none';
-        isPlaying = false;
     }
 
     uploadForm.addEventListener('submit', async (event) => {
