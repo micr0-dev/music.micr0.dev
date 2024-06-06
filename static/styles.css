@@ -317,6 +317,7 @@ main {
     font-size: 1.3em;
     text-align: left;
     padding: 0px;
+    animation-play-state: paused;
 }
 
 #data-scroll span {
