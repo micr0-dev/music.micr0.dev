@@ -98,6 +98,10 @@ document.addEventListener('DOMContentLoaded', () => {
         seekSlider.style.setProperty('--value', `${value / 10}%`);
     }
 
+    String.prototype.toTitleCase = function () {
+        return this.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
+    }
+
     uploadForm.addEventListener('submit', async (event) => {
         event.preventDefault();
         const files = event.target.files.files;  // get the files from the input
@@ -635,12 +639,3 @@ document.addEventListener('DOMContentLoaded', () => {
     loadSidePlaylists();
     loadMusicList();
 });
-
-function toTitleCase(str) {
-    return str.replace(
-        /\w\S*/g,
-        function (txt) {
-            return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-        }
-    );
-}
