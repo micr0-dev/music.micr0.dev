@@ -334,11 +334,20 @@ main {
     animation-play-state: paused;
 }
 
+#data-scroll span#num3 {
+    animation: scroll3 16s linear infinite;
+    animation-play-state: paused;
+}
+
 #data-scroll.playing span {
     animation-play-state: running;
 }
 
 #data-scroll.playing span#num2 {
+    animation-play-state: running;
+}
+
+#data-scroll.playing span#num3 {
     animation-play-state: running;
 }
 
@@ -367,6 +376,24 @@ main {
 
     100% {
         transform: translateX(0%);
+    }
+}
+
+@keyframes scroll3 {
+    0% {
+        transform: translateX(100%);
+    }
+
+    50% {
+        transform: translateX(0%);
+    }
+
+    50.01% {
+        transform: translateX(-100%);
+    }
+
+    100% {
+        transform: translateX(100%);
     }
 }
 
