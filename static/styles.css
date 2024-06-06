@@ -317,10 +317,11 @@ main {
     font-size: 1.3em;
     text-align: left;
     padding: 0px;
-    animation-play-state: paused;
+
 }
 
 #data-scroll span {
+    animation-play-state: paused;
     position: absolute;
     display: inline-block;
     white-space: nowrap;
