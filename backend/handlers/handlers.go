@@ -205,6 +205,8 @@ func (h *MusicHandler) fetchMetadata(title, artist string) (metadata, error) {
 
 func (h *MusicHandler) fetchThumbnail(title, artist string) (string, error) {
 	url := fmt.Sprintf("http://ws.audioscrobbler.com/2.0/?method=track.getInfo&api_key=%s&artist=%s&track=%s&format=json&autocorrect=1", h.LastFmAPIKey, artist, title)
+	url = strings.ReplaceAll(url, " ", "+")
+
 	resp, err := http.Get(url)
 	if err != nil {
 		return "", err
