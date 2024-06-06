@@ -322,27 +322,11 @@ main {
     position: fixed;
     display: inline-block;
     white-space: nowrap;
-    animation: scroll1 10s linear infinite;
+    overflow: hidden;
+    animation: scroll 10s linear infinite;
 }
 
-#data-scroll span#num2 {
-    position: fixed;
-    display: inline-block;
-    white-space: nowrap;
-    animation: scroll2 20s linear infinite;
-}
-
-@keyframes scroll1 {
-    from {
-        transform: translateX(0%);
-    }
-
-    to {
-        transform: translateX(-100%);
-    }
-}
-
-@keyframes scroll2 {
+@keyframes scroll {
     from {
         transform: translateX(100%);
     }
