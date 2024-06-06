@@ -12,8 +12,6 @@ import (
 	"image/png"
 	"io"
 	"log"
-	"math"
-	random "math/rand"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -72,117 +70,44 @@ func getPrimaryColor(filepath string) string {
 		return ""
 	}
 
-	resizedImg := resize.Resize(100, 100, img, resize.Lanczos3)
-	dominantColor := findDominantColor(resizedImg)
+	resizedImg := resize.Resize(100, 0, img, resize.Lanczos3)
 
-	hexColor := fmt.Sprintf("#%02x%02x%02x", dominantColor.R, dominantColor.G, dominantColor.B)
+	averageColor := calculateAverageColor(resizedImg)
+
+	hexColor := fmt.Sprintf("#%02x%02x%02x", averageColor.R, averageColor.G, averageColor.B)
 
 	return hexColor
 }
 
-func findDominantColor(img image.Image) color.RGBA {
-	points := extractColorPoints(img)
-	k := 3
-	centers, _ := kmeans(points, k)
+func calculateAverageColor(img image.Image) color.RGBA {
+	var r, g, b, a uint32
+	pixelCount := 0
 
-	dominantCenter := centers[0]
-	dominantCount := 0
+	for y := 0; y < img.Bounds().Dy(); y++ {
+		for x := 0; x < img.Bounds().Dx(); x++ {
+			pixelColor := img.At(x, y)
+			red, green, blue, alpha := pixelColor.RGBA()
 
-	for _, center := range centers {
-		count := clusterSize(points, center)
-		if count > dominantCount {
-			dominantCount = count
-			dominantCenter = center
+			r += red
+			g += green
+			b += blue
+			a += alpha
+
+			pixelCount++
 		}
 	}
+
+	r /= uint32(pixelCount)
+	g /= uint32(pixelCount)
+	b /= uint32(pixelCount)
+	a /= uint32(pixelCount)
 
 	return color.RGBA{
-		R: uint8(dominantCenter[0]),
-		G: uint8(dominantCenter[1]),
-		B: uint8(dominantCenter[2]),
-		A: 255,
+		R: uint8(r >> 8),
+		G: uint8(g >> 8),
+		B: uint8(b >> 8),
+		A: uint8(a >> 8),
 	}
-}
-
-func extractColorPoints(img image.Image) [][]float64 {
-	bounds := img.Bounds()
-	points := make([][]float64, bounds.Dx()*bounds.Dy())
-	i := 0
-
-	for y := 0; y < bounds.Dy(); y++ {
-		for x := 0; x < bounds.Dx(); x++ {
-			r, g, b, _ := img.At(x, y).RGBA()
-			points[i] = []float64{float64(r >> 8), float64(g >> 8), float64(b >> 8)}
-			i++
-		}
-	}
-
-	return points
-}
-
-func kmeans(points [][]float64, k int) ([][]float64, [][]int) {
-	centers := make([][]float64, k)
-	clusters := make([][]int, k)
-
-	for i := 0; i < k; i++ {
-		centers[i] = points[random.Intn(len(points))]
-	}
-
-	const maxIterations = 100
-	for i := 0; i < maxIterations; i++ {
-		for j := range clusters {
-			clusters[j] = nil
-		}
-
-		for idx, point := range points {
-			minDist := math.MaxFloat64
-			minIdx := 0
-			for j, center := range centers {
-				dist := euclideanDistance(point, center)
-				if dist < minDist {
-					minDist = dist
-					minIdx = j
-				}
-			}
-			clusters[minIdx] = append(clusters[minIdx], idx)
-		}
-
-		for j, cluster := range clusters {
-			if len(cluster) == 0 {
-				continue
-			}
-			newCenter := make([]float64, len(points[0]))
-			for _, idx := range cluster {
-				for d := 0; d < len(points[0]); d++ {
-					newCenter[d] += points[idx][d]
-				}
-			}
-			for d := 0; d < len(newCenter); d++ {
-				newCenter[d] /= float64(len(cluster))
-			}
-			centers[j] = newCenter
-		}
-	}
-
-	return centers, clusters
-}
-
-func euclideanDistance(a, b []float64) float64 {
-	sum := 0.0
-	for i := 0; i < len(a); i++ {
-		sum += (a[i] - b[i]) * (a[i] - b[i])
-	}
-	return math.Sqrt(sum)
-}
-
-func clusterSize(points [][]float64, center []float64) int {
-	count := 0
-	for _, point := range points {
-		if euclideanDistance(point, center) < 1e-5 {
-			count++
-		}
-	}
-	return count
 }
 
 // Fetch lyrics from an external API
