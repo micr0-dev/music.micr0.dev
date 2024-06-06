@@ -318,7 +318,7 @@ main {
     padding: 0px;
 }
 
-#data-scroll {
+#data-scroll span {
     display: inline-block;
     white-space: nowrap;
     animation: scroll 10s linear infinite;
