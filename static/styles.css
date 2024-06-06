@@ -306,16 +306,17 @@ main {
 
 #data-scroll-container {
     position: fixed;
-    bottom: 80px;
+    bottom: 100px;
     width: 300px;
-    height: 40px;
+    height: 25px;
     left: 0px;
     overflow: hidden;
     background-color: #000;
     color: #fff;
     white-space: nowrap;
-    font-size: 1.2em;
+    font-size: 1.3em;
     text-align: left;
+    font-weight: bold;
     padding: 0px;
 }
 
@@ -323,11 +324,11 @@ main {
     position: absolute;
     display: inline-block;
     white-space: nowrap;
-    animation: scroll 10s linear infinite;
+    animation: scroll 16s linear infinite;
 }
 
 #data-scroll span#num2 {
-    animation: scroll2 10s linear infinite;
+    animation: scroll2 16s linear infinite;
 }
 
 @keyframes scroll {
@@ -360,7 +361,7 @@ main {
 
 #cover-art-container {
     position: fixed;
-    bottom: 120px;
+    bottom: 125px;
     width: 300px;
     height: 300px;
     left: 0px;
