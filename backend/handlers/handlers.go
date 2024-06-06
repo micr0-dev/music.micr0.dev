@@ -284,122 +284,114 @@ func (h *MusicHandler) UploadMusic(c *gin.Context) {
 		return
 	}
 
-	metadata, err := readMetadata(filepath)
-	if err != nil {
-		log.Printf("Error reading metadata: %v", err)
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to read metadata"})
-		return
-	}
+	c.JSON(http.StatusCreated, gin.H{"id": id, "filename": filename})
 
-	music := models.Music{
-		ID:        id,
-		Title:     title,
-		Artist:    artist,
-		Filename:  filename,
-		Thumbnail: sql.NullString{String: "", Valid: false},
-		Color:     "#000000",
-		Album:     metadata.Album(),
-		Year:      metadata.Year(),
-		Genre:     metadata.Genre(),
-		Lyrics:    "",
-	}
+	go func() {
+		metadata, err := readMetadata(filepath)
+		if err != nil {
+			log.Printf("Error reading metadata: %v", err)
+			return
+		}
 
-	// Fill details if they are empty
-	if music.Title == "" {
-		music.Title = metadata.Title()
-	}
+		music := models.Music{
+			ID:        id,
+			Title:     title,
+			Artist:    artist,
+			Filename:  filename,
+			Thumbnail: sql.NullString{String: "", Valid: false},
+			Color:     "#000000",
+			Album:     metadata.Album(),
+			Year:      metadata.Year(),
+			Genre:     metadata.Genre(),
+			Lyrics:    "",
+		}
 
-	if music.Artist == "" {
-		music.Artist = metadata.Artist()
-	}
+		if music.Title == "" {
+			music.Title = metadata.Title()
+		}
 
-	// Fetch or extract thumbnail
-	if music.Thumbnail == (sql.NullString{}) {
-		if metadata.Picture() != nil {
-			music.Thumbnail = sql.NullString{String: id + ".jpg", Valid: true}
-			thumbnailPath := "./static/" + music.Thumbnail.String
-			thumbnailFile, err := os.Create(thumbnailPath)
-			if err != nil {
-				log.Printf("Error creating thumbnail: %v", err)
-			} else {
-				_, err = thumbnailFile.Write(metadata.Picture().Data)
-				if err != nil {
-					log.Printf("Error writing thumbnail: %v", err)
-				}
-			}
-		} else {
-			thumbnailURL, err := h.fetchThumbnail(music.Title, music.Artist)
-			if err != nil {
-				log.Printf("Error fetching thumbnail: %v", err)
-			} else {
+		if music.Artist == "" {
+			music.Artist = metadata.Artist()
+		}
+
+		if music.Thumbnail == (sql.NullString{}) {
+			if metadata.Picture() != nil {
 				music.Thumbnail = sql.NullString{String: id + ".jpg", Valid: true}
 				thumbnailPath := "./static/" + music.Thumbnail.String
-				if err := downloadImage(thumbnailURL, thumbnailPath); err != nil {
-					log.Printf("Error downloading thumbnail: %v", err)
+				thumbnailFile, err := os.Create(thumbnailPath)
+				if err != nil {
+					log.Printf("Error creating thumbnail: %v", err)
+				} else {
+					_, err = thumbnailFile.Write(metadata.Picture().Data)
+					if err != nil {
+						log.Printf("Error writing thumbnail: %v", err)
+					}
+				}
+			} else {
+				thumbnailURL, err := h.fetchThumbnail(music.Title, music.Artist)
+				if err != nil {
+					log.Printf("Error fetching thumbnail: %v", err)
+				} else {
+					music.Thumbnail = sql.NullString{String: id + ".jpg", Valid: true}
+					thumbnailPath := "./static/" + music.Thumbnail.String
+					if err := downloadImage(thumbnailURL, thumbnailPath); err != nil {
+						log.Printf("Error downloading thumbnail: %v", err)
+					}
 				}
 			}
 		}
-	}
 
-	// Calculate primary color
-	if music.Color == "#000000" {
+		if music.Color == "#000000" {
+			if music.Thumbnail.Valid {
+				thumbnailPath := "./static/" + music.Thumbnail.String
+				music.Color = getPrimaryColor(thumbnailPath)
+				if music.Color == "" {
+					music.Color = "#000000"
+				}
+			}
+		}
+
+		if music.Album == "" || music.Year == 0 || music.Genre == "" {
+			metadata, err := h.fetchMetadata(music.Title, music.Artist)
+			if err != nil {
+				log.Printf("Error fetching metadata: %v", err)
+			} else {
+				if music.Album == "" {
+					music.Album = metadata.Album
+				}
+				if music.Year == 0 {
+					music.Year, _ = strconv.Atoi(metadata.Year)
+				}
+				if music.Genre == "" {
+					music.Genre = metadata.Genre
+				}
+			}
+		}
+
+		lyrics, err := fetchLyrics(music.Title, music.Artist)
+		if err != nil {
+			log.Printf("Error fetching lyrics: %v", err)
+		} else {
+			music.Lyrics = lyrics
+		}
+
+		if _, err := h.DB.NamedExec(`INSERT INTO music (id, title, artist, filename, thumbnail, color, album, year, genre, lyrics) VALUES (:id, :title, :artist, :filename, :thumbnail, :color, :album, :year, :genre, :lyrics)`, music); err != nil {
+			log.Printf("Error inserting music: %v", err)
+			return
+		}
+
 		if music.Thumbnail.Valid {
 			thumbnailPath := "./static/" + music.Thumbnail.String
-			music.Color = getPrimaryColor(thumbnailPath)
-			if music.Color == "" {
-				music.Color = "#000000"
+			resizedThumbnailPath := getResizedThumbnailPath(thumbnailPath, 300)
+			if _, err := resizeAndSaveImage(thumbnailPath, resizedThumbnailPath, 300); err != nil {
+				log.Printf("Error resizing image: %v", err)
+			}
+			resizedThumbnailPath = getResizedThumbnailPath(thumbnailPath, 80)
+			if _, err := resizeAndSaveImage(thumbnailPath, resizedThumbnailPath, 80); err != nil {
+				log.Printf("Error resizing image: %v", err)
 			}
 		}
-	}
-
-	// Fetch Missing Metadata
-	if music.Album == "" || music.Year == 0 || music.Genre == "" {
-		metadata, err := h.fetchMetadata(music.Title, music.Artist)
-		if err != nil {
-			log.Printf("Error fetching metadata: %v", err)
-		} else {
-			if music.Album == "" {
-				music.Album = metadata.Album
-			}
-			if music.Year == 0 {
-				music.Year, _ = strconv.Atoi(metadata.Year)
-			}
-			if music.Genre == "" {
-				music.Genre = metadata.Genre
-			}
-		}
-	}
-
-	// Fetch lyrics
-	lyrics, err := fetchLyrics(music.Title, music.Artist)
-	if err != nil {
-		log.Printf("Error fetching lyrics: %v", err)
-	} else {
-		music.Lyrics = lyrics
-	}
-
-	// Insert into database
-	if _, err := h.DB.NamedExec(`INSERT INTO music (id, title, artist, filename, thumbnail, color, album, year, genre, lyrics) VALUES (:id, :title, :artist, :filename, :thumbnail, :color, :album, :year, :genre, :lyrics)`, music); err != nil {
-		log.Printf("Error inserting music: %v", err)
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to insert into database"})
-		return
-	}
-
-	// Generate Thumbnail Previews
-	if music.Thumbnail.Valid {
-		thumbnailPath := "./static/" + music.Thumbnail.String
-		resizedThumbnailPath := getResizedThumbnailPath(thumbnailPath, 300)
-		if _, err := resizeAndSaveImage(thumbnailPath, resizedThumbnailPath, 300); err != nil {
-			log.Printf("Error resizing image: %v", err)
-		}
-		resizedThumbnailPath = getResizedThumbnailPath(thumbnailPath, 80)
-		if _, err := resizeAndSaveImage(thumbnailPath, resizedThumbnailPath, 80); err != nil {
-			log.Printf("Error resizing image: %v", err)
-		}
-
-	}
-
-	c.JSON(http.StatusCreated, music)
+	}()
 }
 
 func (h *MusicHandler) GetMusic(c *gin.Context) {
