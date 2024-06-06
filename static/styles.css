@@ -321,7 +321,6 @@ main {
 }
 
 #data-scroll span {
-    animation-play-state: paused;
     position: absolute;
     display: inline-block;
     white-space: nowrap;
@@ -330,6 +329,10 @@ main {
 
 #data-scroll span#num2 {
     animation: scroll2 16s linear infinite;
+}
+
+#data-scroll.paused span {
+    animation-play-state: paused;
 }
 
 @keyframes scroll {
