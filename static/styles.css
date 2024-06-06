@@ -325,22 +325,22 @@ main {
     position: absolute;
     display: inline-block;
     white-space: nowrap;
-    animation: scroll 16s linear infinite;
+    animation: scroll 32s linear infinite;
     animation-play-state: paused;
 }
 
 #data-scroll span#num2 {
-    animation: scroll2 16s linear infinite;
+    animation: scroll2 32s linear infinite;
     animation-play-state: paused;
 }
 
 #data-scroll span#num3 {
-    animation: scroll3 16s linear infinite;
+    animation: scroll3 32s linear infinite;
     animation-play-state: paused;
 }
 
 #data-scroll span#num4 {
-    animation: scroll4 16s linear infinite;
+    animation: scroll4 32s linear infinite;
     animation-play-state: paused;
 }
 
