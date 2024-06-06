@@ -317,8 +317,10 @@ main {
     font-size: 1.3em;
     text-align: left;
     padding: 0px;
-    padding-right: 7px;
+}
 
+#data-scroll {
+    padding-right: 7px;
 }
 
 #data-scroll span {
