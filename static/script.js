@@ -95,6 +95,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (isNaN(value)) return;
         seekSlider.value = value;
         seekSlider.style.setProperty('--value', `${value / 10}%`);
+
+        dataScroll.classList.remove('playing');
     }
 
     uploadForm.addEventListener('submit', async (event) => {
