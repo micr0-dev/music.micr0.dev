@@ -314,10 +314,28 @@ main {
     z-index: 1;
 }
 
+/* Animate Constant Scroll */
 #data-scroll {
     width: 100%;
     height: 100%;
     background-color: #000;
+    text-overflow: clip;
+    white-space: nowrap;
+    overflow: hidden;
+    color: #fff;
+    font-size: 16px;
+
+    animation: scroll 10s linear infinite;
+}
+
+@keyframes scroll {
+    0% {
+        transform: translateX(0%);
+    }
+
+    100% {
+        transform: translateX(-100%);
+    }
 }
 
 #cover-art-container {
