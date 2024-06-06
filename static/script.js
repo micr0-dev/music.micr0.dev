@@ -386,7 +386,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const isLossless = ext === 'FLAC' || ext === 'WAV' || ext === 'AIFF' || ext === 'ALAC' || ext === 'DSD';
         const genre = music.genre.split(',')[0];
         const infoBanner = `${music.year} ${music.album} .${ext.toUpperCase()} ${isLossless ? 'Lossless' : 'Lossy'} ${genre ? genre : ''}`;
-        updateScrollingBanner(infoBanner.toUpperCase());
+        updateScrollingBanner(infoBanner);
         if (play) {
             dataScroll.classList.add('playing');
         }
