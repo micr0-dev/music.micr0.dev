@@ -353,7 +353,7 @@ main {
 
 @keyframes scroll {
     0% {
-        transform: translateX(100%);
+        transform: translateX(200%);
     }
 
     100% {
@@ -363,6 +363,24 @@ main {
 
 @keyframes scroll2 {
     0% {
+        transform: translateX(100%);
+    }
+
+    50% {
+        transform: translateX(-100%);
+    }
+
+    50.01% {
+        transform: translateX(200%);
+    }
+
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+@keyframes scroll3 {
+    0% {
         transform: translateX(0%);
     }
 
@@ -371,22 +389,13 @@ main {
     }
 
     50.01% {
-        transform: translateX(100%);
-    }
-
-    100% {
-        transform: translateX(0%);
-    }
-}
-
-@keyframes scroll3 {
-    0% {
         transform: translateX(200%);
     }
 
-    100% {
+    0% {
         transform: translateX(0%);
     }
+
 }
 
 #cover-art-container {
