@@ -383,6 +383,20 @@ func (h *MusicHandler) UploadMusic(c *gin.Context) {
 		return
 	}
 
+	// Generate Thumbnail Previews
+	if music.Thumbnail.Valid {
+		thumbnailPath := "./static/" + music.Thumbnail.String
+		resizedThumbnailPath := getResizedThumbnailPath(thumbnailPath, 300)
+		if _, err := resizeAndSaveImage(thumbnailPath, resizedThumbnailPath, 300); err != nil {
+			log.Printf("Error resizing image: %v", err)
+		}
+		resizedThumbnailPath = getResizedThumbnailPath(thumbnailPath, 80)
+		if _, err := resizeAndSaveImage(thumbnailPath, resizedThumbnailPath, 80); err != nil {
+			log.Printf("Error resizing image: %v", err)
+		}
+
+	}
+
 	c.JSON(http.StatusCreated, music)
 }
 
