@@ -291,6 +291,9 @@ main {
     background-color: #1ed760;
 }
 
+#now-playing-container {
+    z-index: 6;
+}
 
 #now-playing {
     display: flex;
@@ -299,7 +302,6 @@ main {
     background-color: #000;
     padding: 20px 0;
     width: 100%;
-    z-index: 6;
 
     box-shadow: 0 0 40px 20px var(--art-color);
 
