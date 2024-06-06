@@ -483,6 +483,7 @@ main {
 
 #seek-slider {
     --value: 0;
+    --art-color: #fff;
 }
 
 .slider {
@@ -545,11 +546,6 @@ main {
 }
 
 .hidden {
-    display: none;
-}
-
-/* TODO: Animate */
-.not-playing {
     display: none;
 }
 

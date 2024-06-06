@@ -87,6 +87,9 @@ document.addEventListener('DOMContentLoaded', () => {
         pauseIcon.style.display = 'none';
         dataScroll.classList.remove('playing');
 
+        coverArt.parentElement.classList.remove('hidden');
+        dataScroll.parentElement.classList.remove('hidden');
+
         audioPlayer.currentTime = currentTime;
         currentTimeLabel.textContent = formatTime(currentTime);
         const duration = Math.floor(audioPlayer.duration);
@@ -382,7 +385,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (isUserAction)
             loadQueue();
 
-        nowPlayingContainer.classList.remove('not-playing');
+        coverArt.parentElement.classList.remove('hidden');
+        dataScroll.parentElement.classList.remove('hidden');
 
         if (music.color == "#000000") music.color = "#ffffff";
 
