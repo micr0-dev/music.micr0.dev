@@ -326,7 +326,7 @@ main {
 }
 
 #data-scroll span#num2 {
-    animation-delay: 5s;
+    animation-delay: 10s;
 }
 
 @keyframes scroll {
