@@ -323,14 +323,14 @@ main {
     display: inline-block;
     white-space: nowrap;
     animation: scroll 16s linear infinite;
-    animation-duration: 99999999999s;
-    transition: animation-duration 1s linear;
+    animation-duration: 0s;
+    transition: animation-duration 1s ease-out;
 }
 
 #data-scroll span#num2 {
     animation: scroll2 16s linear infinite;
-    animation-duration: 99999999999s;
-    transition: animation-duration 1s linear;
+    animation-duration: 0s;
+    transition: animation-duration 1s ease-out;
 }
 
 #data-scroll.playing span {
