@@ -370,9 +370,11 @@ document.addEventListener('DOMContentLoaded', () => {
             pauseIcon.style.display = 'inline';
             isPlaying = true;
         }
-        const div = document.getElementById(currentTrack.id);
-        if (div) {
-            div.classList.remove('playing');
+        if (currentTrack) {
+            const div = document.getElementById(currentTrack.id);
+            if (div) {
+                div.classList.remove('playing');
+            }
         }
 
         currentTrack = music;
