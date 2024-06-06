@@ -79,12 +79,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         loadQueue();
 
-        playTrack(currentTrack, false);
+        playTrack(currentTrack, false, false);
         audioPlayer.pause();
 
         isPlaying = false;
         playIcon.style.display = 'inline';
         pauseIcon.style.display = 'none';
+        dataScroll.classList.remove('playing');
 
         audioPlayer.currentTime = currentTime;
         currentTimeLabel.textContent = formatTime(currentTime);
@@ -95,8 +96,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (isNaN(value)) return;
         seekSlider.value = value;
         seekSlider.style.setProperty('--value', `${value / 10}%`);
-
-        dataScroll.classList.remove('playing');
     }
 
     uploadForm.addEventListener('submit', async (event) => {
@@ -345,7 +344,7 @@ document.addEventListener('DOMContentLoaded', () => {
         dataScroll.innerHTML = `<span>${text}</span><span id="num2">${text}</span>`;
     }
 
-    function playTrack(music, isUserAction = true) {
+    function playTrack(music, isUserAction = true, play = true) {
         audioPlayer.src = `/api/stream/${music.id}`;
         const thumbnailUrl = `/api/thumbnail/${music.id}`;
         coverArt.src = thumbnailUrl;
@@ -356,11 +355,12 @@ document.addEventListener('DOMContentLoaded', () => {
         seekSlider.value = 0;
         seekSlider.style.setProperty('--value', `0%`);
         audioPlayer.volume = volumeSlider.value / 100;
-        audioPlayer.play();
-        playIcon.style.display = 'none';
-        pauseIcon.style.display = 'inline';
-        isPlaying = true;
-
+        if (play) {
+            audioPlayer.play();
+            playIcon.style.display = 'none';
+            pauseIcon.style.display = 'inline';
+            isPlaying = true;
+        }
         const div = document.getElementById(currentTrack.id);
         if (div) {
             div.classList.remove('playing');
@@ -383,7 +383,9 @@ document.addEventListener('DOMContentLoaded', () => {
         nowPlayingContainer.style.setProperty('--art-color', music.color);
 
         updateScrollingBanner(`2013 Album Lossless .FLAC 16-Bit 44.1kHz`);
-        dataScroll.classList.add('playing');
+        if (play) {
+            dataScroll.classList.add('playing');
+        }
 
         if ('mediaSession' in navigator) {
             navigator.mediaSession.metadata = new MediaMetadata({
