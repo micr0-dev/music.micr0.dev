@@ -384,7 +384,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (music.color == "#000000") music.color = "#ffffff";
 
-        nowPlayingContainer.style.setProperty('--art-color', music.color);
+        // Set the art-color of root
+        document.documentElement.style.setProperty('--art-color', music.color);
 
         let info = [];
 
