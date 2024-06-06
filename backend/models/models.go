@@ -5,6 +5,7 @@ import (
 	"database/sql/driver"
 	"encoding/json"
 	"fmt"
+	"log"
 
 	"github.com/jmoiron/sqlx"
 )
@@ -44,7 +45,12 @@ type Playlist struct {
 }
 
 func InitializeDatabase(db *sqlx.DB) {
-	_, err := db.Exec(`
+	_, err := db.Exec(`select load_extension('fts5');`)
+	if err != nil {
+		log.Fatalf("Error loading FTS5 module: %v", err)
+	}
+
+	_, err = db.Exec(`
 		CREATE TABLE IF NOT EXISTS music (
 			id TEXT PRIMARY KEY,
 			title TEXT,
