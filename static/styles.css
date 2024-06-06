@@ -315,6 +315,7 @@ main {
     color: #fff;
     white-space: nowrap;
     font-size: 1.2em;
+    text-align: left;
     padding: 0px;
 }
 
@@ -326,7 +327,7 @@ main {
 }
 
 #data-scroll span#num2 {
-    animation-delay: 10s;
+    left: 100%;
 }
 
 @keyframes scroll {
