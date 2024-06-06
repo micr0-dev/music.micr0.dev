@@ -236,7 +236,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function loadMusic(musics, element = musicList) {
-        openQueue = musics;
+        openQueue = musics.slice();
 
         element.innerHTML = '';
         musics.forEach(music => {
@@ -284,7 +284,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     searchInput.addEventListener('input', async () => {
         const query = searchInput.value;
-        if (query.length < 3) return;
+        if (query.length < 2) return;
 
         const response = await fetch(`/api/search?q=${query}`);
         const results = await response.json();
