@@ -318,13 +318,29 @@ main {
     padding: 0px;
 }
 
-#data-scroll span {
+#data-scroll span#1 {
     display: inline-block;
     white-space: nowrap;
-    animation: scroll 10s linear infinite;
+    animation: scroll1 10s linear infinite;
 }
 
-@keyframes scroll {
+#data-scroll span#2 {
+    display: inline-block;
+    white-space: nowrap;
+    animation: scroll2 20s linear infinite;
+}
+
+@keyframes scroll1 {
+    from {
+        transform: translateX(0%);
+    }
+
+    to {
+        transform: translateX(-100%);
+    }
+}
+
+@keyframes scroll2 {
     from {
         transform: translateX(100%);
     }
