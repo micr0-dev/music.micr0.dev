@@ -341,7 +341,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function updateScrollingBanner(text) {
-        dataScroll.innerHTML = `<span>${text}</span><span id="num2">${text}</span>`;
+        dataScroll.innerHTML = `<span>${text}</span><span class="spacer"></span><span>${text}</span>`;
     }
 
     function playTrack(music, isUserAction = true, play = true) {
@@ -384,7 +384,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const ext = music.filename.split('.').pop().toUpperCase();
         const isLossless = ext === 'FLAC' || ext === 'WAV' || ext === 'AIFF' || ext === 'ALAC' || ext === 'DSD';
-        const genre = music.genre.split(',')[0];
+        const genre = music.genre.split(',')[0].toTitleCase();
         const infoBanner = `${music.year} ${music.album} .${ext.toUpperCase()} ${isLossless ? 'Lossless' : 'Lossy'} ${genre ? genre : ''}`;
         updateScrollingBanner(infoBanner);
         if (play) {
