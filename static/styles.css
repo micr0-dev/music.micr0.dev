@@ -335,7 +335,7 @@ main {
 }
 
 #data-scroll span#num3 {
-    animation: scroll3 16s linear infinite;
+    animation: scroll 16s linear infinite;
     animation-play-state: paused;
 }
 
