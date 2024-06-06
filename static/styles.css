@@ -480,6 +480,9 @@ main {
     width: 100%;
     margin: 0px;
     padding: 0px;
+}
+
+#seek-slider {
     z-index: 6;
 }
 
