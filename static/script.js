@@ -382,7 +382,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         nowPlayingContainer.style.setProperty('--art-color', music.color);
 
-        updateScrollingBanner(`2013 Album Lossless .FLAC 16-Bit 44.1kHz`);
+        const ext = music.filename.split('.').pop().toUpperCase();
+        const isLossless = ext === 'FLAC' || ext === 'WAV' || ext === 'AIFF' || ext === 'ALAC' || ext === 'DSD';
+        const genre = music.genre.split(',')[0];
+        const infoBanner = `${music.year} ${music.album} .${ext.toUpperCase()} ${isLossless ? 'Lossless' : 'Lossy'} ${genre ? genre : ''}`;
+        updateScrollingBanner(infoBanner.toUpperCase());
         if (play) {
             dataScroll.classList.add('playing');
         }
