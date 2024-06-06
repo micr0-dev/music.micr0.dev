@@ -359,7 +359,7 @@ document.addEventListener('DOMContentLoaded', () => {
             navigator.mediaSession.metadata = new MediaMetadata({
                 title: music.title,
                 artist: music.artist,
-                album: 'Album Name',
+                album: music.album,
                 artwork: [{ src: thumbnailUrl, sizes: '300x300', type: 'image/jpeg' }]
             });
         }
