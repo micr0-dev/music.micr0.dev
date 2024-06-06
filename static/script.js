@@ -348,28 +348,6 @@ document.addEventListener('DOMContentLoaded', () => {
         dataScroll.innerHTML = `<span>&zwnj; • ${text}</span></span><span id="num2">&zwnj; • ${text}</span>`;
     }
 
-    async function smoothlyStopScrolling() {
-        const span1 = document.querySelector('#data-scroll span');
-        const span2 = document.querySelector('#data-scroll span#num2');
-        const dataScrollContainer = document.querySelector('#data-scroll');
-        const OGduration = 16;
-        let duration = OGduration;
-
-        // Gradually increase the duration
-        while (duration < 100) {
-            duration += 0.5; // Adjust the increment for smoothness
-            span1.style.animationDuration = `${duration}s`;
-            span2.style.animationDuration = `${duration}s`;
-            await new Promise(resolve => setTimeout(resolve, 100)); // Adjust interval for smoothness
-        }
-
-        dataScrollContainer.classList.remove('playing');
-
-        // Reset the duration
-        span1.style.animationDuration = `${OGduration}s`;
-        span2.style.animationDuration = `${OGduration}s`;
-    }
-
     function playTrack(music, isUserAction = true, play = true) {
         audioPlayer.src = `/api/stream/${music.id}`;
         const thumbnailUrl = `/api/thumbnail/${music.id}`;
@@ -529,7 +507,7 @@ document.addEventListener('DOMContentLoaded', () => {
             audioPlayer.pause();
             playIcon.style.display = 'inline';
             pauseIcon.style.display = 'none';
-            smoothlyStopScrolling();
+            dataScroll.classList.remove('playing');
         } else {
             audioPlayer.play();
             playIcon.style.display = 'none';
