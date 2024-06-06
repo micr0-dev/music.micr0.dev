@@ -69,6 +69,7 @@ button:hover {
 
 .content {
     display: flex;
+    margin-bottom: 100px;
 }
 
 aside {
