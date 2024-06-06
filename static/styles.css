@@ -321,36 +321,28 @@ main {
     z-index: 5;
 }
 
-#data-scroll {
-    display: flex;
-    align-items: center;
-    white-space: nowrap;
-}
-
 #data-scroll span {
+    position: absolute;
     display: inline-block;
     white-space: nowrap;
+    animation: scroll 16s linear infinite;
+    animation-play-state: paused;
 }
 
 #data-scroll span.spacer {
     width: 20px;
 }
 
-#data-scroll span:nth-child(1) {
-    animation: scroll 16s linear infinite;
-    animation-play-state: paused;
-}
-
-#data-scroll span:nth-child(3) {
+#data-scroll span#num2 {
     animation: scroll2 16s linear infinite;
     animation-play-state: paused;
 }
 
-#data-scroll.playing span:nth-child(1) {
+#data-scroll.playing span {
     animation-play-state: running;
 }
 
-#data-scroll.playing span:nth-child(3) {
+#data-scroll.playing span#num2 {
     animation-play-state: running;
 }
 
