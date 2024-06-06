@@ -675,12 +675,6 @@ main {
     }
 }
 
-.cast-button {
-    background: url('https://www.gstatic.com/cast/sdk/v1/cb-v1-0.png') no-repeat center center;
-    width: 50px;
-    height: 50px;
-}
-
 .hidden {
     display: none;
 }
