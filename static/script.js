@@ -107,7 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     uploadForm.addEventListener('submit', async (event) => {
         event.preventDefault();
-        const files = event.target.files.files;  // get the files from the input
+        const files = event.target.files.files;
         if (files.length === 0) {
             alert('Please select at least one file.');
             return;
@@ -244,6 +244,8 @@ document.addEventListener('DOMContentLoaded', () => {
         homeButton.classList.remove('selected');
     });
 
+    // TODO: Dynamic loading of music list as you scroll
+
     function loadMusic(musics, element = musicList) {
         openQueue = musics.slice();
 
@@ -350,7 +352,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function updateScrollingBanner(text) {
-        dataScroll.innerHTML = `<span>&zwnj; • ${text}</span></span><span id="num2">&zwnj; • ${text}</span>`;
+        dataScroll.innerHTML = `<span>${text} • &zwnj;</span></span><span id="num2">${text} • &zwnj;</span>`;
     }
 
     function playTrack(music, isUserAction = true, play = true) {
@@ -396,6 +398,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let info = [];
 
+        //FIXME: Playlist metadata not showing all
 
         if (!(music.year == 0))
             info.push(music.year);
@@ -617,6 +620,8 @@ document.addEventListener('DOMContentLoaded', () => {
         seconds = seconds % 60;
         return `${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
     }
+
+    // TODO: Implement playlist cards and make look kewl
 
     async function loadPlaylists(playlists, element = playlistsList) {
         element.innerHTML = '';
