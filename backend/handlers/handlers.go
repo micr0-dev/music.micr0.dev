@@ -369,14 +369,40 @@ func (h *MusicHandler) UploadMusic(c *gin.Context) {
 		music.Lyrics = lyrics
 	}
 
-	// Insert into database
-	if _, err := h.DB.NamedExec(`INSERT INTO music (id, title, artist, filename, thumbnail, color, album, year, genre, lyrics) VALUES (:id, :title, :artist, :filename, :thumbnail, :color, :album, :year, :genre, :lyrics)`, music); err != nil {
+	tx, err := h.DB.Beginx()
+	if err != nil {
+		log.Printf("Error starting transaction: %v", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to start transaction"})
+		return
+	}
+
+	defer tx.Rollback()
+
+	_, err = tx.NamedExec(`INSERT INTO music (id, title, artist, filename, thumbnail, color, album, year, genre, lyrics) 
+                           VALUES (:id, :title, :artist, :filename, :thumbnail, :color, :album, :year, :genre, :lyrics)`, music)
+	if err != nil {
 		log.Printf("Error inserting music: %v", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to insert into database"})
 		return
 	}
 
+	_, err = tx.Exec(`INSERT INTO music_fts (rowid, title, artist, album, genre, lyrics) 
+                      VALUES (?, ?, ?, ?, ?, ?, ?)`, id, music.Title, music.Artist, music.Album, music.Genre, music.Lyrics)
+	if err != nil {
+		log.Printf("Error inserting into FTS table: %v", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to insert into FTS table"})
+		return
+	}
+
+	err = tx.Commit()
+	if err != nil {
+		log.Printf("Error committing transaction: %v", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to commit transaction"})
+		return
+	}
+
 	c.JSON(http.StatusCreated, music)
+
 }
 
 func (h *MusicHandler) GetMusic(c *gin.Context) {
@@ -613,36 +639,22 @@ func (h *MusicHandler) Search(c *gin.Context) {
 		return
 	}
 
-	// Prepare the fuzzy search query
-	likeQuery := "%" + strings.ToLower(query) + "%"
-
-	// Search songs across all relevant fields
+	// Search songs using FTS5
 	var songs []models.Music
-	songQuery := `
-	SELECT * FROM music
-	WHERE 
-		LOWER(id) LIKE ? OR
-		LOWER(title) LIKE ? OR
-		LOWER(artist) LIKE ? OR
-		LOWER(filename) LIKE ? OR
-		LOWER(album) LIKE ? OR
-		LOWER(genre) LIKE ? OR
-		LOWER(lyrics) LIKE ?
-	`
-	err := h.DB.Select(&songs, songQuery, likeQuery, likeQuery, likeQuery, likeQuery, likeQuery, likeQuery, likeQuery)
+	err := h.DB.Select(&songs, `
+        SELECT m.id, m.title, m.artist, m.filename, m.thumbnail, m.color, m.album, m.year, m.genre, m.lyrics, m.tags
+        FROM music_fts fts 
+        JOIN music m ON fts.rowid = m.id 
+        WHERE fts MATCH ?`, query)
 	if err != nil {
 		log.Printf("Error querying songs: %v", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to search songs"})
 		return
 	}
 
-	// Search playlists by name
+	// Search playlists
 	var playlists []models.Playlist
-	playlistQuery := `
-	SELECT * FROM playlists
-	WHERE LOWER(name) LIKE ?
-	`
-	err = h.DB.Select(&playlists, playlistQuery, likeQuery)
+	err = h.DB.Select(&playlists, "SELECT * FROM playlists WHERE name LIKE ?", "%"+query+"%")
 	if err != nil {
 		log.Printf("Error querying playlists: %v", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to search playlists"})

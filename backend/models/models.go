@@ -63,6 +63,15 @@ func InitializeDatabase(db *sqlx.DB) {
 	}
 
 	_, err = db.Exec(`
+        CREATE VIRTUAL TABLE IF NOT EXISTS music_fts USING fts5(
+            title, artist, album, genre, lyrics, tags
+        );
+    `)
+	if err != nil {
+		panic(err)
+	}
+
+	_, err = db.Exec(`
         CREATE TABLE IF NOT EXISTS playlists (
             id TEXT PRIMARY KEY,
             name TEXT,
