@@ -323,20 +323,21 @@ main {
 #data-scroll span {
     position: absolute;
     display: inline-block;
-    white-space: nowrap;
     animation: scroll 16s linear infinite;
+    animation-play-state: paused;
 }
 
 #data-scroll span#num2 {
     animation: scroll2 16s linear infinite;
-}
-
-#data-scroll.paused span {
     animation-play-state: paused;
 }
 
-#data-scroll.paused span#num2 {
-    animation-play-state: paused;
+#data-scroll.playing span {
+    animation-play-state: running;
+}
+
+#data-scroll.playing span#num2 {
+    animation-play-state: running;
 }
 
 @keyframes scroll {

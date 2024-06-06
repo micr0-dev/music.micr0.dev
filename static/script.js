@@ -381,7 +381,7 @@ document.addEventListener('DOMContentLoaded', () => {
         nowPlayingContainer.style.setProperty('--art-color', music.color);
 
         updateScrollingBanner(`2013 Album Lossless .FLAC 16-Bit 44.1kHz`);
-        dataScroll.classList.remove('paused');
+        dataScroll.classList.add('playing');
 
         if ('mediaSession' in navigator) {
             navigator.mediaSession.metadata = new MediaMetadata({
@@ -403,14 +403,14 @@ document.addEventListener('DOMContentLoaded', () => {
             playIcon.style.display = 'none';
             pauseIcon.style.display = 'inline';
             isPlaying = true;
-            dataScroll.classList.remove('paused');
+            dataScroll.classList.add('playing');
         });
         navigator.mediaSession.setActionHandler('pause', () => {
             audioPlayer.pause();
             playIcon.style.display = 'inline';
             pauseIcon.style.display = 'none';
             isPlaying = false;
-            dataScroll.classList.add('paused');
+            dataScroll.classList.remove('playing');
         });
         navigator.mediaSession.setActionHandler('previoustrack', () => {
             playPreviousTrack();
@@ -480,12 +480,12 @@ document.addEventListener('DOMContentLoaded', () => {
             audioPlayer.pause();
             playIcon.style.display = 'inline';
             pauseIcon.style.display = 'none';
-            dataScroll.classList.add('paused');
+            dataScroll.classList.remove('playing');
         } else {
             audioPlayer.play();
             playIcon.style.display = 'none';
             pauseIcon.style.display = 'inline';
-            dataScroll.classList.remove('paused');
+            dataScroll.classList.add('playing');
         }
 
         isPlaying = !isPlaying;
