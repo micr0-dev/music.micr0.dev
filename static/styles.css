@@ -318,13 +318,13 @@ main {
     padding: 0px;
 }
 
-#data-scroll span#1 {
+#data-scroll span#num1 {
     display: inline-block;
     white-space: nowrap;
     animation: scroll1 10s linear infinite;
 }
 
-#data-scroll span#2 {
+#data-scroll span#num2 {
     display: inline-block;
     white-space: nowrap;
     animation: scroll2 20s linear infinite;
