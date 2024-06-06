@@ -319,13 +319,10 @@ main {
     padding: 0px;
 }
 
-#data-scroll {
-    padding-right: 7px;
-}
-
 #data-scroll span {
     position: absolute;
     display: inline-block;
+    margin-left: 7px;
     animation: scroll 16s linear infinite;
     animation-play-state: paused;
 }
