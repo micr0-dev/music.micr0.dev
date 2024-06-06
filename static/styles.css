@@ -484,6 +484,7 @@ main {
 
 #seek-slider {
     z-index: 6;
+    --value: 0;
 }
 
 .slider {
