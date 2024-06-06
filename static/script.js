@@ -263,6 +263,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 div.classList.add('playing');
             }
 
+            div.id = music.id;
+
             div.addEventListener('click', () => {
                 playTrack(music);
             });
@@ -351,7 +353,16 @@ document.addEventListener('DOMContentLoaded', () => {
         playIcon.style.display = 'none';
         pauseIcon.style.display = 'inline';
         isPlaying = true;
+
+        const div = document.getElementById(currentTrack.id);
+        if (div) {
+            div.classList.remove('playing');
+        }
+
         currentTrack = music;
+
+        const currentDiv = document.getElementById(music.id);
+        currentDiv.classList.add('playing');
 
         if (isUserAction)
             loadQueue();
