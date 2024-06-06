@@ -351,7 +351,8 @@ document.addEventListener('DOMContentLoaded', () => {
     async function smoothlyStopScrolling() {
         const span1 = document.querySelector('#data-scroll span');
         const span2 = document.querySelector('#data-scroll span#num2');
-        const OGduration = span1.style.animationDuration;
+        const dataScrollContainer = document.querySelector('#data-scroll');
+        const OGduration = 16;
         let duration = OGduration;
 
         // Gradually increase the duration
