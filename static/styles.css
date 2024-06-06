@@ -312,13 +312,14 @@ main {
     left: 0px;
     padding: 0px;
     z-index: 1;
+    background-color: #000;
 }
 
 /* Animate Constant Scroll */
 #data-scroll {
     width: 100%;
     height: 100%;
-    background-color: #000;
+    text-align: left;
     text-overflow: clip;
     white-space: nowrap;
     overflow: hidden;
