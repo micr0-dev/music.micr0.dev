@@ -338,6 +338,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    function updateScrollingBanner(text) {
+        dataScroll.innerHTML = `<span>${text}</span><span>${text}</span>`;
+    }
+
     function playTrack(music, isUserAction = true) {
         audioPlayer.src = `/api/stream/${music.id}`;
         const thumbnailUrl = `/api/thumbnail/${music.id}`;
