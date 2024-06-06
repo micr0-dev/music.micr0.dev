@@ -325,6 +325,10 @@ main {
     animation: scroll 10s linear infinite;
 }
 
+#data-scroll span#num2 {
+    animation-delay: 5s;
+}
+
 @keyframes scroll {
     from {
         transform: translateX(0%);
