@@ -389,7 +389,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let info = [];
 
 
-        if (!music.year === 0)
+        if (!(music.year == 0))
             info.push(music.year);
 
         info.push(music.album);
