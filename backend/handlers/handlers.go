@@ -613,18 +613,36 @@ func (h *MusicHandler) Search(c *gin.Context) {
 		return
 	}
 
-	// Search songs
+	// Prepare the fuzzy search query
+	likeQuery := "%" + strings.ToLower(query) + "%"
+
+	// Search songs across all relevant fields
 	var songs []models.Music
-	err := h.DB.Select(&songs, "SELECT * FROM music WHERE title LIKE ? OR artist LIKE ?", "%"+query+"%", "%"+query+"%")
+	songQuery := `
+	SELECT * FROM music
+	WHERE 
+		LOWER(id) LIKE ? OR
+		LOWER(title) LIKE ? OR
+		LOWER(artist) LIKE ? OR
+		LOWER(filename) LIKE ? OR
+		LOWER(album) LIKE ? OR
+		LOWER(genre) LIKE ? OR
+		LOWER(lyrics) LIKE ?
+	`
+	err := h.DB.Select(&songs, songQuery, likeQuery, likeQuery, likeQuery, likeQuery, likeQuery, likeQuery, likeQuery)
 	if err != nil {
 		log.Printf("Error querying songs: %v", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to search songs"})
 		return
 	}
 
-	// Search playlists
+	// Search playlists by name
 	var playlists []models.Playlist
-	err = h.DB.Select(&playlists, "SELECT * FROM playlists WHERE name LIKE ?", "%"+query+"%")
+	playlistQuery := `
+	SELECT * FROM playlists
+	WHERE LOWER(name) LIKE ?
+	`
+	err = h.DB.Select(&playlists, playlistQuery, likeQuery)
 	if err != nil {
 		log.Printf("Error querying playlists: %v", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to search playlists"})
