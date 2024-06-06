@@ -352,7 +352,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function updateScrollingBanner(text) {
-        dataScroll.innerHTML = `<span>${text} • &zwnj;</span></span><span id="num2">${text} • &zwnj;</span>`;
+        dataScroll.innerHTML = `<span>${text} • &zwnj;</span><span id="num2">${text} • &zwnj;</span><span id="num3">${text} • &zwnj;</span>`;
     }
 
     function playTrack(music, isUserAction = true, play = true) {
