@@ -335,7 +335,12 @@ main {
 }
 
 #data-scroll span#num3 {
-    animation: scroll 16s linear infinite;
+    animation: scroll3 16s linear infinite;
+    animation-play-state: paused;
+}
+
+#data-scroll span#num4 {
+    animation: scroll4 16s linear infinite;
     animation-play-state: paused;
 }
 
@@ -351,13 +356,17 @@ main {
     animation-play-state: running;
 }
 
+#data-scroll.playing span#num4 {
+    animation-play-state: running;
+}
+
 @keyframes scroll {
     0% {
         transform: translateX(200%);
     }
 
     100% {
-        transform: translateX(-100%);
+        transform: translateX(-200%);
     }
 }
 
@@ -367,7 +376,7 @@ main {
     }
 
     50% {
-        transform: translateX(-100%);
+        transform: translateX(-200%);
     }
 
     50.01% {
@@ -385,18 +394,37 @@ main {
     }
 
     50% {
-        transform: translateX(-100%);
+        transform: translateX(-200%);
     }
 
     50.01% {
         transform: translateX(200%);
     }
 
-    0% {
+    100% {
         transform: translateX(0%);
     }
-
 }
+
+@keyframes scroll4 {
+    0% {
+        transform: translateX(-100%);
+    }
+
+    50% {
+        transform: translateX(-200%);
+    }
+
+    50.01% {
+        transform: translateX(200%);
+    }
+
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
+
 
 #cover-art-container {
     position: fixed;
