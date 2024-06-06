@@ -253,6 +253,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const isPlaying = currentTrack && currentTrack.id === music.id;
 
+            if (music.color == "#000000") music.color = "#ffffff";
+
             div.style.setProperty('--art-color', music.color);
 
             div.innerHTML = `
@@ -384,8 +386,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (music.color == "#000000") music.color = "#ffffff";
 
-        // Set the art-color of root
-        document.documentElement.style.setProperty('--art-color', music.color);
+        nowPlayingContainer.style.setProperty('--art-color', music.color);
 
         let info = [];
 
