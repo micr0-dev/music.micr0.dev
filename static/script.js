@@ -362,7 +362,9 @@ document.addEventListener('DOMContentLoaded', () => {
         currentTrack = music;
 
         const currentDiv = document.getElementById(music.id);
-        currentDiv.classList.add('playing');
+        if (currentDiv) {
+            currentDiv.classList.add('playing');
+        }
 
         if (isUserAction)
             loadQueue();
