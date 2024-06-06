@@ -170,6 +170,13 @@ func (h *MusicHandler) fetchMetadata(title, artist string) (metadata, error) {
 		return metadata{}, fmt.Errorf("no album data found")
 	}
 
+	if track["wiki"] == nil {
+		return metadata{
+			Album: album["title"].(string),
+			Year:  "",
+		}, fmt.Errorf("no wiki data found")
+	}
+
 	date, ok := track["wiki"].(map[string]interface{})["published"].(string)
 	if !ok {
 		return metadata{}, fmt.Errorf("no release year found")
