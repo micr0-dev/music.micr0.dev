@@ -319,12 +319,14 @@ main {
 }
 
 #data-scroll span#num1 {
+    position: fixed;
     display: inline-block;
     white-space: nowrap;
     animation: scroll1 10s linear infinite;
 }
 
 #data-scroll span#num2 {
+    position: fixed;
     display: inline-block;
     white-space: nowrap;
     animation: scroll2 20s linear infinite;
