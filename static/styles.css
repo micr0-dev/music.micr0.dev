@@ -327,16 +327,34 @@ main {
 }
 
 #data-scroll span#num2 {
-    animation-delay: 10s;
+    animation: scroll2 10s linear infinite;
 }
 
 @keyframes scroll {
-    from {
+    0% {
         transform: translateX(100%);
     }
 
-    to {
+    100% {
         transform: translateX(-100%);
+    }
+}
+
+@keyframes scroll2 {
+    0% {
+        transform: translateX(0%);
+    }
+
+    50% {
+        transform: translateX(-100%);
+    }
+
+    50.01% {
+        transform: translateX(100%);
+    }
+
+    100% {
+        transform: translateX(0%);
     }
 }
 
