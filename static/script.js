@@ -245,6 +245,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const ext = music.filename.split('.').pop().toUpperCase();
             const isHiFi = ext === 'FLAC' || ext === 'WAV' || ext === 'AIFF' || ext === 'ALAC' || ext === 'DSD';
 
+            const isPlaying = currentTrack && currentTrack.id === music.id;
+
             div.style.setProperty('--art-color', music.color);
 
             div.innerHTML = `
@@ -256,6 +258,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 ${isHiFi ? `<span class="hifi-tag">.${ext}</span>` : ''}
                 <button id="add-to-playlist"><svg><use href="#plus"></use></svg></button>
             `;
+
+            if (isPlaying) {
+                div.classList.add('playing');
+            }
+
             div.addEventListener('click', () => {
                 playTrack(music);
             });

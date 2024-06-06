@@ -159,6 +159,7 @@ main {
     display: flex;
     align-items: center;
     gap: 15px;
+    box-shadow: 0 0 0px 0px var(--art-color);
     transition: transform 0.4s, background-position 1s ease-out;
 }
 
@@ -219,6 +220,13 @@ main {
 
 .music-item #add-to-playlist:hover {
     transform: scale(1.2);
+}
+
+.music-item.is-playing {
+    background-image: none;
+    background-color: #000;
+    box-shadow: 0 0 40px 20px var(--art-color);
+    transform: scale(1.05);
 }
 
 #search-input {
