@@ -160,7 +160,7 @@ main {
     align-items: center;
     gap: 15px;
     box-shadow: 0 0 0px 0px var(--art-color);
-    transition: transform 0.4s, background-position 1s ease-out;
+    transition: transform 0.4s, background-image 1s, background-position 1s ease-out;
 }
 
 .music-item img.cover-art {
@@ -223,10 +223,9 @@ main {
 }
 
 .music-item.playing {
-    background-image: none;
-    background-color: #000;
+    background-image: linear-gradient(135deg, #000, #000);
     box-shadow: 0 0 40px 20px var(--art-color);
-    transform: scale(1.05);
+    transform: scale(1.02);
 }
 
 #search-input {
