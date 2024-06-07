@@ -303,7 +303,7 @@ func (h *MusicHandler) UploadMusic(c *gin.Context) {
 			Album:     metadata.Album(),
 			Year:      metadata.Year(),
 			Genre:     metadata.Genre(),
-			Lyrics:    "",
+			Lyrics:    metadata.Lyrics(),
 		}
 
 		if music.Title == "" {
@@ -368,11 +368,13 @@ func (h *MusicHandler) UploadMusic(c *gin.Context) {
 			}
 		}
 
-		lyrics, err := fetchLyrics(music.Title, music.Artist)
-		if err != nil {
-			log.Printf("Error fetching lyrics: %v", err)
-		} else {
-			music.Lyrics = lyrics
+		if music.Lyrics == "" {
+			lyrics, err := fetchLyrics(music.Title, music.Artist)
+			if err != nil {
+				log.Printf("Error fetching lyrics: %v", err)
+			} else {
+				music.Lyrics = lyrics
+			}
 		}
 
 		if _, err := h.DB.NamedExec(`INSERT INTO music (id, title, artist, filename, thumbnail, color, album, year, genre, lyrics) VALUES (:id, :title, :artist, :filename, :thumbnail, :color, :album, :year, :genre, :lyrics)`, music); err != nil {
