@@ -267,7 +267,7 @@ document.addEventListener('DOMContentLoaded', () => {
             div.style.setProperty('--art-color', music.color);
 
             div.innerHTML = `
-                <img src="${`/api/thumbnail/${music.id}?size=80`}" alt="cover art" class="cover-art">
+                <img src="${`/api/thumbnail/${music.id}?size=160`}" alt="cover art" class="cover-art">
                 <div class="music-info">
                     <div class="music-item-title">${music.title} </div>
                     <div class="music-item-artist">${music.artist}</div>
@@ -361,7 +361,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function playTrack(music, isUserAction = true, play = true) {
         audioPlayer.src = `/api/stream/${music.id}`;
-        const thumbnailUrl = `/api/thumbnail/${music.id}`;
+        const thumbnailUrl = `/api/thumbnail/${music.id}/size=600`;
         coverArt.src = thumbnailUrl;
         coverArt.alt = music.title;
         trackTitle.textContent = music.title;
@@ -431,7 +431,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 title: music.title,
                 artist: music.artist,
                 album: music.album,
-                artwork: [{ src: thumbnailUrl, sizes: '300x300', type: 'image/jpeg' }]
+                artwork: [{ src: thumbnailUrl, sizes: '600x600', type: 'image/jpeg' }]
             });
         }
 
