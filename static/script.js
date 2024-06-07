@@ -470,7 +470,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function shuffleQueue() {
         const artistMap = {};
-        queue.forEach(song => {
+
+        shuffleedQueue = queue.slice();
+        shuffleedQueue.sort(() => Math.random() - 0.5);
+
+        shuffleedQueue.forEach(song => {
             if (!artistMap[song.artist]) {
                 artistMap[song.artist] = [];
             }
