@@ -249,6 +249,10 @@ document.addEventListener('DOMContentLoaded', () => {
     function loadMusic(musics, element = musicList) {
         openQueue = musics.slice();
 
+        console.log(openQueue);
+        console.log(queue);
+        console.log(shuffleedQueue);
+
         element.innerHTML = '';
         musics.forEach(music => {
             const div = document.createElement('div');
@@ -417,6 +421,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const infoBanner = info.join(' • ');
         updateScrollingBanner(infoBanner);
+
         if (play) {
             dataScroll.classList.add('playing');
         }
@@ -464,9 +469,33 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function shuffleQueue() {
-        shuffleedQueue = queue.slice();
-        shuffleedQueue.sort(() => Math.random() - 0.5);
+        const artistMap = {};
+        queue.forEach(song => {
+            if (!artistMap[song.artist]) {
+                artistMap[song.artist] = [];
+            }
+            artistMap[song.artist].push(song);
+        });
+
+        const artistGroups = Object.values(artistMap);
+
+        artistGroups.sort((a, b) => b.length - a.length);
+
+        const smartShuffledQueue = [];
+        let groupIndex = 0;
+
+        while (artistGroups.some(group => group.length > 0)) {
+            for (let i = 0; i < artistGroups.length; i++) {
+                if (artistGroups[i].length > 0) {
+                    smartShuffledQueue.push(artistGroups[i].shift());
+                    groupIndex++;
+                }
+            }
+        }
+
+        shuffleedQueue = smartShuffledQueue;
     }
+
 
     function getCurrentIndex() {
         let currentIndex;
