@@ -38,6 +38,7 @@ func main() {
 	router.GET("/music", musicHandler.GetMusic)
 	router.GET("/music/:id", musicHandler.GetMusicByID)
 	router.POST("/music", musicHandler.UploadMusic)
+	router.PUT("/music/:id", musicHandler.UpdateMusic)
 	router.GET("/stream/:id", musicHandler.StreamMusic)
 	router.GET("/thumbnail/:id", musicHandler.GetThumbnail)
 

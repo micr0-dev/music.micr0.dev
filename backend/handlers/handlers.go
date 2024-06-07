@@ -274,6 +274,20 @@ func (h *MusicHandler) UploadMusic(c *gin.Context) {
 		return
 	}
 
+	// Check if song with the same title and artist already exists
+	var count int
+	err = h.DB.Get(&count, "SELECT COUNT(*) FROM music WHERE title = ? AND artist = ?", title, artist)
+	if err != nil {
+		log.Printf("Error querying music: %v", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to check for existing music"})
+		return
+	}
+
+	if count > 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Song already exists, try updating it instead with a PUT request"})
+		return
+	}
+
 	id := generateUniqueID()
 	filename := id + filepath.Ext(file.Filename)
 	filepath := "./static/" + filename
@@ -384,16 +398,43 @@ func (h *MusicHandler) UploadMusic(c *gin.Context) {
 
 		if music.Thumbnail.Valid {
 			thumbnailPath := "./static/" + music.Thumbnail.String
-			resizedThumbnailPath := getResizedThumbnailPath(thumbnailPath, 300)
-			if _, err := resizeAndSaveImage(thumbnailPath, resizedThumbnailPath, 300); err != nil {
+			resizedThumbnailPath := getResizedThumbnailPath(thumbnailPath, 600)
+			if _, err := resizeAndSaveImage(thumbnailPath, resizedThumbnailPath, 600); err != nil {
 				log.Printf("Error resizing image: %v", err)
 			}
-			resizedThumbnailPath = getResizedThumbnailPath(thumbnailPath, 80)
-			if _, err := resizeAndSaveImage(thumbnailPath, resizedThumbnailPath, 80); err != nil {
+			resizedThumbnailPath = getResizedThumbnailPath(thumbnailPath, 160)
+			if _, err := resizeAndSaveImage(thumbnailPath, resizedThumbnailPath, 160); err != nil {
 				log.Printf("Error resizing image: %v", err)
 			}
 		}
 	}()
+}
+
+func (h *MusicHandler) UpdateMusic(c *gin.Context) {
+	id := c.Param("id")
+	var music models.Music
+	if err := c.ShouldBindJSON(&music); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	if _, err := h.DB.NamedExec(`UPDATE music SET title = :title, artist = :artist, filename = :filename, thumbnail = :thumbnail, color = :color, album = :album, year = :year, genre = :genre, lyrics = :lyrics WHERE id = :id`, map[string]interface{}{
+		"id":        id,
+		"title":     music.Title,
+		"artist":    music.Artist,
+		"filename":  music.Filename,
+		"thumbnail": music.Thumbnail,
+		"color":     music.Color,
+		"album":     music.Album,
+		"year":      music.Year,
+		"genre":     music.Genre,
+		"lyrics":    music.Lyrics,
+	}); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update music"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Music updated successfully"})
 }
 
 func (h *MusicHandler) GetMusic(c *gin.Context) {
