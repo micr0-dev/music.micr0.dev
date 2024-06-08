@@ -324,6 +324,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const playlistsDiv = document.createElement('div');
         playlistsDiv.className = 'search-results-playlists';
+        const albumsDiv = document.createElement('div');
+        albumsDiv.className = 'search-results-albums';
         const musicDiv = document.createElement('div');
         musicDiv.className = 'search-results-music';
         musicDiv.classList.add('music-list');
@@ -331,21 +333,33 @@ document.addEventListener('DOMContentLoaded', () => {
         const playlistsTitle = document.createElement('h2');
         playlistsTitle.textContent = 'Playlists';
 
+        const albumsTitle = document.createElement('h2');
+        albumsTitle.textContent = 'Albums';
+
         const musicTitle = document.createElement('h2');
         musicTitle.textContent = 'Music';
 
         searchResults.appendChild(playlistsTitle);
         searchResults.appendChild(playlistsDiv);
+        searchResults.appendChild(albumsTitle);
+        searchResults.appendChild(albumsDiv);
         searchResults.appendChild(musicTitle);
         searchResults.appendChild(musicDiv);
 
         const playlistResults = results.playlists;
+        const albumResults = results.albums;
         const musicResults = results.songs;
 
         if (playlistResults == null) {
             playlistsDiv.innerHTML = 'No playlists found';
         } else {
             loadPlaylists(playlistResults, playlistsDiv);
+        }
+
+        if (albumResults == null) {
+            albumsDiv.innerHTML = 'No albums found';
+        } else {
+            loadAlbums(albumResults, albumsDiv);
         }
 
         if (musicResults == null) {
@@ -402,7 +416,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let info = [];
 
-        //FIXME: Playlist metadata not showing all
+        //FIXME: Song metadata not showing up while in a playlist
 
         if (!(music.year == 0))
             info.push(music.year);
@@ -462,6 +476,8 @@ document.addEventListener('DOMContentLoaded', () => {
             playNextTrack();
         });
     }
+
+    //FIXME: Queue get reset weirdly
 
     function loadQueue() {
         queue = openQueue.slice();
@@ -656,7 +672,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // TODO: Implement playlist cards and make look kewl
 
-    async function loadPlaylists(playlists, element = playlistsList) {
+    function loadPlaylists(playlists, element = playlistsList) {
         element.innerHTML = '';
         playlists.forEach(playlist => {
             const li = document.createElement('li');
@@ -680,8 +696,6 @@ document.addEventListener('DOMContentLoaded', () => {
         loadPlaylists(playlists);
     }
 
-
-
     async function loadPlaylist(playlistId) {
         const response = await fetch(`/api/playlists/${playlistId}`);
         const playlist = await response.json();
@@ -692,6 +706,25 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         loadMusic(playlist.songs);
+    }
+
+    function loadAlbums(albums, element = albumsList) {
+        element.innerHTML = '';
+        albums.forEach(album => {
+            const div = document.createElement('div');
+            div.className = 'album-item';
+            div.innerHTML = `
+                <img src="${`/api/thumbnail/${album.id}?size=160`}" alt="cover art" class="cover-art">
+                <div class="album-info">
+                    <div class="album-item">${album.title}</div>
+                    <div class="album-artist">${album.artist}</div>
+                </div>
+            `;
+            div.addEventListener('click', () => {
+                // loadAlbum(album.id);
+            });
+            element.appendChild(div);
+        });
     }
 
     seekSlider.style.setProperty('--value', '0%');

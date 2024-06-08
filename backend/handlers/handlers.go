@@ -265,26 +265,9 @@ func downloadImage(url, filepath string) error {
 }
 
 func (h *MusicHandler) UploadMusic(c *gin.Context) {
-	title := c.PostForm("title")
-	artist := c.PostForm("artist")
-
 	file, err := c.FormFile("file")
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid file"})
-		return
-	}
-
-	// Check if song with the same title and artist already exists
-	var count int
-	err = h.DB.Get(&count, "SELECT COUNT(*) FROM music WHERE title = ? AND artist = ?", title, artist)
-	if err != nil {
-		log.Printf("Error querying music: %v", err)
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to check for existing music"})
-		return
-	}
-
-	if count > 0 {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Song already exists, try updating it instead with a PUT request"})
 		return
 	}
 
@@ -298,36 +281,41 @@ func (h *MusicHandler) UploadMusic(c *gin.Context) {
 		return
 	}
 
+	metadata, err := readMetadata(filepath)
+	if err != nil {
+		log.Printf("Error reading metadata: %v", err)
+		return
+	}
+
+	music := models.Music{
+		ID:        id,
+		Title:     metadata.Title(),
+		Artist:    metadata.Artist(),
+		Filename:  filename,
+		Thumbnail: sql.NullString{String: "", Valid: false},
+		Color:     "#000000",
+		Album:     metadata.Album(),
+		Year:      metadata.Year(),
+		Genre:     metadata.Genre(),
+		Lyrics:    metadata.Lyrics(),
+	}
+
+	var count int
+	err = h.DB.Get(&count, "SELECT COUNT(*) FROM music WHERE title = ? AND artist = ?", music.Title, music.Artist)
+	if err != nil {
+		log.Printf("Error querying music: %v", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to check for existing music"})
+		return
+	}
+
+	if count > 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Song already exists, try updating it instead with a PUT request"})
+		return
+	}
+
 	c.JSON(http.StatusCreated, gin.H{"id": id, "filename": filename})
 
 	go func() {
-		metadata, err := readMetadata(filepath)
-		if err != nil {
-			log.Printf("Error reading metadata: %v", err)
-			return
-		}
-
-		music := models.Music{
-			ID:        id,
-			Title:     title,
-			Artist:    artist,
-			Filename:  filename,
-			Thumbnail: sql.NullString{String: "", Valid: false},
-			Color:     "#000000",
-			Album:     metadata.Album(),
-			Year:      metadata.Year(),
-			Genre:     metadata.Genre(),
-			Lyrics:    metadata.Lyrics(),
-		}
-
-		if music.Title == "" {
-			music.Title = metadata.Title()
-		}
-
-		if music.Artist == "" {
-			music.Artist = metadata.Artist()
-		}
-
 		if music.Thumbnail == (sql.NullString{}) {
 			if metadata.Picture() != nil {
 				music.Thumbnail = sql.NullString{String: id + ".jpg", Valid: true}
@@ -396,6 +384,28 @@ func (h *MusicHandler) UploadMusic(c *gin.Context) {
 			return
 		}
 
+		if music.Album != "" {
+			var album models.Album
+			err := h.DB.Get(&album, "SELECT * FROM albums WHERE title = ? AND artist = ?", music.Album, music.Artist)
+			if err != nil {
+				album.ID = generateUniqueID()
+				album.Title = music.Album
+				album.Artist = music.Artist
+				album.Year = music.Year
+				album.Genre = music.Genre
+				album.Songs = []string{music.ID}
+
+				if _, err := h.DB.NamedExec(`INSERT INTO albums (id, title, artist, year, genre, songs) VALUES (:id, :title, :artist, :year, :genre, :songs)`, album); err != nil {
+					log.Printf("Error inserting album: %v", err)
+				}
+			} else {
+				album.Songs = append(album.Songs, music.ID)
+				if _, err := h.DB.NamedExec(`UPDATE albums SET songs = :songs WHERE id = :id`, album); err != nil {
+					log.Printf("Error updating album: %v", err)
+				}
+			}
+		}
+
 		if music.Thumbnail.Valid {
 			thumbnailPath := "./static/" + music.Thumbnail.String
 			resizedThumbnailPath := getResizedThumbnailPath(thumbnailPath, 600)
@@ -432,6 +442,28 @@ func (h *MusicHandler) UpdateMusic(c *gin.Context) {
 	}); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update music"})
 		return
+	}
+
+	var album models.Album
+	err := h.DB.Get(&album, "SELECT * FROM albums WHERE title = ? AND artist = ?", music.Album, music.Artist)
+	if err != nil {
+		album.ID = generateUniqueID()
+		album.Title = music.Album
+		album.Artist = music.Artist
+		album.Year = music.Year
+		album.Genre = music.Genre
+		album.Songs = []string{id}
+
+		if _, err := h.DB.NamedExec(`INSERT INTO albums (id, title, artist, year, genre, songs) VALUES (:id, :title, :artist, :year, :genre, :songs)`, album); err != nil {
+			log.Printf("Error inserting album: %v", err)
+			return
+		}
+	} else {
+		album.Songs = append(album.Songs, id)
+		if _, err := h.DB.NamedExec(`UPDATE albums SET songs = :songs WHERE id = :id`, album); err != nil {
+			log.Printf("Error updating album: %v", err)
+			return
+		}
 	}
 
 	c.JSON(http.StatusOK, gin.H{"message": "Music updated successfully"})
@@ -508,7 +540,6 @@ func (h *MusicHandler) GetThumbnail(c *gin.Context) {
 
 		c.File(resizedThumbnailPath)
 	} else {
-		// Return a placeholder image if no thumbnail is available
 		originalThumbnailPath := "./placeholder.png"
 		resizedThumbnailPath := getResizedThumbnailPath(originalThumbnailPath, size)
 		if _, err := os.Stat(resizedThumbnailPath); os.IsNotExist(err) {
@@ -694,16 +725,38 @@ func (h *MusicHandler) Search(c *gin.Context) {
 		return
 	}
 
-	// Search playlists by name
+	// Search playlists by name and songs
 	var playlists []models.Playlist
 	playlistQuery := `
 	SELECT * FROM playlists
-	WHERE LOWER(name) LIKE ?
+	WHERE
+		LOWER(id) LIKE ? OR
+		LOWER(name) LIKE ? OR
+		LOWER(songs) LIKE ?
 	`
-	err = h.DB.Select(&playlists, playlistQuery, likeQuery)
+
+	err = h.DB.Select(&playlists, playlistQuery, likeQuery, likeQuery, likeQuery)
 	if err != nil {
 		log.Printf("Error querying playlists: %v", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to search playlists"})
+		return
+	}
+
+	// Search albums
+	var albums []models.Album
+	albumQuery := `
+	SELECT * FROM albums
+	WHERE
+		LOWER(id) LIKE ? OR
+		LOWER(title) LIKE ? OR
+		LOWER(artist) LIKE ? OR
+		LOWER(songs) LIKE ?
+	`
+
+	err = h.DB.Select(&albums, albumQuery, likeQuery, likeQuery, likeQuery, likeQuery)
+	if err != nil {
+		log.Printf("Error querying albums: %v", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to search albums"})
 		return
 	}
 
@@ -711,7 +764,30 @@ func (h *MusicHandler) Search(c *gin.Context) {
 	result := map[string]interface{}{
 		"songs":     songs,
 		"playlists": playlists,
+		"albums":    albums,
 	}
 
 	c.JSON(http.StatusOK, result)
+}
+
+func (h *MusicHandler) GetAlbums(c *gin.Context) {
+	var albums []models.Album
+	err := h.DB.Select(&albums, "SELECT * FROM albums")
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get albums"})
+		return
+	}
+
+	c.JSON(http.StatusOK, albums)
+}
+
+func (h *MusicHandler) GetAlbumByID(c *gin.Context) {
+	id := c.Param("id")
+	var album models.Album
+	err := h.DB.Get(&album, "SELECT * FROM albums WHERE id = ?", id)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Album not found"})
+		return
+	}
+	c.JSON(http.StatusOK, album)
 }

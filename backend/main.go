@@ -49,6 +49,10 @@ func main() {
 	router.PUT("/playlists/:id", musicHandler.UpdatePlaylist)
 	router.DELETE("/playlists/:id", musicHandler.DeletePlaylist)
 
+	// Album routes
+	router.GET("/albums", musicHandler.GetAlbums)
+	router.GET("/albums/:id", musicHandler.GetAlbumByID)
+
 	// Search route
 	router.GET("/search", musicHandler.Search)
 
