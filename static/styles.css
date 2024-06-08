@@ -263,20 +263,20 @@ main {
 
 .playlist-item {
     position: relative;
-    background: linear-gradient(135deg, var(--art-color0, #000000), #282828);
-    border-radius: 8px;
+    background: linear-gradient(135deg, var(--art-color0), var(--art-color1), var(--art-color2), var(--art-color3));
+    border-radius: 0px;
     overflow: hidden;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .playlist-item:hover {
     transform: scale(1.05);
-    box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
 }
 
 .playlist-item-art {
     display: grid;
+    width: 160px;
+    height: 160px;
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(2, 1fr);
     gap: 0px;
@@ -291,7 +291,6 @@ main {
 .playlist-item-info {
     padding: 15px;
     text-align: center;
-    background-color: #202020;
 }
 
 .playlist-info {
