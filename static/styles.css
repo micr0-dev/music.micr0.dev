@@ -264,6 +264,8 @@ main {
 .playlist-item {
     position: relative;
     background: linear-gradient(135deg, var(--art-color), #282828);
+    background-position: 100%;
+    background-size: 150%;
     border-radius: 0px;
     overflow: hidden;
     cursor: pointer;
@@ -271,12 +273,14 @@ main {
     flex-direction: column;
     align-items: center;
     padding: 15px;
+    gap: 15px;
 
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: transform 0.3s ease, background-position 1s ease-out;
 }
 
 .playlist-item:hover {
     transform: scale(1.05);
+    background-position: 0%;
 }
 
 .playlist-item-art {
