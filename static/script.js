@@ -795,7 +795,9 @@ document.addEventListener('DOMContentLoaded', () => {
             playlistInfo.className = 'playlist-item-info';
             playlistInfo.innerHTML = `
             <div class="playlist-info">
-                <div class="playlist-item-title">${album.name}</div>
+                <div class="playlist-item-title">${album.title}</div>
+                <div class="playlist-item-artist">${album.artist}</div>
+                <div class="playlist-item-count">${album.songs.length} songs</div>
             </div>
             `;
 
@@ -807,20 +809,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const songID = album.songs[0];
 
-            if (songID == 0) {
-                const img = document.createElement('img');
-                img.src = `/api/thumbnail/0?size=160`;
-                playlistArt.appendChild(img);
-                div.style.setProperty('--art-color', '#000000');
-            }
-
             const response = await fetch(`/api/music/${songID}`);
             const song = await response.json();
 
             const img = document.createElement('img');
-            img.src = `/api/thumbnail/${song.id}?size=160`;
+            img.src = `/api/thumbnail/${song.id}?size=600`;
             img.alt = song.title;
             playlistArt.appendChild(img);
+
+            div.style.setProperty('--art-color', song.color);
 
             element.appendChild(div);
         });

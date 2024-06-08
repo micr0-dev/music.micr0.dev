@@ -261,6 +261,12 @@ main {
     gap: 20px;
 }
 
+.search-results-albums {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
 .playlist-item {
     position: relative;
     background: linear-gradient(135deg, var(--art-color), #282828);
