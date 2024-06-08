@@ -391,6 +391,7 @@ document.addEventListener('DOMContentLoaded', () => {
         audioPlayer.currentTime = 0;
         seekSlider.value = 0;
         seekSlider.style.setProperty('--value', `0%`);
+        console.log(volumeCurve(volumeSlider.value), volumeSlider.value);
         audioPlayer.volume = volumeCurve(volumeSlider.value);
         if (play) {
             audioPlayer.play();
