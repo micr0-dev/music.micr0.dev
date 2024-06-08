@@ -201,7 +201,10 @@ main {
     width: 24px;
     height: 24px;
     fill: #fff;
+    opacity: 0;
     cursor: pointer;
+
+    transition: opacity 0.2s;
 }
 
 .music-item #add-to-playlist {
@@ -214,6 +217,10 @@ main {
     background-color: #0000;
     border: none;
     transition: transform 0.2s;
+}
+
+.music-item:hover svg {
+    opacity: 1;
 }
 
 .music-item #add-to-playlist:hover {
