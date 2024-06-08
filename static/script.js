@@ -726,7 +726,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 const song = await response.json();
 
                 if (song == null) {
-                    songImages.push('/api/thumbnail/0?size=160');
+                    img.src = `/api/thumbnail/${song.id}?size=160`;
+                    img.alt = song.title;
+                    img.className = 'playlist-item-art';
+                    playlistArt.appendChild(img);
                     div.style.setProperty('--art-color' + i, '#000000');
                     return;
                 }
