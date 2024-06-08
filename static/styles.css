@@ -299,6 +299,20 @@ main {
     object-fit: cover;
 }
 
+.playlist-item-art {
+    width: 160px;
+    height: 160px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.album-item-art img {
+    width: 160px;
+    height: 160px;
+    object-fit: cover;
+}
+
 .playlist-item-info {
     width: 100%;
     padding: 15px;

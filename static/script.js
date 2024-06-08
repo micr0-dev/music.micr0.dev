@@ -688,12 +688,9 @@ document.addEventListener('DOMContentLoaded', () => {
         return `${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
     }
 
-    // TODO: Implement playlist cards and make look kewl
-
     function loadPlaylists(playlists, element = playlistsList) {
         element.innerHTML = '';
         playlists.forEach(async playlist => {
-            // make each playlist a card and use 4 first songs as preview and colors
             const div = document.createElement('div');
             div.className = 'playlist-item';
 
@@ -783,22 +780,48 @@ document.addEventListener('DOMContentLoaded', () => {
 
         loadMusic(playlist.songs);
     }
-
+    // loadAlbums like loadPlaylists cards
     function loadAlbums(albums, element = albumsList) {
         element.innerHTML = '';
-        albums.forEach(album => {
+        albums.forEach(async album => {
             const div = document.createElement('div');
-            div.className = 'album-item';
-            div.innerHTML = `
-                <img src="${`/api/thumbnail/${album.id}?size=160`}" alt="cover art" class="cover-art">
-                <div class="album-info">
-                    <div class="album-item">${album.title}</div>
-                    <div class="album-artist">${album.artist}</div>
-                </div>
+            div.className = 'playlist-item';
+
+            const playlistArt = document.createElement('div');
+            playlistArt.className = 'album-item-art';
+            div.appendChild(playlistArt);
+
+            const playlistInfo = document.createElement('div');
+            playlistInfo.className = 'playlist-item-info';
+            playlistInfo.innerHTML = `
+            <div class="playlist-info">
+                <div class="playlist-item-title">${album.name}</div>
+            </div>
             `;
+
+            div.appendChild(playlistInfo);
+
             div.addEventListener('click', () => {
-                // loadAlbum(album.id);
+                // loadPlaylist(playlist); //TODO: Implement playlist view
             });
+
+            const songID = album.songs[0];
+
+            if (songID == 0) {
+                const img = document.createElement('img');
+                img.src = `/api/thumbnail/0?size=160`;
+                playlistArt.appendChild(img);
+                div.style.setProperty('--art-color', '#000000');
+            }
+
+            const response = await fetch(`/api/music/${songID}`);
+            const song = await response.json();
+
+            const img = document.createElement('img');
+            img.src = `/api/thumbnail/${song.id}?size=160`;
+            img.alt = song.title;
+            playlistArt.appendChild(img);
+
             element.appendChild(div);
         });
     }
