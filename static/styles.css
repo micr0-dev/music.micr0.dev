@@ -263,7 +263,6 @@ main {
 
 .playlist-item {
     position: relative;
-    width: 190px;
     background-color: #000;
     border-radius: 0px;
     overflow: hidden;
@@ -280,6 +279,9 @@ main {
 
 .playlist-item:hover {
     transform: scale(1.05);
+}
+
+.playlist-item:hover .playlist-item-info {
     background-position: 0%;
 }
 
