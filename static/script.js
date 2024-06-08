@@ -733,7 +733,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     console.log('No song found');
                     const img = document.createElement('img');
                     img.src = `/api/thumbnail/0?size=160`;
-                    img.alt = song.title;
                     playlistArt.appendChild(img);
                     div.style.setProperty('--art-color' + i, '#000000');
                     i++;
