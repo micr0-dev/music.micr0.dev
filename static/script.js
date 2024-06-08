@@ -692,7 +692,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function loadPlaylists(playlists, element = playlistsList) {
         element.innerHTML = '';
-        playlists.forEach(playlist => {
+        playlists.forEach(async playlist => {
             // make each playlist a card and use 4 first songs as preview and colors
             const div = document.createElement('div');
             div.className = 'playlist-item';
@@ -724,7 +724,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 i++;
             });
 
-            console.log(songImages);
+            await Promise.all(songImages);
 
             div.innerHTML = `
                 <div class="playlist-item-art">
