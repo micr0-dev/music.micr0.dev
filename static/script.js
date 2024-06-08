@@ -697,6 +697,16 @@ document.addEventListener('DOMContentLoaded', () => {
             const div = document.createElement('div');
             div.className = 'playlist-item';
 
+            const playlistArt = document.createElement('div');
+            playlistArt.className = 'playlist-item-art';
+            div.appendChild(playlistArt);
+
+            div.innerHTML = `
+                <div class="playlist-info">
+                    <div class="playlist-item-title">${playlist.name}</div>
+                    <div class="playlist-item-count">${playlist.songs.length} songs</div>
+                </div>
+            `;
 
             div.addEventListener('click', () => {
                 // loadPlaylist(playlist); //TODO: Implement playlist view
@@ -704,7 +714,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const songIDs = playlist.songs.slice(0, 4);
             let i = 0;
-            let songImages = [];
 
             console.log(songIDs);
 
@@ -720,24 +729,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 div.style.setProperty('--art-color' + i, song.color);
 
-                songImages.push(`/api/thumbnail/${song.id}?size=160`);
+                const img = document.createElement('img');
+                img.src = `/api/thumbnail/${song.id}?size=160`;
+                img.alt = song.title;
+                img.className = 'playlist-item-art';
+                playlistArt.appendChild(img);
                 i++;
             });
 
-            await Promise.all(songImages);
 
-            div.innerHTML = `
-                <div class="playlist-item-art">
-                    <img src="${songImages[0]}" alt="cover art" class="cover-art">
-                    <img src="${songImages[1]}" alt="cover art" class="cover-art">
-                    <img src="${songImages[2]}" alt="cover art" class="cover-art">
-                    <img src="${songImages[3]}" alt="cover art" class="cover-art">
-                </div>
-                <div class="playlist-info">
-                    <div class="playlist-item-title">${playlist.name}</div>
-                    <div class="playlist-item-count">${playlist.songs.length} songs</div>
-                </div>
-            `;
 
 
             element.appendChild(div);
