@@ -113,6 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return 0;
         }
 
+        return value;
     }
 
     uploadForm.addEventListener('submit', async (event) => {
