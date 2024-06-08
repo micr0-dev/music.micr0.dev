@@ -338,7 +338,6 @@ main {
     color: #fff;
     /* allow only one line */
     white-space: nowrap;
-    overflow: hidden;
     text-overflow: ellipsis;
 }
 
