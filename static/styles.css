@@ -255,6 +255,37 @@ main {
     padding: 20px;
 }
 
+.playlist-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.playlist-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    cursor: pointer;
+    color: #ccc;
+}
+
+.playlist-item:hover {
+    background-color: #333;
+    color: #fff;
+}
+
+.playlist-item .playlist-info {
+    display: flex;
+    gap: 10px;
+}
+
+.playlist-item .playlist-info img {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+}
+
 #playlist-menu {
     position: fixed;
     top: 50%;

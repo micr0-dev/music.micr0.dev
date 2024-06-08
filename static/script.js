@@ -736,14 +736,14 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        element.innerHTML = '';
+        playlistsList.innerHTML = '';
         playlists.forEach(playlist => {
             const li = document.createElement('li');
             li.textContent = playlist.name;
             li.addEventListener('click', () => {
                 loadPlaylist(playlist.id);
             });
-            element.appendChild(li);
+            playlistsList.appendChild(li);
         });
     }
 
