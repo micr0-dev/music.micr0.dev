@@ -706,6 +706,8 @@ document.addEventListener('DOMContentLoaded', () => {
             let i = 0;
             let songImages = [];
 
+            console.log(songIDs);
+
             songIDs.forEach(async songID => {
                 const response = await fetch(`/api/music/${songID}`);
                 const song = await response.json();
@@ -721,6 +723,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 songImages.push(`/api/thumbnail/${song.id}?size=160`);
                 i++;
             });
+
+            console.log(songImages);
 
             div.innerHTML = `
                 <div class="playlist-item-art">
