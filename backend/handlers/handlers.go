@@ -513,6 +513,20 @@ func (h *MusicHandler) GetThumbnail(c *gin.Context) {
 		return
 	}
 
+	if id == "0" {
+		originalThumbnailPath := "./placeholder.png"
+		resizedThumbnailPath := getResizedThumbnailPath(originalThumbnailPath, size)
+		if _, err := os.Stat(resizedThumbnailPath); os.IsNotExist(err) {
+			if _, err := resizeAndSaveImage(originalThumbnailPath, resizedThumbnailPath, size); err != nil {
+				log.Printf("Error resizing image: %v", err)
+				c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to resize image"})
+				return
+			}
+		}
+		c.File(resizedThumbnailPath)
+		return
+	}
+
 	var music models.Music
 	err = h.DB.Get(&music, "SELECT thumbnail FROM music WHERE id = ?", id)
 	if err != nil {

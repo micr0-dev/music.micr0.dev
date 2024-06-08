@@ -711,12 +711,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 const song = await response.json();
 
                 if (song == null) {
+                    songImages.push('/api/thumbnail/0?size=160');
                     return;
                 }
 
                 div.style.setProperty('--art-color' + i, song.color);
 
-                songImages.push(song.thumbnail);
+                songImages.push(`/api/thumbnail/${song.id}?size=160`);
                 i++;
             });
 
