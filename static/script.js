@@ -106,7 +106,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function volumeCurve(volume) {
-        return Math.pow(10, volume / 250) - 1;
+        let value = Math.pow(10, volume / 250) - 1;
+        if (value > 1) {
+            return 1;
+        } else if (value < 0) {
+            return 0;
+        }
+
     }
 
     uploadForm.addEventListener('submit', async (event) => {
