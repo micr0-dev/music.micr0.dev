@@ -701,12 +701,16 @@ document.addEventListener('DOMContentLoaded', () => {
             playlistArt.className = 'playlist-item-art';
             div.appendChild(playlistArt);
 
-            div.innerHTML = `
-                <div class="playlist-info">
-                    <div class="playlist-item-title">${playlist.name}</div>
-                    <div class="playlist-item-count">${playlist.songs.length} songs</div>
-                </div>
+            const playlistInfo = document.createElement('div');
+            playlistInfo.className = 'playlist-item-info';
+            playlistInfo.innerHTML = `
+            <div class="playlist-info">
+                <div class="playlist-item-title">${playlist.name}</div>
+                <div class="playlist-item-count">${playlist.songs.length} songs</div>
+            </div>
             `;
+
+            div.appendChild(playlistInfo);
 
             div.addEventListener('click', () => {
                 // loadPlaylist(playlist); //TODO: Implement playlist view
