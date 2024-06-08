@@ -263,6 +263,7 @@ main {
 
 .playlist-item {
     position: relative;
+    width: 190px;
     background-color: #000;
     border-radius: 0px;
     overflow: hidden;
