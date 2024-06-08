@@ -259,12 +259,14 @@ main {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 20px;
+    background-color: #000;
 }
 
 .search-results-albums {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 20px;
+    background-color: #000;
 }
 
 .playlist-item {
