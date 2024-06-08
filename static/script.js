@@ -696,13 +696,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // make each playlist a card and use 4 first songs as preview and colors
             const div = document.createElement('div');
             div.className = 'playlist-item';
-            div.innerHTML = `
-                <img src="${`/api/thumbnail/${playlist.id}?size=160`}" alt="cover art" class="cover-art">
-                <div class="playlist-info">
-                    <div class="playlist-item-title">${playlist.name}</div>
-                    <div class="playlist-item-count">${playlist.songs.length} songs</div>
-                </div>
-            `;
+
 
             div.addEventListener('click', () => {
                 // loadPlaylist(playlist); //TODO: Implement playlist view
@@ -710,6 +704,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const songIDs = playlist.songs.slice(0, 4);
             let i = 0;
+            let songImages = [];
 
             songIDs.forEach(async songID => {
                 const response = await fetch(`/api/music/${songID}`);
@@ -720,8 +715,24 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 div.style.setProperty('--art-color' + i, song.color);
+
+                songImages.push(song.thumbnail);
                 i++;
             });
+
+            div.innerHTML = `
+                <div class="playlist-item-art">
+                    <img src="${songImages[0]}" alt="cover art" class="cover-art">
+                    <img src="${songImages[1]}" alt="cover art" class="cover-art">
+                    <img src="${songImages[2]}" alt="cover art" class="cover-art">
+                    <img src="${songImages[3]}" alt="cover art" class="cover-art">
+                </div>
+                <div class="playlist-info">
+                    <div class="playlist-item-title">${playlist.name}</div>
+                    <div class="playlist-item-count">${playlist.songs.length} songs</div>
+                </div>
+            `;
+
 
             element.appendChild(div);
         });

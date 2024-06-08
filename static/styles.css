@@ -276,6 +276,12 @@ main {
     color: #fff;
 }
 
+.playlist-item-art img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+}
+
 .playlist-item .playlist-info {
     display: flex;
     gap: 10px;
