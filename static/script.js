@@ -728,10 +728,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log(songIDs);
 
             songIDs.forEach(async songID => {
-                const response = await fetch(`/api/music/${songID}`);
-                const song = await response.json();
-
-                if (song == null) {
+                if (songID == 0) {
                     const img = document.createElement('img');
                     img.src = `/api/thumbnail/0?size=160`;
                     img.alt = song.title;
@@ -739,6 +736,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     div.style.setProperty('--art-color' + i, '#000000');
                     return;
                 }
+
+                const response = await fetch(`/api/music/${songID}`);
+                const song = await response.json();
 
                 div.style.setProperty('--art-color' + i, song.color);
 
