@@ -106,7 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function volumeCurve(volume) {
-        return Math.pow(10, volume / 2000);
+        return Math.pow(10, volume / 2500);
     }
 
     uploadForm.addEventListener('submit', async (event) => {
@@ -619,6 +619,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     volumeSlider.addEventListener('input', () => {
+        console.log(volumeCurve(volumeSlider.value), volumeSlider.value);
         audioPlayer.volume = volumeCurve(volumeSlider.value);
         volumeSlider.style.setProperty('--value', `${volumeSlider.value}%`);
 
