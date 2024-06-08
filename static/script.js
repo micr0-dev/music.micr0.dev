@@ -265,7 +265,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             div.style.setProperty('--art-color', music.color);
 
-            artist = music.artist + music.album_artist && music.artist != music.album_artist ? `, ${music.album_artist}` : '';
+            artist = music.artist + (music.album_artist && music.artist != music.album_artist ? `, ${music.album_artist}` : '');
             artist = artist ? artist : 'Unknown Artist';
 
             div.innerHTML = `
@@ -381,7 +381,7 @@ document.addEventListener('DOMContentLoaded', () => {
         coverArt.src = thumbnailUrl;
         coverArt.alt = music.title;
         trackTitle.textContent = music.title;
-        artist = music.artist + music.album_artist && music.artist != music.album_artist ? `, ${music.album_artist}` : '';
+        artist = music.artist + (music.album_artist && music.artist != music.album_artist ? `, ${music.album_artist}` : '');
         artist = artist ? artist : 'Unknown Artist';
         trackArtist.textContent = artist;
         audioPlayer.currentTime = 0;
