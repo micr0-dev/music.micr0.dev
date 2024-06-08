@@ -263,9 +263,7 @@ main {
 
 .playlist-item {
     position: relative;
-    background: linear-gradient(135deg, var(--art-color), #282828);
-    background-position: 100%;
-    background-size: 150%;
+    background-color: #000;
     border-radius: 0px;
     overflow: hidden;
     cursor: pointer;
@@ -303,7 +301,9 @@ main {
     width: 100%;
     padding: 15px;
     text-align: center;
-    background-color: #000;
+    background: linear-gradient(135deg, var(--art-color), #282828);
+    background-position: 100%;
+    background-size: 150%;
 }
 
 .playlist-info {
