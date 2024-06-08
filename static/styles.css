@@ -323,6 +323,10 @@ main {
     padding: 15px;
     text-align: center;
     background-color: #000;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
 }
 
 .playlist-info {
@@ -336,9 +340,6 @@ main {
     font-size: 18px;
     font-weight: bold;
     color: #fff;
-    /* allow only one line */
-    white-space: nowrap;
-    text-overflow: ellipsis;
 }
 
 .playlist-item-count {
