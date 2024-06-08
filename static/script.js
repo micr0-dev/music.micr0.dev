@@ -712,6 +712,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (song == null) {
                     songImages.push('/api/thumbnail/0?size=160');
+                    div.style.setProperty('--art-color' + i, '#000000');
                     return;
                 }
 
