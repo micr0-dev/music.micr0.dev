@@ -337,6 +337,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const playlistsDiv = document.createElement('div');
         playlistsDiv.className = 'search-results-playlists';
+        playlistsDiv.classList.add('playlist-cards');
         const albumsDiv = document.createElement('div');
         albumsDiv.className = 'search-results-albums';
         const musicDiv = document.createElement('div');
@@ -692,12 +693,37 @@ document.addEventListener('DOMContentLoaded', () => {
     function loadPlaylists(playlists, element = playlistsList) {
         element.innerHTML = '';
         playlists.forEach(playlist => {
-            const li = document.createElement('li');
-            li.textContent = playlist.name;
-            li.addEventListener('click', () => {
-                loadPlaylist(playlist.id);
+            // make each playlist a card and use 4 first songs as preview and colors
+            const div = document.createElement('div');
+            div.className = 'playlist-item';
+            div.innerHTML = `
+                <img src="${`/api/thumbnail/${playlist.id}?size=160`}" alt="cover art" class="cover-art">
+                <div class="playlist-info">
+                    <div class="playlist-item-title">${playlist.name}</div>
+                    <div class="playlist-item-count">${playlist.songs.length} songs</div>
+                </div>
+            `;
+
+            div.addEventListener('click', () => {
+                // loadPlaylist(playlist); //TODO: Implement playlist view
             });
-            element.appendChild(li);
+
+            const songIDs = playlist.songs.slice(0, 4);
+            let i = 0;
+
+            songIDs.forEach(async songID => {
+                const response = await fetch(`/api/music/${songID}`);
+                const song = await response.json();
+
+                if (song == null) {
+                    return;
+                }
+
+                div.style.setProperty('--art-color' + i, song.color);
+                i++;
+            });
+
+            element.appendChild(div);
         });
     }
 
@@ -710,7 +736,15 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        loadPlaylists(playlists);
+        element.innerHTML = '';
+        playlists.forEach(playlist => {
+            const li = document.createElement('li');
+            li.textContent = playlist.name;
+            li.addEventListener('click', () => {
+                loadPlaylist(playlist.id);
+            });
+            element.appendChild(li);
+        });
     }
 
     async function loadPlaylist(playlistId) {
