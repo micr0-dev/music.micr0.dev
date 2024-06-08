@@ -265,14 +265,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
             div.style.setProperty('--art-color', music.color);
 
-            artist = music.artist + music.album_artist ? `, ${music.album_artist}` : '';
+            artist = music.artist + music.album_artist && music.artist != music.album_artist ? `, ${music.album_artist}` : '';
             artist = artist ? artist : 'Unknown Artist';
 
             div.innerHTML = `
                 <img src="${`/api/thumbnail/${music.id}?size=160`}" alt="cover art" class="cover-art">
                 <div class="music-info">
                     <div class="music-item-title">${music.title} </div>
-                    <div class="music-item-artist">${music.artist}</div>
+                    <div class="music-item-artist">${artist}</div>
                 </div>
                 ${isHiFi ? `<span class="hifi-tag">.${ext}</span>` : ''}
                 <button id="add-to-playlist"><svg><use href="#plus"></use></svg></button>
@@ -381,7 +381,9 @@ document.addEventListener('DOMContentLoaded', () => {
         coverArt.src = thumbnailUrl;
         coverArt.alt = music.title;
         trackTitle.textContent = music.title;
-        trackArtist.textContent = music.artist;
+        artist = music.artist + music.album_artist && music.artist != music.album_artist ? `, ${music.album_artist}` : '';
+        artist = artist ? artist : 'Unknown Artist';
+        trackArtist.textContent = artist;
         audioPlayer.currentTime = 0;
         seekSlider.value = 0;
         seekSlider.style.setProperty('--value', `0%`);
