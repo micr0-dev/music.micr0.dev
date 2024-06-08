@@ -391,7 +391,7 @@ document.addEventListener('DOMContentLoaded', () => {
         audioPlayer.currentTime = 0;
         seekSlider.value = 0;
         seekSlider.style.setProperty('--value', `0%`);
-        audioPlayer.volume = volumeDBToPercentage(volumeSlider.value);
+        audioPlayer.volume = volumeCurve(volumeSlider.value);
         if (play) {
             audioPlayer.play();
             playIcon.style.display = 'none';
@@ -618,7 +618,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     volumeSlider.addEventListener('input', () => {
-        audioPlayer.volume = volumeDBToPercentage(volumeSlider.value);
+        audioPlayer.volume = volumeCurve(volumeSlider.value);
         volumeSlider.style.setProperty('--value', `${volumeSlider.value}%`);
 
         savePlayerState();
