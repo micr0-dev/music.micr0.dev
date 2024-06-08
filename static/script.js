@@ -734,19 +734,19 @@ document.addEventListener('DOMContentLoaded', () => {
                     img.alt = song.title;
                     playlistArt.appendChild(img);
                     div.style.setProperty('--art-color' + i, '#000000');
-                    return;
+                    i++;
+                } else {
+                    const response = await fetch(`/api/music/${songID}`);
+                    const song = await response.json();
+
+                    div.style.setProperty('--art-color' + i, song.color);
+
+                    const img = document.createElement('img');
+                    img.src = `/api/thumbnail/${song.id}?size=160`;
+                    img.alt = song.title;
+                    playlistArt.appendChild(img);
+                    i++;
                 }
-
-                const response = await fetch(`/api/music/${songID}`);
-                const song = await response.json();
-
-                div.style.setProperty('--art-color' + i, song.color);
-
-                const img = document.createElement('img');
-                img.src = `/api/thumbnail/${song.id}?size=160`;
-                img.alt = song.title;
-                playlistArt.appendChild(img);
-                i++;
             });
 
             element.appendChild(div);
