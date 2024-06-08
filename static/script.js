@@ -128,7 +128,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!response.ok) {
                 const result = await response.json();
                 alert('Failed to upload music: ' + (result.error || 'Unknown error'));
-                break;
             }
         }
 
@@ -265,6 +264,9 @@ document.addEventListener('DOMContentLoaded', () => {
             if (music.color == "#000000") music.color = "#ffffff";
 
             div.style.setProperty('--art-color', music.color);
+
+            artist = music.artist + music.album_artist ? `, ${music.album_artist}` : '';
+            artist = artist ? artist : 'Unknown Artist';
 
             div.innerHTML = `
                 <img src="${`/api/thumbnail/${music.id}?size=160`}" alt="cover art" class="cover-art">

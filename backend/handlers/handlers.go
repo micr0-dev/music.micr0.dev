@@ -288,16 +288,17 @@ func (h *MusicHandler) UploadMusic(c *gin.Context) {
 	}
 
 	music := models.Music{
-		ID:        id,
-		Title:     metadata.Title(),
-		Artist:    metadata.Artist(),
-		Filename:  filename,
-		Thumbnail: sql.NullString{String: "", Valid: false},
-		Color:     "#000000",
-		Album:     metadata.Album(),
-		Year:      metadata.Year(),
-		Genre:     metadata.Genre(),
-		Lyrics:    metadata.Lyrics(),
+		ID:          id,
+		Title:       metadata.Title(),
+		Artist:      metadata.Artist(),
+		AlbumArtist: metadata.AlbumArtist(),
+		Filename:    filename,
+		Thumbnail:   sql.NullString{String: "", Valid: false},
+		Color:       "#000000",
+		Album:       metadata.Album(),
+		Year:        metadata.Year(),
+		Genre:       metadata.Genre(),
+		Lyrics:      metadata.Lyrics(),
 	}
 
 	var count int
@@ -379,7 +380,7 @@ func (h *MusicHandler) UploadMusic(c *gin.Context) {
 			}
 		}
 
-		if _, err := h.DB.NamedExec(`INSERT INTO music (id, title, artist, filename, thumbnail, color, album, year, genre, lyrics) VALUES (:id, :title, :artist, :filename, :thumbnail, :color, :album, :year, :genre, :lyrics)`, music); err != nil {
+		if _, err := h.DB.NamedExec(`INSERT INTO music (id, title, artist, album_artist, album, year, genre, lyrics, filename, thumbnail, color) VALUES (:id, :title, :artist, :album_artist, :album, :year, :genre, :lyrics, :filename, :thumbnail, :color)`, music); err != nil {
 			log.Printf("Error inserting music: %v", err)
 			return
 		}
@@ -428,17 +429,18 @@ func (h *MusicHandler) UpdateMusic(c *gin.Context) {
 		return
 	}
 
-	if _, err := h.DB.NamedExec(`UPDATE music SET title = :title, artist = :artist, filename = :filename, thumbnail = :thumbnail, color = :color, album = :album, year = :year, genre = :genre, lyrics = :lyrics WHERE id = :id`, map[string]interface{}{
-		"id":        id,
-		"title":     music.Title,
-		"artist":    music.Artist,
-		"filename":  music.Filename,
-		"thumbnail": music.Thumbnail,
-		"color":     music.Color,
-		"album":     music.Album,
-		"year":      music.Year,
-		"genre":     music.Genre,
-		"lyrics":    music.Lyrics,
+	if _, err := h.DB.NamedExec(`UPDATE music SET title = :title, artist = :artist, album_artist = :album_artist, album = :album, year = :year, genre = :genre, lyrics = :lyrics WHERE id = :id`, map[string]interface{}{
+		"id":           id,
+		"title":        music.Title,
+		"artist":       music.Artist,
+		"album_artist": music.AlbumArtist,
+		"filename":     music.Filename,
+		"thumbnail":    music.Thumbnail,
+		"color":        music.Color,
+		"album":        music.Album,
+		"year":         music.Year,
+		"genre":        music.Genre,
+		"lyrics":       music.Lyrics,
 	}); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update music"})
 		return
@@ -713,6 +715,7 @@ func (h *MusicHandler) Search(c *gin.Context) {
 		LOWER(id) LIKE ? OR
 		LOWER(title) LIKE ? OR
 		LOWER(artist) LIKE ? OR
+		LOWER(album_artist) LIKE ? OR
 		LOWER(filename) LIKE ? OR
 		LOWER(album) LIKE ? OR
 		LOWER(genre) LIKE ? OR
