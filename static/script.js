@@ -106,7 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function volumeCurve(volume) {
-        return Math.pow(10, volume / 2500);
+        return Math.pow(10, volume / 250) - 1;
     }
 
     uploadForm.addEventListener('submit', async (event) => {
