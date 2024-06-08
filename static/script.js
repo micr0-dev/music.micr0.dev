@@ -726,6 +726,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const song = await response.json();
 
                 if (song == null) {
+                    const img = document.createElement('img');
                     img.src = `/api/thumbnail/${song.id}?size=160`;
                     img.alt = song.title;
                     img.className = 'playlist-item-art';
