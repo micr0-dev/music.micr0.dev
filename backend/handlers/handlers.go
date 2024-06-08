@@ -721,7 +721,7 @@ func (h *MusicHandler) Search(c *gin.Context) {
 		LOWER(genre) LIKE ? OR
 		LOWER(lyrics) LIKE ?
 	`
-	err := h.DB.Select(&songs, songQuery, likeQuery, likeQuery, likeQuery, likeQuery, likeQuery, likeQuery, likeQuery)
+	err := h.DB.Select(&songs, songQuery, likeQuery, likeQuery, likeQuery, likeQuery, likeQuery, likeQuery, likeQuery, likeQuery)
 	if err != nil {
 		log.Printf("Error querying songs: %v", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to search songs"})
