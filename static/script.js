@@ -105,6 +105,14 @@ document.addEventListener('DOMContentLoaded', () => {
         return this.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
     }
 
+    function volumeDBToPercentage(volume) {
+        return Math.round(Math.pow(10, volume / 20) * 100);
+    }
+
+    function volumePercentageToDB(volume) {
+        return Math.round(20 * Math.log10(volume / 100));
+    }
+
     uploadForm.addEventListener('submit', async (event) => {
         event.preventDefault();
         const files = event.target.files.files;
@@ -276,7 +284,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
                 ${isHiFi ? `<span class="hifi-tag">.${ext}</span>` : ''}
                 <button id="add-to-playlist"><svg><use href="#plus"></use></svg></button>
-            `;
+            `; // TODO: Truncate long titles
 
             if (isPlaying) {
                 div.classList.add('playing');
@@ -387,7 +395,7 @@ document.addEventListener('DOMContentLoaded', () => {
         audioPlayer.currentTime = 0;
         seekSlider.value = 0;
         seekSlider.style.setProperty('--value', `0%`);
-        audioPlayer.volume = volumeSlider.value / 100;
+        audioPlayer.volume = volumeDBToPercentage(volumeSlider.value) / 100;
         if (play) {
             audioPlayer.play();
             playIcon.style.display = 'none';
@@ -614,7 +622,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     volumeSlider.addEventListener('input', () => {
-        audioPlayer.volume = volumeSlider.value / 100;
+        audioPlayer.volume = volumeDBToPercentage(volumeSlider.value) / 100;
         volumeSlider.style.setProperty('--value', `${volumeSlider.value}%`);
 
         savePlayerState();
