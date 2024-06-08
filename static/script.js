@@ -717,6 +717,12 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             const songIDs = playlist.songs.slice(0, 4);
+            if (songIDs.length < 4) {
+                for (let i = songIDs.length; i < 4; i++) {
+                    songIDs.push(0);
+                }
+            }
+
             let i = 0;
 
             console.log(songIDs);
@@ -729,7 +735,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     const img = document.createElement('img');
                     img.src = `/api/thumbnail/0?size=160`;
                     img.alt = song.title;
-                    img.className = 'playlist-item-art';
                     playlistArt.appendChild(img);
                     div.style.setProperty('--art-color' + i, '#000000');
                     return;
@@ -740,13 +745,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 const img = document.createElement('img');
                 img.src = `/api/thumbnail/${song.id}?size=160`;
                 img.alt = song.title;
-                img.className = 'playlist-item-art';
                 playlistArt.appendChild(img);
                 i++;
             });
-
-
-
 
             element.appendChild(div);
         });
