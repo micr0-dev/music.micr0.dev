@@ -105,8 +105,8 @@ document.addEventListener('DOMContentLoaded', () => {
         return this.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
     }
 
-    function volumeDBToPercentage(volume) {
-        return Math.round(Math.pow(10, volume / 20) * 100);
+    function volumeCurve(volume) {
+        return Math.pow(10, volume / 20);
     }
 
     uploadForm.addEventListener('submit', async (event) => {
