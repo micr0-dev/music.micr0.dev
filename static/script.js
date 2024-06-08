@@ -736,7 +736,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     const response = await fetch(`/api/music/${songID}`);
                     const song = await response.json();
 
-                    div.style.setProperty('--art-color' + i, song.color);
+                    if (i == 0) {
+                        div.style.setProperty('--art-color', song.color);
+                    }
 
                     const img = document.createElement('img');
                     img.src = `/api/thumbnail/${song.id}?size=160`;
