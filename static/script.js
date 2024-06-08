@@ -106,7 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function volumeCurve(volume) {
-        let value = Math.pow(10, volume / 250) - 1;
+        let value = (Math.pow(10, volume / 2500) - 1) * 10;
         if (value > 1) {
             return 1;
         } else if (value < 0) {
