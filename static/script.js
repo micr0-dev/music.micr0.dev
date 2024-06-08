@@ -725,19 +725,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
             let i = 0;
 
-            console.log(songIDs);
-
             songIDs.forEach(async songID => {
-                console.log(songID);
                 if (songID == 0) {
-                    console.log('No song found');
                     const img = document.createElement('img');
                     img.src = `/api/thumbnail/0?size=160`;
                     playlistArt.appendChild(img);
                     div.style.setProperty('--art-color' + i, '#000000');
                     i++;
                 } else {
-                    console.log('Fetching song');
                     const response = await fetch(`/api/music/${songID}`);
                     const song = await response.json();
 
