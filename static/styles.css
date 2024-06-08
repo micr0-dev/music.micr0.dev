@@ -340,6 +340,17 @@ main {
     font-size: 18px;
     font-weight: bold;
     color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+
+.playlist-item-artist {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
 }
 
 .playlist-item-count {
