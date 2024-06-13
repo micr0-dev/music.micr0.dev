@@ -23,6 +23,7 @@ func main() {
 	if !exists {
 		log.Fatal("JWT_SECRET environment variable not set")
 	}
+	fmt.Println("JWT Secret Key Loaded:", jwtSecret)
 
 	db, err := sqlx.Connect("sqlite3", "./music.db")
 	if err != nil {
