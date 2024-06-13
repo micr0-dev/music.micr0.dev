@@ -52,6 +52,8 @@ document.addEventListener('DOMContentLoaded', () => {
     async function fetchAuth(url, options = {}) {
         const token = getCookie('token');
         if (!token) {
+            console.log('No token found');
+            console.log(document.cookie);
             // window.location.href = '/login.html';
             return;
         }
