@@ -828,19 +828,20 @@ func (h *MusicHandler) GetUserPlaylists(c *gin.Context) {
 		return
 	}
 
-	var playlists []models.Playlist
-	query, args, err := sqlx.In("SELECT * FROM playlists WHERE id IN (?)", user.PlaylistIDs)
-	if err != nil {
-		log.Printf("Error preparing query: %v", err)
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get user playlists"})
-		return
+	var playlistIDs []string
+	for _, playlistID := range user.PlaylistIDs {
+		playlistIDs = append(playlistIDs, playlistID)
 	}
 
-	err = h.DB.Select(&playlists, query, args...)
-	if err != nil {
-		log.Printf("Error querying playlists: %v", err)
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get user playlists"})
-		return
+	var playlists []models.Playlist
+	for _, playlistID := range playlistIDs {
+		var playlist models.Playlist
+		err := h.DB.Get(&playlist, "SELECT id, name, songs FROM playlists WHERE id = ?", playlistID)
+		if err != nil {
+			log.Printf("Error fetching playlist: %v", err)
+			continue
+		}
+		playlists = append(playlists, playlist)
 	}
 
 	c.JSON(http.StatusOK, playlists)

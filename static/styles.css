@@ -808,7 +808,7 @@ main {
 }
 
 #volume-slider {
-    background: linear-gradient(to right, #fff 0%, #fff var(--value), #000 var(--value), #000 100%);
+    background: linear-gradient(to right, #fff 0%, #fff var(--value), #121212 var(--value), #121212 100%);
 }
 
 .slider::-webkit-slider-thumb {
