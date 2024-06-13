@@ -853,9 +853,7 @@ func (h *MusicHandler) Login(c *gin.Context) {
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
-	log.Printf("Signing token with key: %s", jwtKey)
-
-	tokenString, err := token.SignedString(jwtKey)
+	tokenString, err := token.SignedString([]byte(jwtKey))
 	if err != nil {
 		log.Printf("Error signing token: %v", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create token"})
