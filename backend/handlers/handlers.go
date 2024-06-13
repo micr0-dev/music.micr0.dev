@@ -509,10 +509,12 @@ func (h *MusicHandler) StreamMusic(c *gin.Context) {
 
 	claims := &StreamClaims{}
 	token, err := jwt.ParseWithClaims(tokenStr, claims, func(token *jwt.Token) (interface{}, error) {
-		return jwtKey, nil
+		return []byte(jwtKey), nil
 	})
 
 	if err != nil || !token.Valid {
+		log.Printf("Error validating token: %v", err)
+		log.Printf("Token: %v", token)
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
 		return
 	}
