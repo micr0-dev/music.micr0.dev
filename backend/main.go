@@ -89,8 +89,10 @@ func main() {
 		// Search route
 		authorized.GET("/search", musicHandler.Search)
 
-		// User routes
+		// User specific routes
 		authorized.GET("/whoami", musicHandler.WhoAmI)
+		authorized.GET("/user/uploaded", musicHandler.GetUserMusic)
+		authorized.GET("/user/playlists", musicHandler.GetUserPlaylists)
 
 	}
 

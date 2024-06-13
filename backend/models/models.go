@@ -54,9 +54,11 @@ type Album struct {
 }
 
 type User struct {
-	ID       int    `db:"id" json:"id"`
-	Username string `db:"username" json:"username"`
-	Password string `db:"password" json:"-"`
+	ID          int             `db:"id" json:"id"`
+	Username    string          `db:"username" json:"username"`
+	Password    string          `db:"password" json:"-"`
+	PlaylistIDs JSONStringArray `db:"playlist_ids" json:"playlist_ids"`
+	UploadedIDs JSONStringArray `db:"uploaded_ids" json:"uploaded_ids"`
 }
 
 func InitializeDatabase(db *sqlx.DB) {
@@ -108,7 +110,9 @@ func InitializeDatabase(db *sqlx.DB) {
 		CREATE TABLE IF NOT EXISTS users (
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
 			username TEXT,
-			password TEXT
+			password TEXT,
+			playlist_ids TEXT,
+			uploaded_ids TEXT
 		)
 	`)
 	if err != nil {

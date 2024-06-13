@@ -318,6 +318,27 @@ func (h *MusicHandler) UploadMusic(c *gin.Context) {
 		return
 	}
 
+	username, exists := c.Get("username")
+	if !exists {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get username, is user middleware missing?"})
+		return
+	}
+
+	var user models.User
+	err = h.DB.Get(&user, "SELECT * FROM users WHERE username = ?", username)
+	if err != nil {
+		log.Printf("Error querying user: %v", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get user"})
+		return
+	}
+
+	user.UploadedIDs = append(user.UploadedIDs, id)
+	if _, err := h.DB.NamedExec(`UPDATE users SET uploaded_ids = :uploaded_ids WHERE id = :id`, user); err != nil {
+		log.Printf("Error updating user: %v", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update user"})
+		return
+	}
+
 	c.JSON(http.StatusCreated, gin.H{"id": id, "filename": filename})
 
 	go func() {
@@ -497,6 +518,39 @@ func (h *MusicHandler) GetMusicByID(c *gin.Context) {
 	c.JSON(http.StatusOK, music)
 }
 
+func (h *MusicHandler) GetUserMusic(c *gin.Context) {
+	username, exists := c.Get("username")
+	if !exists {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get username, is user middleware missing?"})
+		return
+	}
+
+	var user models.User
+	err := h.DB.Get(&user, "SELECT * FROM users WHERE username = ?", username)
+	if err != nil {
+		log.Printf("Error querying user: %v", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get user"})
+		return
+	}
+
+	var musics []models.Music
+	query, args, err := sqlx.In("SELECT * FROM music WHERE id IN (?)", user.UploadedIDs)
+	if err != nil {
+		log.Printf("Error preparing query: %v", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get user music"})
+		return
+	}
+
+	err = h.DB.Select(&musics, query, args...)
+	if err != nil {
+		log.Printf("Error querying music: %v", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get user music"})
+		return
+	}
+
+	c.JSON(http.StatusOK, musics)
+}
+
 func (h *MusicHandler) StreamMusic(c *gin.Context) {
 	tokenStr := c.Query("token")
 
@@ -652,6 +706,28 @@ func (h *MusicHandler) CreatePlaylist(c *gin.Context) {
 		return
 	}
 
+	// Add playlist to user's playlist IDs
+	username, exists := c.Get("username")
+	if !exists {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get username, is user middleware missing?"})
+		return
+	}
+
+	var user models.User
+	err := h.DB.Get(&user, "SELECT * FROM users WHERE username = ?", username)
+	if err != nil {
+		log.Printf("Error querying user: %v", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get user"})
+		return
+	}
+
+	user.PlaylistIDs = append(user.PlaylistIDs, playlist.ID)
+	if _, err := h.DB.NamedExec(`UPDATE users SET playlist_ids = :playlist_ids WHERE id = :id`, user); err != nil {
+		log.Printf("Error updating user: %v", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update user"})
+		return
+	}
+
 	c.JSON(http.StatusCreated, playlist)
 }
 
@@ -735,6 +811,39 @@ func (h *MusicHandler) DeletePlaylist(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"message": "Playlist deleted successfully"})
+}
+
+func (h *MusicHandler) GetUserPlaylists(c *gin.Context) {
+	username, exists := c.Get("username")
+	if !exists {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get username, is user middleware missing?"})
+		return
+	}
+
+	var user models.User
+	err := h.DB.Get(&user, "SELECT * FROM users WHERE username = ?", username)
+	if err != nil {
+		log.Printf("Error querying user: %v", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get user"})
+		return
+	}
+
+	var playlists []models.Playlist
+	query, args, err := sqlx.In("SELECT * FROM playlists WHERE id IN (?)", user.PlaylistIDs)
+	if err != nil {
+		log.Printf("Error preparing query: %v", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get user playlists"})
+		return
+	}
+
+	err = h.DB.Select(&playlists, query, args...)
+	if err != nil {
+		log.Printf("Error querying playlists: %v", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get user playlists"})
+		return
+	}
+
+	c.JSON(http.StatusOK, playlists)
 }
 
 func (h *MusicHandler) Search(c *gin.Context) {
