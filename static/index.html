@@ -8,12 +8,10 @@
     <link rel="stylesheet" href="styles.css">
 
     <script>
-        // Function to get the JWT token from localStorage
         function getToken() {
             return localStorage.getItem('token');
         }
 
-        // Redirect to login if not authenticated
         document.addEventListener("DOMContentLoaded", () => {
             const token = getToken();
             if (!token) {
@@ -23,7 +21,6 @@
             }
         });
 
-        // Fetch and display username
         async function fetchUserInfo() {
             const token = getToken();
             if (!token) {
@@ -45,11 +42,9 @@
                 }
             } catch (error) {
                 console.error(error);
-                // Optionally, handle the error (logout user, show message, etc.)
             }
         }
 
-        // Handle logout
         function logout() {
             localStorage.removeItem('token');
             window.location.href = '/login.html';
