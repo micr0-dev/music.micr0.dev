@@ -41,6 +41,40 @@ document.addEventListener('DOMContentLoaded', () => {
     let isShuffle = false;
     let isRepeat = false;
 
+    // Helper function to get the JWT token from cookies
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+    }
+
+    // Function to fetch data with authentication
+    async function fetchAuth(url, options = {}) {
+        const token = getCookie('token');
+        if (!token) {
+            window.location.href = '/login.html';
+            return;
+        }
+
+        const headers = new Headers({
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        });
+
+        if (options.headers) {
+            options.headers = new Headers(options.headers);
+            options.headers.append('Authorization', `Bearer ${token}`);
+        } else {
+            options.headers = headers;
+        }
+
+        const response = await fetch(url, options);
+        if (response.status === 401) {
+            window.location.href = '/login.html';
+        }
+        return response.json();
+    }
+
 
     function savePlayerState() {
         localStorage.setItem('player-state', JSON.stringify({
@@ -131,7 +165,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const formData = new FormData();
             formData.append('file', files[i]);
 
-            const response = await fetch('/api/music', {
+            const response = await fetchAuth('/api/music', {
                 method: 'POST',
                 body: formData,
             });
@@ -151,7 +185,7 @@ document.addEventListener('DOMContentLoaded', () => {
         event.preventDefault();
         const playlistName = event.target['playlist-name'].value;
 
-        const response = await fetch('/api/playlists', {
+        const response = await fetchAuth('/api/playlists', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ name: playlistName })
@@ -168,7 +202,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     async function fetchPlaylists() {
-        const response = await fetch('/api/playlists');
+        const response = await fetchAuth('/api/playlists');
         const playlists = await response.json();
 
         existingPlaylists.innerHTML = '';
@@ -192,7 +226,7 @@ document.addEventListener('DOMContentLoaded', () => {
     async function addSongToPlaylist(playlistId) {
         const songId = playlistMenu.dataset.songId;
 
-        const response = await fetch(`/api/playlists/${playlistId}`);
+        const response = await fetchAuth(`/api/playlists/${playlistId}`);
         const playlist = await response.json();
 
         if (response.ok) {
@@ -200,7 +234,7 @@ document.addEventListener('DOMContentLoaded', () => {
             playlist.songs = playlist.song_ids;
             playlist.song_ids = undefined;
 
-            const updateResponse = await fetch(`/api/playlists/${playlistId}`, {
+            const updateResponse = await fetchAuth(`/api/playlists/${playlistId}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(playlist)
@@ -310,7 +344,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function loadMusicList() {
-        const response = await fetch('/api/music');
+        const response = await fetchAuth('/api/music');
         const musics = await response.json();
 
         if (musics == null) {
@@ -325,7 +359,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const query = searchInput.value;
         if (query.length < 2) return;
 
-        const response = await fetch(`/api/search?q=${query}`);
+        const response = await fetchAuth(`/api/search?q=${query}`);
         const results = await response.json();
 
         if (results == null) {
@@ -730,7 +764,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     div.style.setProperty('--art-color' + i, '#000000');
                     i++;
                 } else {
-                    const response = await fetch(`/api/music/${songID}`);
+                    const response = await fetchAuth(`/api/music/${songID}`);
                     const song = await response.json();
 
                     if (i == 0) {
@@ -750,7 +784,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function loadSidePlaylists() {
-        const response = await fetch('/api/playlists');
+        const response = await fetchAuth('/api/playlists');
         const playlists = await response.json();
 
         if (playlists == null) {
@@ -770,7 +804,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function loadPlaylist(playlistId) {
-        const response = await fetch(`/api/playlists/${playlistId}`);
+        const response = await fetchAuth(`/api/playlists/${playlistId}`);
         const playlist = await response.json();
 
         if (playlist == null) {
@@ -809,7 +843,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const songID = album.songs[0];
 
-            const response = await fetch(`/api/music/${songID}`);
+            const response = await fetchAuth(`/api/music/${songID}`);
             const song = await response.json();
 
             const img = document.createElement('img');

@@ -786,6 +786,15 @@ main {
     }
 }
 
+.not-clickable {
+    pointer-events: none;
+    cursor: default;
+}
+
+.not-clickable:hover {
+    transform: none;
+}
+
 .hidden {
     display: none;
 }
