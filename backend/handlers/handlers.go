@@ -860,6 +860,7 @@ func (h *MusicHandler) Login(c *gin.Context) {
 		return
 	}
 
-	c.SetCookie("token", tokenString, int(expirationTime.Unix()), "/", "ubuntu-server", false, false)
-	c.JSON(http.StatusOK, gin.H{"message": "Login successful"})
+	c.SetSameSite(http.SameSiteStrictMode)
+
+	c.JSON(http.StatusOK, gin.H{"message": "Login successful", "token": tokenString})
 }
