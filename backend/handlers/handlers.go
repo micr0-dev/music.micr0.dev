@@ -860,6 +860,6 @@ func (h *MusicHandler) Login(c *gin.Context) {
 		return
 	}
 
-	c.SetCookie("token", tokenString, int(expirationTime.Unix()), "/", "localhost", false, true)
+	c.SetCookie("token", tokenString, int(expirationTime.Unix()), "/", "ubuntu-server", false, true)
 	c.JSON(http.StatusOK, gin.H{"message": "Login successful"})
 }
