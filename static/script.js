@@ -839,6 +839,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function loadSidePlaylists() {
         const response = await fetchAuth('/api/user/playlists');
+        const playlistSelect = document.getElementById('playlist-select');
         const playlists = await response.json();
 
         if (playlists == null) {
@@ -847,6 +848,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         playlistsList.innerHTML = '';
+
         playlists.forEach(playlist => {
             const li = document.createElement('li');
             li.textContent = playlist.name;
@@ -854,6 +856,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 loadPlaylist(playlist.id);
             });
             playlistsList.appendChild(li);
+
+            const option = document.createElement('option');
+            option.value = playlist.id;
+            option.textContent = playlist.name;
+            playlistSelect.appendChild(option);
+
         });
     }
 
@@ -919,32 +927,3 @@ document.addEventListener('DOMContentLoaded', () => {
     loadSidePlaylists();
     loadMusicList();
 });
-
-window.__onGCastApiAvailable = function (isAvailable) {
-    if (!isAvailable) {
-        return false;
-    }
-
-    var castContext = cast.framework.CastContext.getInstance();
-
-    castContext.setOptions({
-        autoJoinPolicy: chrome.cast.AutoJoinPolicy.ORIGIN_SCOPED,
-        receiverApplicationId: chrome.cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID
-    });
-
-    var stateChanged = cast.framework.CastContextEventType.CAST_STATE_CHANGED;
-    castContext.addEventListener(stateChanged, function (event) {
-        var castSession = castContext.getCurrentSession();
-        var media = new chrome.cast.media.MediaInfo('http://ubuntu-server/api/stream/ef43253ce451f072', 'audio/mp3');
-        var request = new chrome.cast.media.LoadRequest(media);
-
-        castSession && castSession
-            .loadMedia(request)
-            .then(function () {
-                console.log('Success');
-            })
-            .catch(function (error) {
-                console.log('Error: ' + error);
-            });
-    });
-};
