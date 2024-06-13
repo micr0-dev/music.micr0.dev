@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (response.status === 401) {
             window.location.href = '/login.html';
         }
-        return response.json();
+        return response;
     }
 
 
