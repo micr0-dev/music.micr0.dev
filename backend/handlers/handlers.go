@@ -920,3 +920,12 @@ func (h *MusicHandler) GetStreamToken(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{"token": token})
 }
+
+func (h *MusicHandler) WhoAmI(c *gin.Context) {
+	username, exists := c.Get("username")
+	if !exists {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get username"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"username": username})
+}

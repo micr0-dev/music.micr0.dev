@@ -88,6 +88,10 @@ func main() {
 
 		// Search route
 		authorized.GET("/search", musicHandler.Search)
+
+		// User routes
+		authorized.GET("/whoami", musicHandler.WhoAmI)
+
 	}
 
 	fmt.Println("Go server listening on port 8084")

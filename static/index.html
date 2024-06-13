@@ -6,7 +6,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Music Streaming</title>
     <link rel="stylesheet" href="styles.css">
-    <script src='https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1'></script>
+
+    <script>
+        // Function to get the JWT token from localStorage
+        function getToken() {
+            return localStorage.getItem('token');
+        }
+
+        // Redirect to login if not authenticated
+        document.addEventListener("DOMContentLoaded", () => {
+            const token = getToken();
+            if (!token) {
+                window.location.href = '/login.html';
+            } else {
+                fetchUserInfo();
+            }
+        });
+
+        // Fetch and display username
+        async function fetchUserInfo() {
+            const token = getToken();
+            if (!token) {
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/whoami', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    document.getElementById('username-display').textContent = data.username;
+                } else {
+                    throw new Error('Failed to fetch user info');
+                }
+            } catch (error) {
+                console.error(error);
+                // Optionally, handle the error (logout user, show message, etc.)
+            }
+        }
+
+        // Handle logout
+        function logout() {
+            localStorage.removeItem('token');
+            window.location.href = '/login.html';
+        }
+    </script>
 </head>
 
 <svg style="display: none">
@@ -48,6 +96,10 @@
 
 <body>
     <aside id="sidebar">
+        <div id="user-info">
+            Logged in as: <span id="username-display">Loading...</span>
+            <button onclick="logout()">Logout</button>
+        </div>
         <button id="home-button" class="selected">
             Home
         </button>
@@ -155,8 +207,6 @@
                             <use href="#shuffle"></use>
                         </svg>
                     </button>
-                    <button is='google-cast-button'></button>
-
                 </div>
                 <div class="volume">
                     <input type="range" min="0" max="100" value="100" class="slider" id="volume-slider">
