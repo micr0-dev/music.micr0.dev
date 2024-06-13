@@ -270,6 +270,7 @@ func downloadImage(url, filepath string) error {
 func (h *MusicHandler) UploadMusic(c *gin.Context) {
 	file, err := c.FormFile("file")
 	if err != nil {
+		log.Printf("Error getting file: %v", err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid file"})
 		return
 	}
