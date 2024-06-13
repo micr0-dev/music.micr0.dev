@@ -63,7 +63,7 @@ func main() {
 	// Public routes
 	router.POST("/login", musicHandler.Login)
 	router.GET("/thumbnail/:id", musicHandler.GetThumbnail)
-	router.GET("/stream/:id", musicHandler.StreamMusic)
+	router.GET("/stream", musicHandler.StreamMusic)
 
 	// Protected routes with authentication middleware
 	authorized := router.Group("/")
