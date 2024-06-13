@@ -155,10 +155,13 @@ aside button.selected {
     border: none;
     border-radius: 0;
     cursor: pointer;
+    border: 1px solid #000;
+    transition: border 0.2s;
 }
 
 #user-info button:hover {
     background-color: #f44336;
+    border: 1px solid #f44336;
 }
 
 /* Main content adjustments */
