@@ -420,8 +420,31 @@ document.addEventListener('DOMContentLoaded', () => {
         dataScroll.innerHTML = `<span>${text} • &zwnj;</span><span id="num2">${text} • &zwnj;</span><span id="num3">${text} • &zwnj;</span><span id="num4">${text} • &zwnj;</span>`;
     }
 
-    function playTrack(music, isUserAction = true, play = true) {
-        audioPlayer.src = `/api/stream/${music.id}`;
+    async function fetchStreamToken(musicId) {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            window.location.href = '/login.html';
+            return;
+        }
+
+        const response = await fetch(`/api/streamtoken/${musicId}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to fetch stream token');
+        }
+
+        const data = await response.json();
+        return data.token;
+    }
+
+    async function playTrack(music, isUserAction = true, play = true) {
+        const streamToken = await fetchStreamToken(music.id);
+        audioPlayer.src = `/api/stream?token=${streamToken}`;
+
         const thumbnailUrl = `/api/thumbnail/${music.id}?size=600`;
         coverArt.src = thumbnailUrl;
         coverArt.alt = music.title;
