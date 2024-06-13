@@ -184,7 +184,7 @@ document.addEventListener('DOMContentLoaded', () => {
         event.preventDefault();
         const playlistName = event.target['playlist-name'].value;
 
-        const response = await fetchAuth('/api/playlists', {
+        const response = await fetchAuth('/api/user/playlists', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ name: playlistName })
@@ -806,7 +806,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function loadSidePlaylists() {
-        const response = await fetchAuth('/api/playlists');
+        const response = await fetchAuth('/api/user/playlists');
         const playlists = await response.json();
 
         if (playlists == null) {
