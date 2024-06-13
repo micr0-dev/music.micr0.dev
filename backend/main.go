@@ -106,7 +106,7 @@ func createUser(db *sqlx.DB, username, password string) error {
 		return err
 	}
 
-	_, err = db.Exec("INSERT INTO users (username, password) VALUES (?, ?)", username, hashedPassword)
+	_, err = db.Exec("INSERT INTO users (username, password, playlist_ids, uploaded_ids) VALUES (?, ?, '[]', '[]')", username, string(hashedPassword))
 	if err != nil {
 		return err
 	}
