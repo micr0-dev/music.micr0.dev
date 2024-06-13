@@ -41,6 +41,7 @@ func main() {
 		}
 
 		fmt.Println("User created successfully")
+		return
 	}
 
 	lastFmAPIKey := os.Getenv("LASTFM_API_KEY")
