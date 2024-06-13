@@ -48,17 +48,24 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        const headers = new Headers({
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-        });
+        const headers = new Headers();
+
+        headers.append('Authorization', `Bearer ${token}`);
+
+        if (!(options.body instanceof FormData)) {
+            headers.append('Content-Type', 'application/json');
+        }
+
 
         if (options.headers) {
             options.headers = new Headers(options.headers);
-            options.headers.append('Authorization', `Bearer ${token}`);
+            for (let [key, value] of headers.entries()) {
+                options.headers.append(key, value);
+            }
         } else {
             options.headers = headers;
         }
+
 
         const response = await fetch(url, options);
         if (response.status === 401) {
