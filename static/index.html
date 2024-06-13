@@ -122,6 +122,16 @@
                     <h2>Upload Music</h2>
                     <form id="upload-form" enctype="multipart/form-data">
                         <input type="file" name="files" multiple required>
+                        <div>
+                            <label for="playlist-select">Select Playlist:</label>
+                            <select id="playlist-select">
+                                <option value="" selected disabled>Select Playlist</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="new-playlist">Or Create New Playlist:</label>
+                            <input type="text" id="new-playlist" placeholder="New Playlist Name">
+                        </div>
                         <button type="submit" name="upload">Upload</button>
                         <label for="files" id="file-progress"></label>
                     </form>
@@ -135,7 +145,7 @@
                 </section>
 
                 <section id="music-list-section">
-                    <h2>Music List</h2>
+                    <h2 id="music-list-title">Music List</h2>
                     <div id="music-list" class="music-list"></div>
                 </section>
             </main>

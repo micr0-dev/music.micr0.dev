@@ -32,6 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const searchInput = document.getElementById('search-input');
     const searchResults = document.getElementById('search-results');
     const dataScroll = document.getElementById('data-scroll');
+    const musicListTitle = document.getElementById('music-list-title');
 
     let isPlaying = false;
     let openQueue = [];
@@ -149,33 +150,62 @@ document.addEventListener('DOMContentLoaded', () => {
         return value;
     }
 
-    uploadForm.addEventListener('submit', async (event) => {
+    document.getElementById('upload-form').addEventListener('submit', async function (event) {
         event.preventDefault();
+
+        // Check whether to use an existing or new playlist
+        const playlistSelect = document.getElementById('playlist-select');
+        let selectedPlaylistId = playlistSelect.value;
+        const newPlaylistName = document.getElementById('new-playlist').value.trim();
+
+        if (newPlaylistName) {
+            const createResponse = await fetchAuth('/api/playlists', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ name: newPlaylistName })
+            });
+
+            if (createResponse.ok) {
+                const playlist = await createResponse.json();
+                selectedPlaylistId = playlist.id;
+            } else {
+                alert('Failed to create new playlist');
+                return;
+            }
+        }
+
         const files = event.target.files.files;
         if (files.length === 0) {
             alert('Please select at least one file.');
             return;
         }
 
-        uploadProgress.classList.remove('hidden');
+        document.getElementById('upload-progress').classList.remove('hidden');
 
         for (let i = 0; i < files.length; i++) {
+            const fileProgress = document.getElementById('file-progress');
             fileProgress.textContent = `Uploading ${i + 1}/${files.length} files`;
+
             const formData = new FormData();
             formData.append('file', files[i]);
 
             const response = await fetchAuth('/api/music', {
                 method: 'POST',
-                body: formData,
+                body: formData
             });
 
             if (!response.ok) {
                 const result = await response.json();
                 alert('Failed to upload music: ' + (result.error || 'Unknown error'));
+            } else {
+                const uploadedSong = await response.json();
+                await addSongToPlaylist(selectedPlaylistId, uploadedSong.id);
             }
         }
 
-        uploadProgress.classList.add('hidden');
+        document.getElementById('upload-progress').classList.add('hidden');
         alert('All music files uploaded successfully!');
         loadMusicList();
     });
@@ -184,7 +214,7 @@ document.addEventListener('DOMContentLoaded', () => {
         event.preventDefault();
         const playlistName = event.target['playlist-name'].value;
 
-        const response = await fetchAuth('/api/user/playlists', {
+        const response = await fetchAuth('/api/playlists', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ name: playlistName })
@@ -240,7 +270,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (updateResponse.ok) {
-                alert('Song added to playlist successfully!');
                 playlistMenu.classList.add('hidden');
             } else {
                 const result = await updateResponse.json();
@@ -351,6 +380,8 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        musicListTitle.textContent = 'Recently Added';
+
         loadMusic(musics);
     }
 
@@ -412,6 +443,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (musicResults == null) {
             musicDiv.innerHTML = 'No music found';
         } else {
+            musicListTitle.textContent = 'Search Results';
             loadMusic(musicResults, musicDiv);
         }
     });
@@ -833,6 +865,8 @@ document.addEventListener('DOMContentLoaded', () => {
             albumsList.innerHTML = 'No music found';
             return;
         }
+
+        musicListTitle.textContent = playlist.name;
 
         loadMusic(playlist.songs);
     }
