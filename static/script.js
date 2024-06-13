@@ -41,19 +41,11 @@ document.addEventListener('DOMContentLoaded', () => {
     let isShuffle = false;
     let isRepeat = false;
 
-    // Helper function to get the JWT token from cookies
-    function getCookie(name) {
-        const value = `; ${document.cookie}`;
-        const parts = value.split(`; ${name}=`);
-        if (parts.length === 2) return parts.pop().split(';').shift();
-    }
-
-    // Function to fetch data with authentication
     async function fetchAuth(url, options = {}) {
-        const token = getCookie('token');
+        const token = localStorage.getItem('token');
         if (!token) {
             console.log('No token found');
-            console.log(document.cookie);
+            console.log(localStorage.getItem('token'));
             // window.location.href = '/login.html';
             return;
         }

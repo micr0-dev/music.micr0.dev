@@ -32,10 +32,8 @@
                 });
                 const result = await response.json();
 
-                console.log(result);
-
                 if (response.ok && result.token) {
-                    document.cookie = `token=${result.token}; Path=/; SameSite=Strict`;
+                    localStorage.setItem('token', result.token);
                     window.location.href = '/';
                 } else {
                     document.getElementById('login-error').classList.remove('hidden');
