@@ -19,7 +19,7 @@ import (
 )
 
 func main() {
-	_, exists := os.LookupEnv("JWT_SECRET")
+	jwtSecret, exists := os.LookupEnv("JWT_SECRET")
 	if !exists {
 		log.Fatal("JWT_SECRET environment variable not set")
 	}
@@ -50,6 +50,8 @@ func main() {
 	}
 
 	gin.SetMode(gin.ReleaseMode)
+
+	middlewares.Init([]byte(jwtSecret))
 
 	models.InitializeDatabase(db)
 
