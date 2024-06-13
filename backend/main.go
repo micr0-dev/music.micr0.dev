@@ -106,10 +106,13 @@ func createUser(db *sqlx.DB, username, password string) error {
 		return err
 	}
 
-	_, err = db.Exec("INSERT INTO users (username, password, playlist_ids, uploaded_ids) VALUES (?, ?, '[]', '[]')", username, string(hashedPassword))
-	if err != nil {
-		return err
+	user := models.User{
+		Username:    username,
+		Password:    string(hashedPassword),
+		PlaylistIDs: models.JSONStringArray{},
+		UploadedIDs: models.JSONStringArray{},
 	}
 
-	return nil
+	_, err = db.NamedExec(`INSERT INTO users (username, password, playlist_ids, uploaded_ids) VALUES (:username, :password, :playlist_ids, :uploaded_ids)`, &user)
+	return err
 }
