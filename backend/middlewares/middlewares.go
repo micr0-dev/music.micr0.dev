@@ -2,6 +2,7 @@ package middlewares
 
 import (
 	"net/http"
+	"strings"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
@@ -20,17 +21,21 @@ func Init(jwtSecret []byte) {
 
 func AuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		tokenString, err := c.Cookie("token")
-		if err != nil {
-			if err == http.ErrNoCookie {
-				c.JSON(http.StatusUnauthorized, gin.H{"error": "Not authorized"})
-				c.Abort()
-				return
-			}
+		authHeader := c.GetHeader("Authorization")
+		if authHeader == "" {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Not authorized"})
+			c.Abort()
+			return
+		}
+
+		parts := strings.Split(authHeader, " ")
+		if len(parts) != 2 || parts[0] != "Bearer" {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
 			c.Abort()
 			return
 		}
+
+		tokenString := parts[1]
 
 		claims := &Claims{}
 		token, err := jwt.ParseWithClaims(tokenString, claims, func(t *jwt.Token) (interface{}, error) {

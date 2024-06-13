@@ -860,7 +860,5 @@ func (h *MusicHandler) Login(c *gin.Context) {
 		return
 	}
 
-	c.SetSameSite(http.SameSiteStrictMode)
-
 	c.JSON(http.StatusOK, gin.H{"message": "Login successful", "token": tokenString})
 }

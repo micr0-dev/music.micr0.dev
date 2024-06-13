@@ -44,9 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
     async function fetchAuth(url, options = {}) {
         const token = localStorage.getItem('token');
         if (!token) {
-            console.log('No token found');
-            console.log(localStorage.getItem('token'));
-            // window.location.href = '/login.html';
+            window.location.href = '/login.html';
             return;
         }
 
@@ -64,7 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const response = await fetch(url, options);
         if (response.status === 401) {
-            // window.location.href = '/login.html';
+            window.location.href = '/login.html';
         }
         return response.json();
     }
