@@ -17,11 +17,14 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
+	"time"
 
+	"github.com/dgrijalva/jwt-go"
 	"github.com/dhowden/tag"
 	"github.com/gin-gonic/gin"
 	"github.com/jmoiron/sqlx"
 	"github.com/nfnt/resize"
+	"golang.org/x/crypto/bcrypt"
 	"music.micr0.dev/backend/models"
 )
 
@@ -807,4 +810,54 @@ func (h *MusicHandler) GetAlbumByID(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, album)
+}
+
+type Credentials struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
+
+type Claims struct {
+	Username string `json:"username"`
+	jwt.StandardClaims
+}
+
+func (h *MusicHandler) Login(c *gin.Context) {
+	jwtKey, exists := os.LookupEnv("JWT_SECRET")
+	if !exists {
+		log.Fatal("JWT_SECRET environment variable not set")
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "JWT secret not set"})
+		return
+	}
+
+	var creds Credentials
+	if err := c.BindJSON(&creds); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
+		return
+	}
+
+	var user models.User
+	err := h.DB.Get(&user, "SELECT * FROM users WHERE username = ?", creds.Username)
+	if err != nil || bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(creds.Password)) != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid username or password"})
+		return
+	}
+
+	expirationTime := time.Now().Add(24 * time.Hour)
+	claims := &Claims{
+		Username: user.Username,
+		StandardClaims: jwt.StandardClaims{
+			ExpiresAt: expirationTime.Unix(),
+		},
+	}
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	tokenString, err := token.SignedString(jwtKey)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create token"})
+		return
+	}
+
+	c.SetCookie("token", tokenString, int(expirationTime.Unix()), "/", "localhost", false, true)
+	c.JSON(http.StatusOK, gin.H{"message": "Login successful"})
 }

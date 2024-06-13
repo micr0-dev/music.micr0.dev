@@ -6,7 +6,9 @@ import (
 	"net/http"
 	"os"
 
+	"golang.org/x/crypto/bcrypt"
 	"music.micr0.dev/backend/handlers"
+	"music.micr0.dev/backend/middlewares"
 	"music.micr0.dev/backend/models"
 
 	"github.com/gin-gonic/gin"
@@ -17,11 +19,29 @@ import (
 )
 
 func main() {
+	_, exists := os.LookupEnv("JWT_SECRET")
+	if !exists {
+		log.Fatal("JWT_SECRET environment variable not set")
+	}
+
 	db, err := sqlx.Connect("sqlite3", "./music.db")
 	if err != nil {
 		log.Fatalf("Failed to connect to the database: %v", err)
 	}
 	defer db.Close()
+
+	// Get admin username and password from the command line arguments if they are provided
+	if len(os.Args) == 3 {
+		username := os.Args[1]
+		password := os.Args[2]
+
+		err = createUser(db, username, password)
+		if err != nil {
+			log.Fatalf("Failed to create user: %v", err)
+		}
+
+		fmt.Println("User created successfully")
+	}
 
 	lastFmAPIKey := os.Getenv("LASTFM_API_KEY")
 	if lastFmAPIKey == "" {
@@ -35,27 +55,50 @@ func main() {
 	router := gin.Default()
 
 	musicHandler := handlers.NewMusicHandler(db, lastFmAPIKey)
-	router.GET("/music", musicHandler.GetMusic)
-	router.GET("/music/:id", musicHandler.GetMusicByID)
-	router.POST("/music", musicHandler.UploadMusic)
-	router.PUT("/music/:id", musicHandler.UpdateMusic)
-	router.GET("/stream/:id", musicHandler.StreamMusic)
-	router.GET("/thumbnail/:id", musicHandler.GetThumbnail)
 
-	// Playlist routes
-	router.POST("/playlists", musicHandler.CreatePlaylist)
-	router.GET("/playlists", musicHandler.GetPlaylists)
-	router.GET("/playlists/:id", musicHandler.GetPlaylistByID)
-	router.PUT("/playlists/:id", musicHandler.UpdatePlaylist)
-	router.DELETE("/playlists/:id", musicHandler.DeletePlaylist)
+	// Public routes
+	router.POST("/login", musicHandler.Login)
 
-	// Album routes
-	router.GET("/albums", musicHandler.GetAlbums)
-	router.GET("/albums/:id", musicHandler.GetAlbumByID)
+	// Protected routes with authentication middleware
+	authorized := router.Group("/")
+	authorized.Use(middlewares.AuthMiddleware())
+	{
+		authorized.GET("/music", musicHandler.GetMusic)
+		authorized.GET("/music/:id", musicHandler.GetMusicByID)
+		authorized.POST("/music", musicHandler.UploadMusic)
+		authorized.PUT("/music/:id", musicHandler.UpdateMusic)
+		authorized.GET("/stream/:id", musicHandler.StreamMusic)
+		authorized.GET("/thumbnail/:id", musicHandler.GetThumbnail)
 
-	// Search route
-	router.GET("/search", musicHandler.Search)
+		// Playlist routes
+		authorized.POST("/playlists", musicHandler.CreatePlaylist)
+		authorized.GET("/playlists", musicHandler.GetPlaylists)
+		authorized.GET("/playlists/:id", musicHandler.GetPlaylistByID)
+		authorized.PUT("/playlists/:id", musicHandler.UpdatePlaylist)
+		authorized.DELETE("/playlists/:id", musicHandler.DeletePlaylist)
+
+		// Album routes
+		authorized.GET("/albums", musicHandler.GetAlbums)
+		authorized.GET("/albums/:id", musicHandler.GetAlbumByID)
+
+		// Search route
+		authorized.GET("/search", musicHandler.Search)
+	}
 
 	fmt.Println("Go server listening on port 8084")
 	log.Fatal(http.ListenAndServe(":8084", router))
+}
+
+func createUser(db *sqlx.DB, username, password string) error {
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	if err != nil {
+		return err
+	}
+
+	_, err = db.Exec("INSERT INTO users (username, password) VALUES (?, ?)", username, hashedPassword)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

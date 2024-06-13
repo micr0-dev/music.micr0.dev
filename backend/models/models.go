@@ -53,6 +53,12 @@ type Album struct {
 	Songs  JSONStringArray `db:"songs" json:"songs"`
 }
 
+type User struct {
+	ID       int    `db:"id" json:"id"`
+	Username string `db:"username" json:"username"`
+	Password string `db:"password" json:"-"`
+}
+
 func InitializeDatabase(db *sqlx.DB) {
 	_, err := db.Exec(`
 		CREATE TABLE IF NOT EXISTS music (
@@ -92,6 +98,17 @@ func InitializeDatabase(db *sqlx.DB) {
 			year INTEGER,
 			genre TEXT,
 			songs TEXT
+		)
+	`)
+	if err != nil {
+		panic(err)
+	}
+
+	_, err = db.Exec(`
+		CREATE TABLE IF NOT EXISTS users (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			username TEXT,
+			password TEXT
 		)
 	`)
 	if err != nil {
