@@ -32,7 +32,9 @@
                 });
                 const result = await response.json();
 
-                if (response.ok && result.token) {
+                console.log('Login response:', result);
+
+                if (response.ok) {
                     localStorage.setItem('token', result.token);
                     window.location.href = '/';
                 } else {
