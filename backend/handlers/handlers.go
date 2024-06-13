@@ -498,9 +498,29 @@ func (h *MusicHandler) GetMusicByID(c *gin.Context) {
 }
 
 func (h *MusicHandler) StreamMusic(c *gin.Context) {
-	id := c.Param("id")
+	tokenStr := c.Query("token")
+
+	jwtKey, exists := os.LookupEnv("JWT_SECRET")
+	if !exists {
+		log.Fatal("JWT_SECRET environment variable not set")
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "JWT secret not set"})
+		return
+	}
+
+	claims := &StreamClaims{}
+	token, err := jwt.ParseWithClaims(tokenStr, claims, func(token *jwt.Token) (interface{}, error) {
+		return jwtKey, nil
+	})
+
+	if err != nil || !token.Valid {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+		return
+	}
+
+	id := claims.MusicID
+
 	var music models.Music
-	err := h.DB.Get(&music, "SELECT filename FROM music WHERE id = ?", id)
+	err = h.DB.Get(&music, "SELECT filename FROM music WHERE id = ?", id)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Music not found"})
 		return
@@ -862,4 +882,39 @@ func (h *MusicHandler) Login(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"message": "Login successful", "token": tokenString})
+}
+
+type StreamClaims struct {
+	MusicID string `json:"musicId"`
+	jwt.StandardClaims
+}
+
+func GenerateStreamToken(musicID string, secret []byte) (string, error) {
+	expirationTime := time.Now().Add(15 * time.Minute) // 15-minute expiry
+	claims := &StreamClaims{
+		MusicID: musicID,
+		StandardClaims: jwt.StandardClaims{
+			ExpiresAt: expirationTime.Unix(),
+		},
+	}
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	return token.SignedString(secret)
+}
+
+func (h *MusicHandler) GetStreamToken(c *gin.Context) {
+	musicID := c.Param("id")
+
+	jwtKey, exists := os.LookupEnv("JWT_SECRET")
+	if !exists {
+		log.Fatal("JWT_SECRET environment variable not set")
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "JWT secret not set"})
+		return
+	}
+
+	token, err := GenerateStreamToken(musicID, []byte(jwtKey))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to generate stream token"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"token": token})
 }
