@@ -971,6 +971,9 @@ func (h *MusicHandler) Login(c *gin.Context) {
 	var user models.User
 	err := h.DB.Get(&user, "SELECT * FROM users WHERE username = ?", creds.Username)
 	if err != nil || bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(creds.Password)) != nil {
+		log.Printf("Error querying user: %v", err)
+		log.Printf("User: %v", user)
+		log.Printf(" creds: %v", creds)
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid username or password"})
 		return
 	}
