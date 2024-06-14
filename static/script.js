@@ -323,10 +323,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function loadMusic(musics, element = musicList) {
         openQueue = musics.slice();
 
-        console.log(openQueue);
-        console.log(queue);
-        console.log(shuffleedQueue);
-
         element.innerHTML = '';
         musics.forEach(music => {
             const div = document.createElement('div');
@@ -491,7 +487,6 @@ document.addEventListener('DOMContentLoaded', () => {
         audioPlayer.currentTime = 0;
         seekSlider.value = 0;
         seekSlider.style.setProperty('--value', `0%`);
-        console.log(volumeCurve(volumeSlider.value), volumeSlider.value);
         audioPlayer.volume = volumeCurve(volumeSlider.value);
         if (play) {
             audioPlayer.play();
@@ -526,6 +521,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let info = [];
 
         //FIXME: Song metadata not showing up while in a playlist
+        console.log(music);
 
         if (!(music.year == 0))
             info.push(music.year);
@@ -719,7 +715,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     volumeSlider.addEventListener('input', () => {
-        console.log(volumeCurve(volumeSlider.value), volumeSlider.value);
         audioPlayer.volume = volumeCurve(volumeSlider.value);
         volumeSlider.style.setProperty('--value', `${volumeSlider.value}%`);
 
