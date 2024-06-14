@@ -893,7 +893,10 @@ document.addEventListener('DOMContentLoaded', () => {
         searchButton.classList.remove('selected');
         uploadButton.classList.remove('selected');
 
-        document.getElementById(playlistId).classList.add('selected');
+        const playlistSide = document.getElementById(playlistId)
+        if (playlistSide) {
+            playlistSide.classList.add('selected');
+        }
 
         let response;
 
