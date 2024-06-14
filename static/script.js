@@ -415,7 +415,9 @@ document.addEventListener('DOMContentLoaded', () => {
             playlistsList.innerHTML = 'No playlists found';
         }
 
-        loadPlaylists(playlists);
+        const playlistList = document.getElementById('playlist-list');
+
+        loadPlaylists(playlists, playlistList);
 
         const albumsResponse = await fetchAuth('/api/albums?limit=10');
         const albums = await albumsResponse.json();
@@ -424,7 +426,9 @@ document.addEventListener('DOMContentLoaded', () => {
             albumsList.innerHTML = 'No albums found';
         }
 
-        loadAlbums(albums);
+        const albumsList = document.getElementById('albums-list');
+
+        loadAlbums(albums, albumsList);
     }
 
     searchInput.addEventListener('input', async () => {
