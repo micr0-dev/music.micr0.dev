@@ -696,8 +696,6 @@ main {
 }
 
 
-
-
 #cover-art-container {
     position: fixed;
     bottom: 125px;
@@ -720,7 +718,7 @@ main {
     left: 10px;
     text-align: left;
     padding: 5px;
-    max-width: 35%;
+    max-width: 50%;
     overflow: hidden;
     white-space: nowrap;
     z-index: 0;
