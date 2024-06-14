@@ -393,7 +393,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function loadMusicList() {
-        const response = await fetchAuth('/api/music?limit=10');
+        const response = await fetchAuth('/api/music?limit=20');
         const musics = await response.json();
 
         if (musics == null) {
