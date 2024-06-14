@@ -284,6 +284,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     //Sidebar navigation
     homeButton.addEventListener('click', () => {
+        document.getElementById(currentScreen).classList.remove('selected');
+
         currentScreen = 'home';
         uploadSection.classList.add('hidden');
         searchSection.classList.add('hidden');
@@ -297,6 +299,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     uploadButton.addEventListener('click', () => {
+        document.getElementById(currentScreen).classList.remove('selected');
+
         currentScreen = 'upload';
         musicSection.classList.add('hidden');
         searchSection.classList.add('hidden');
@@ -308,6 +312,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     searchButton.addEventListener('click', () => {
+        document.getElementById(currentScreen).classList.remove('selected');
+
         currentScreen = 'search';
         musicSection.classList.add('hidden');
         uploadSection.classList.add('hidden');
@@ -849,12 +855,13 @@ document.addEventListener('DOMContentLoaded', () => {
         playlistsList.innerHTML = '';
 
         playlists.forEach(playlist => {
-            const li = document.createElement('li');
-            li.textContent = playlist.name;
-            li.addEventListener('click', () => {
+            const button = document.createElement('button');
+            button.id = playlist.id;
+            button.textContent = playlist.name;
+            button.addEventListener('click', () => {
                 loadPlaylist(playlist.id);
             });
-            playlistsList.appendChild(li);
+            playlistsList.appendChild(button);
 
             const option = document.createElement('option');
             option.value = playlist.id;
@@ -865,14 +872,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function loadPlaylist(playlistId, isAlbum = false) {
-        currentScreen = 'home';
+        currentScreen = playlistId;
         uploadSection.classList.add('hidden');
         searchSection.classList.add('hidden');
         musicSection.classList.remove('hidden');
 
-        homeButton.classList.add('selected');
+        homeButton.classList.remove('selected');
         searchButton.classList.remove('selected');
         uploadButton.classList.remove('selected');
+
+        document.getElementById(playlistId).classList.add('selected');
 
         let response;
 
