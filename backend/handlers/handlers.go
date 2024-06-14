@@ -497,6 +497,8 @@ func (h *MusicHandler) UpdateMusic(c *gin.Context) {
 }
 
 func (h *MusicHandler) GetMusic(c *gin.Context) {
+	limiter := c.Query("limit")
+
 	var musics []models.Music
 	err := h.DB.Select(&musics, "SELECT * FROM music")
 	if err != nil {
@@ -504,6 +506,19 @@ func (h *MusicHandler) GetMusic(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get music"})
 		return
 	}
+
+	if limiter != "" {
+		limit, err := strconv.Atoi(limiter)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid limit parameter"})
+			return
+		}
+		if limit > len(musics) {
+			limit = len(musics)
+		}
+		musics = musics[:limit]
+	}
+
 	c.JSON(http.StatusOK, musics)
 }
 
@@ -732,11 +747,25 @@ func (h *MusicHandler) CreatePlaylist(c *gin.Context) {
 }
 
 func (h *MusicHandler) GetPlaylists(c *gin.Context) {
+	limiter := c.Query("limit")
+
 	var playlists []models.Playlist
 	err := h.DB.Select(&playlists, "SELECT id, name, songs FROM playlists")
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get playlists"})
 		return
+	}
+
+	if limiter != "" {
+		limit, err := strconv.Atoi(limiter)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid limit parameter"})
+			return
+		}
+		if limit > len(playlists) {
+			limit = len(playlists)
+		}
+		playlists = playlists[:limit]
 	}
 
 	c.JSON(http.StatusOK, playlists)
@@ -848,6 +877,7 @@ func (h *MusicHandler) GetUserPlaylists(c *gin.Context) {
 }
 
 func (h *MusicHandler) Search(c *gin.Context) {
+	limiter := c.Query("limit")
 	query := c.Query("q")
 	if query == "" {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Query parameter 'q' is required"})
@@ -918,6 +948,29 @@ func (h *MusicHandler) Search(c *gin.Context) {
 		"songs":     songs,
 		"playlists": playlists,
 		"albums":    albums,
+	}
+
+	if limiter != "" {
+		limit, err := strconv.Atoi(limiter)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid limit parameter"})
+			return
+		}
+
+		if limit > len(songs) {
+			limit = len(songs)
+		}
+		result["songs"] = songs[:limit]
+
+		if limit > len(playlists) {
+			limit = len(playlists)
+		}
+		result["playlists"] = playlists[:limit]
+
+		if limit > len(albums) {
+			limit = len(albums)
+		}
+		result["albums"] = albums[:limit]
 	}
 
 	c.JSON(http.StatusOK, result)

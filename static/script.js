@@ -538,9 +538,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let info = [];
 
-        //FIXME: Song metadata not showing up while in a playlist
-        console.log(music);
-
         if (!(music.year == 0))
             info.push(music.year);
 
@@ -914,13 +911,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         musicListTitle.textContent = playlist.name;
 
-        console.log(playlist);
-
         //Get the songs from the playlist from IDs
         let songs = [];
         for (let i = 0; i < playlist.song_ids.length; i++) {
-            console.log(`/api/music/${playlist.song_ids[i]}`);
-            const response = await fetchAuth(`/api/music/${playlist.song_ids[i]}`);
+            if (!isAlbum) {
+                const response = await fetchAuth(`/api/music/${playlist.song_ids[i]}`);
+            } else {
+                const response = await fetchAuth(`/api/music/${playlist.songs[i]}`);
+            }
             const song = await response.json();
             songs.push(song);
         }
