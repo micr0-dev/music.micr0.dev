@@ -33,6 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const searchResults = document.getElementById('search-results');
     const dataScroll = document.getElementById('data-scroll');
     const musicListTitle = document.getElementById('music-list-title');
+    const trackInfo = document.getElementById('track-info');
 
     let isPlaying = false;
     let openQueue = [];
