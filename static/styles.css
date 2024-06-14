@@ -723,17 +723,7 @@ main {
     max-width: 35%;
     overflow: hidden;
     white-space: nowrap;
-}
-
-.track-info-gradient:after {
-    content: '';
-    position: absolute;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    width: 50px;
-    background: linear-gradient(to left, #000, transparent);
-    pointer-events: none;
+    z-index: 0;
 }
 
 #track-title {
@@ -755,6 +745,20 @@ main {
     justify-content: center;
     align-items: center;
     gap: 20px;
+    z-index: 1;
+    background-color: #000;
+}
+
+#audio-controls:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 50px;
+    background: linear-gradient(to left, #000, transparent);
+    z-index: 1;
 }
 
 #audio-controls button {

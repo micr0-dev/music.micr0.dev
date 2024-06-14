@@ -543,12 +543,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         nowPlayingContainer.style.setProperty('--art-color', music.color);
 
-        if (trackInfo.scrollWidth > trackInfo.clientWidth) {
-            trackInfo.classList.add("track-info-gradient");
-        } else {
-            trackInfo.classList.remove("track-info-gradient");
-        }
-
         // fetch song from id if missing year, album, genre
         if (music.year == 0 || !music.album || !music.genre) {
             const response = await fetchAuth(`/api/music/${music.id}`);
