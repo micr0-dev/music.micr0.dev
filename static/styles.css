@@ -17,8 +17,11 @@ body {
 }
 
 #anti-sidebar {
-    width: 100%;
-    margin-left: 300px;
+    width: calc(100% - 300px);
+    position: absolute;
+    left: 300px;
+    overflow: hidden;
+
 }
 
 .container {
@@ -27,6 +30,7 @@ body {
     max-width: 800px;
     width: 100%;
     padding: 20px;
+    margin: auto;
 }
 
 header {
@@ -125,6 +129,21 @@ aside button.selected {
     color: #000;
     border: 1px solid #fff;
 }
+
+.sidebar-toggle {
+    display: none;
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    z-index: 20;
+    background-color: #000;
+    color: #fff;
+    border: none;
+    padding: 10px;
+    font-size: 20px;
+    cursor: pointer;
+}
+
 
 input[type="text"] {
     padding: 10px;
@@ -907,3 +926,17 @@ main {
 }
 
 /* TODO: Responsive Design */
+
+@media (max-width: 768px) {
+    aside {
+        transform: translateX(-100%);
+    }
+
+    .sidebar-toggle {
+        display: block;
+    }
+
+    aside.active {
+        transform: translateX(0);
+    }
+}

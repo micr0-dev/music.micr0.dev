@@ -1036,3 +1036,13 @@ window.addEventListener('resize', () => {
         trackInfo.classList.remove("track-info-gradient");
     }
 });
+
+document.addEventListener("DOMContentLoaded", function () {
+    const sidebar = document.getElementById("sidebar");
+    const toggleButton = document.getElementById("sidebar-toggle");
+
+    // Toggle the sidebar on mobile when the button is clicked
+    toggleButton.addEventListener("click", function () {
+        sidebar.classList.toggle("active");
+    });
+});
