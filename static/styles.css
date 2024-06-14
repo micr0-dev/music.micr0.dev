@@ -244,11 +244,36 @@ main {
 
 .music-item .music-info {
     flex: 1;
+    max-height: 80px;
+}
+
+.music-item-title-container {
+    position: relative;
+    overflow: hidden;
 }
 
 .music-item-title {
     font-size: 16px;
     font-weight: bold;
+    line-height: 1.2;
+    max-height: 2.4em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: wrap;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+.music-item-title-container:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1.2em;
+    background: linear-gradient(to top, #000, rgba(0, 0, 0, 0));
+    pointer-events: none;
 }
 
 .music-item-artist {
