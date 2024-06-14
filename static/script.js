@@ -307,6 +307,8 @@ document.addEventListener('DOMContentLoaded', () => {
         searchButton.classList.remove('selected');
         uploadButton.classList.remove('selected');
 
+        sidebar.classList.remove('active');
+
         loadMusicList();
     });
 
@@ -324,6 +326,8 @@ document.addEventListener('DOMContentLoaded', () => {
         uploadButton.classList.add('selected');
         searchButton.classList.remove('selected');
         homeButton.classList.remove('selected');
+
+        sidebar.classList.remove('active');
     });
 
     searchButton.addEventListener('click', () => {
@@ -340,6 +344,8 @@ document.addEventListener('DOMContentLoaded', () => {
         searchButton.classList.add('selected');
         uploadButton.classList.remove('selected');
         homeButton.classList.remove('selected');
+
+        sidebar.classList.remove('active');
     });
 
     function loadMusic(musics, element = musicList, skip = 0) {
@@ -892,6 +898,7 @@ document.addEventListener('DOMContentLoaded', () => {
             button.textContent = playlist.name;
             button.addEventListener('click', () => {
                 loadPlaylist(playlist.id);
+                sidebar.classList.remove('active');
             });
             playlistsList.appendChild(button);
 
