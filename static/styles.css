@@ -957,7 +957,15 @@ main {
         display: none;
     }
 
-    #now-playing {
+    #audio-controls {
+        display: none;
+    }
+
+    .volume {
+        display: none;
+    }
+
+    .playtime {
         display: none;
     }
 }
