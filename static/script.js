@@ -343,10 +343,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // TODO: Dynamic loading of music list as you scroll
 
-    function loadMusic(musics, element = musicList) {
+    function loadMusic(musics, element = musicList, skip = 0) {
         openQueue = musics.slice();
 
-        element.innerHTML = '';
+        if (skip > 0) {
+            musics = musics.slice(skip);
+        } else {
+            element.innerHTML = '';
+        }
+
         musics.forEach(music => {
             const div = document.createElement('div');
             div.className = 'music-item';
@@ -404,28 +409,6 @@ document.addEventListener('DOMContentLoaded', () => {
         musicListTitle.textContent = 'Recently Added';
 
         loadMusic(musics);
-
-        // const playlistsResponse = await fetchAuth('/api/playlists?limit=10');
-        // const playlists = await playlistsResponse.json();
-
-        // if (playlists == null) {
-        //     playlistsList.innerHTML = 'No playlists found';
-        // }
-
-        // const playlistList = document.getElementById('playlist-list');
-
-        // loadPlaylists(playlists, playlistList);
-
-        // const albumsResponse = await fetchAuth('/api/albums?limit=10');
-        // const albums = await albumsResponse.json();
-
-        // if (albums == null) {
-        //     albumsList.innerHTML = 'No albums found';
-        // }
-
-        // const albumsList = document.getElementById('albums-list');
-
-        // loadAlbums(albums, albumsList);
     }
 
     searchInput.addEventListener('input', async () => {
@@ -972,14 +955,14 @@ document.addEventListener('DOMContentLoaded', () => {
         loadMusic(songs);
 
         if (!isAlbum) {
-            response = await fetchAuth(`/api/playlists/${playlistId}`);
+            response = await fetchAuth(`/api/playlists/${playlistId}?offset=40`);
             const playlist = await response.json();
 
             if (playlist == null) {
                 return;
             }
 
-            loadMusic(playlist.songs);
+            loadMusic(playlist.songs, musicList, 40);
         }
     }
 

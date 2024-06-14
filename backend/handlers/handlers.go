@@ -790,6 +790,7 @@ type returnPlaylist struct {
 func (h *MusicHandler) GetPlaylistByID(c *gin.Context) {
 	id := c.Param("id")
 	limiter := c.Query("limit")
+	offset := c.Query("offset")
 
 	var playlist models.Playlist
 	err := h.DB.Get(&playlist, "SELECT id, name, songs FROM playlists WHERE id = ?", id)
@@ -800,6 +801,18 @@ func (h *MusicHandler) GetPlaylistByID(c *gin.Context) {
 
 	for i, j := 0, len(playlist.Songs)-1; i < j; i, j = i+1, j-1 {
 		playlist.Songs[i], playlist.Songs[j] = playlist.Songs[j], playlist.Songs[i]
+	}
+
+	if offset != "" {
+		off, err := strconv.Atoi(offset)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid offset parameter"})
+			return
+		}
+		if off > len(playlist.Songs) {
+			off = len(playlist.Songs)
+		}
+		playlist.Songs = playlist.Songs[off:]
 	}
 
 	if limiter != "" {
