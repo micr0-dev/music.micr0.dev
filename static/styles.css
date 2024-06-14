@@ -954,14 +954,11 @@ main {
 }
 
 .modal-content h2 {
-    position: absolute;
-    top: 10px;
-    left: 10px;
+    margin: 0;
 }
 
 .close-btn {
     position: absolute;
-    top: 10px;
     right: 10px;
     color: #fff;
     font-size: 20px;
@@ -971,7 +968,6 @@ main {
 
 #donate-button {
     display: inline-block;
-    margin-top: 20px;
     padding: 10px 20px;
     background-color: #FF5E5B;
     color: #fff;
@@ -981,7 +977,29 @@ main {
 }
 
 #donate-button:hover {
-    background-color: #ff392e;
+    animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+    0% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-5px);
+    }
+
+    50% {
+        transform: translateX(5px);
+    }
+
+    75% {
+        transform: translateX(-5px);
+    }
+
+    100% {
+        transform: translateX(0);
+    }
 }
 
 @media (min-width: 1000px) {
