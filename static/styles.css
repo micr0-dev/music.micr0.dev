@@ -969,8 +969,7 @@ main {
         display: none;
     }
 
-    #track-info {
-        margin-top: 20px;
-        margin-bottom: 20px;
+    #now-playing {
+        height: 100px;
     }
 }
