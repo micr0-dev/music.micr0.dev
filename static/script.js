@@ -913,14 +913,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
         //Get the songs from the playlist from IDs
         let songs = [];
-        for (let i = 0; i < playlist.song_ids.length; i++) {
-            if (!isAlbum) {
+        if (!isAlbum) {
+            for (let i = 0; i < playlist.song_ids.length; i++) {
                 const response = await fetchAuth(`/api/music/${playlist.song_ids[i]}`);
-            } else {
-                const response = await fetchAuth(`/api/music/${playlist.songs[i]}`);
+                const song = await response.json();
+                songs.push(song);
             }
-            const song = await response.json();
-            songs.push(song);
+        } else {
+            for (let i = 0; i < playlist.songs.length; i++) {
+                const response = await fetchAuth(`/api/music/${playlist.songs[i]}`);
+                const song = await response.json();
+                songs.push(song);
+            }
         }
 
         loadMusic(songs);
