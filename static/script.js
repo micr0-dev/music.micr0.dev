@@ -1057,3 +1057,17 @@ document.addEventListener("DOMContentLoaded", function () {
         sidebar.classList.toggle("active");
     });
 });
+
+document.addEventListener("DOMContentLoaded", function () {
+    const modal = document.getElementById("donation-modal");
+    const closeModalBtn = document.getElementById("close-modal-btn");
+
+    closeModalBtn.addEventListener("click", function () {
+        modal.style.display = "none";
+    });
+
+    // If you want to hide the modal after a certain period, you can use a timeout
+    setTimeout(function () {
+        modal.style.display = "none";
+    }, 10000); // 10 seconds (adjust as needed)
+});
