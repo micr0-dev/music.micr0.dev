@@ -38,6 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let openQueue = [];
     let queue = [];
     let currentTrack;
+    let currentScreen = 'home';
     let shuffleedQueue = [];
     let isShuffle = false;
     let isRepeat = false;
@@ -83,7 +84,8 @@ document.addEventListener('DOMContentLoaded', () => {
             isShuffle,
             isRepeat,
             volume: volumeSlider.value,
-            currentTime: audioPlayer.currentTime
+            currentTime: audioPlayer.currentTime,
+            currentScreen
         }));
     }
 
@@ -102,6 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
         isRepeat = data.isRepeat;
         volume = data.volume;
         const currentTime = parseInt(data.currentTime);
+        currentScreen = data.currentScreen;
 
         volumeSlider.value = parseInt(volume);
         volumeSlider.style.setProperty('--value', volume + '%');
