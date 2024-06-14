@@ -363,7 +363,7 @@ document.addEventListener('DOMContentLoaded', () => {
             artist = artist ? artist : 'Unknown Artist';
 
             div.innerHTML = `
-                <img src="${`/api/thumbnail/${music.id}?size=160`}" alt="cover art" class="cover-art">
+                <img src="${`/api/thumbnail/${music.id}?size=160`}" alt="cover art" class="cover-art" loading="lazy">
                 <div class="music-info">
                     <div class="music-item-title">${music.title} </div>
                     <div class="music-item-artist">${artist}</div>
