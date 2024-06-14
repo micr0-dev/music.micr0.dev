@@ -914,6 +914,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         musicListTitle.textContent = playlist.name;
 
+        console.log(playlist);
+
         //Get the songs from the playlist from IDs
         let songs = [];
         for (let i = 0; i < playlist.song_ids.length; i++) {
