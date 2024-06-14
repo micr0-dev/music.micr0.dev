@@ -942,7 +942,7 @@ main {
     display: none;
     position: fixed;
     top: 10px;
-    right: 10px;
+    left: 310px;
     z-index: 1000;
     background-color: #000;
     padding: 20px;
