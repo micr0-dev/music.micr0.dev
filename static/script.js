@@ -935,7 +935,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let response;
 
         if (!isAlbum) {
-            response = await fetchAuth(`/api/playlists/${playlistId}`);
+            response = await fetchAuth(`/api/playlists/${playlistId}?limit=40`);
         } else {
             response = await fetchAuth(`/api/albums/${playlistId}`);
         }
@@ -970,7 +970,19 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         loadMusic(songs);
+
+        if (!isAlbum) {
+            response = await fetchAuth(`/api/playlists/${playlistId}`);
+            const playlist = await response.json();
+
+            if (playlist == null) {
+                return;
+            }
+
+            loadMusic(playlist.songs);
+        }
     }
+
     // loadAlbums like loadPlaylists cards
     function loadAlbums(albums, element = albumsList) {
         element.innerHTML = '';

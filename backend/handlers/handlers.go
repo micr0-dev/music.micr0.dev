@@ -789,12 +789,25 @@ type returnPlaylist struct {
 
 func (h *MusicHandler) GetPlaylistByID(c *gin.Context) {
 	id := c.Param("id")
+	limiter := c.Query("limit")
 
 	var playlist models.Playlist
 	err := h.DB.Get(&playlist, "SELECT id, name, songs FROM playlists WHERE id = ?", id)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Playlist not found"})
 		return
+	}
+
+	if limiter != "" {
+		limit, err := strconv.Atoi(limiter)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid limit parameter"})
+			return
+		}
+		if limit > len(playlist.Songs) {
+			limit = len(playlist.Songs)
+		}
+		playlist.Songs = playlist.Songs[:limit]
 	}
 
 	for i, j := 0, len(playlist.Songs)-1; i < j; i, j = i+1, j-1 {
