@@ -747,17 +747,7 @@ main {
     background-color: #000;
 }
 
-#audio-controls:before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    width: 50px;
-    background: linear-gradient(to left, #000, transparent);
-    z-index: 1;
-}
+
 
 #audio-controls button {
     background: none;
@@ -787,6 +777,14 @@ main {
 
 .control-button {
     position: relative;
+}
+
+#repeat-button:before {
+    content: '';
+    position: absolute;
+    width: 50px;
+    background: linear-gradient(to left, #000, transparent);
+    z-index: 1;
 }
 
 .control-button::before {
