@@ -247,11 +247,6 @@ main {
     max-height: 80px;
 }
 
-.music-item-title-container {
-    position: relative;
-    overflow: hidden;
-}
-
 .music-item-title {
     font-size: 16px;
     font-weight: bold;
@@ -265,14 +260,14 @@ main {
     -webkit-box-orient: vertical;
 }
 
-.music-item-title-container:after {
+.music-item-title:after {
     content: '';
     position: absolute;
     bottom: 0;
     left: 0;
     right: 0;
     height: 1.2em;
-    background: linear-gradient(to top, #000, rgba(0, 0, 0, 0));
+    background: linear-gradient(to left, #000, transparent);
     pointer-events: none;
 }
 
