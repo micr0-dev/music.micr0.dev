@@ -284,7 +284,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     //Sidebar navigation
     homeButton.addEventListener('click', () => {
-        document.getElementById(currentScreen).classList.remove('selected');
+        const currentScreenElement = document.getElementById(currentScreen)
+        if (currentScreenElement) {
+            currentScreenElement.classList.remove('selected');
+        }
 
         currentScreen = 'home';
         uploadSection.classList.add('hidden');
@@ -299,7 +302,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     uploadButton.addEventListener('click', () => {
-        document.getElementById(currentScreen).classList.remove('selected');
+        const currentScreenElement = document.getElementById(currentScreen)
+        if (currentScreenElement) {
+            currentScreenElement.classList.remove('selected');
+        }
 
         currentScreen = 'upload';
         musicSection.classList.add('hidden');
@@ -312,7 +318,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     searchButton.addEventListener('click', () => {
-        document.getElementById(currentScreen).classList.remove('selected');
+        const currentScreenElement = document.getElementById(currentScreen)
+        if (currentScreenElement) {
+            currentScreenElement.classList.remove('selected');
+        }
 
         currentScreen = 'search';
         musicSection.classList.add('hidden');
