@@ -798,6 +798,10 @@ func (h *MusicHandler) GetPlaylistByID(c *gin.Context) {
 		return
 	}
 
+	for i, j := 0, len(playlist.Songs)-1; i < j; i, j = i+1, j-1 {
+		playlist.Songs[i], playlist.Songs[j] = playlist.Songs[j], playlist.Songs[i]
+	}
+
 	if limiter != "" {
 		limit, err := strconv.Atoi(limiter)
 		if err != nil {
@@ -808,10 +812,6 @@ func (h *MusicHandler) GetPlaylistByID(c *gin.Context) {
 			limit = len(playlist.Songs)
 		}
 		playlist.Songs = playlist.Songs[:limit]
-	}
-
-	for i, j := 0, len(playlist.Songs)-1; i < j; i, j = i+1, j-1 {
-		playlist.Songs[i], playlist.Songs[j] = playlist.Songs[j], playlist.Songs[i]
 	}
 
 	var songs []models.Music
