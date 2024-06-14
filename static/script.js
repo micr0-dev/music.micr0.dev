@@ -561,6 +561,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         nowPlayingContainer.style.setProperty('--art-color', music.color);
 
+        // fetch song from id if missing year, album, genre
+        if (music.year == 0 || !music.album || !music.genre) {
+            const response = await fetchAuth(`/api/music/${music.id}`);
+            const song = await response.json();
+            music = song;
+        }
+
         let info = [];
 
         if (!(music.year == 0))
@@ -938,11 +945,13 @@ document.addEventListener('DOMContentLoaded', () => {
         //Get the songs from the playlist from IDs
         let songs = [];
         if (!isAlbum) {
-            for (let i = 0; i < playlist.song_ids.length; i++) {
-                const response = await fetchAuth(`/api/music/${playlist.song_ids[i]}`);
-                const song = await response.json();
-                songs.push(song);
-            }
+            // for (let i = 0; i < playlist.song_ids.length; i++) {
+            //     const response = await fetchAuth(`/api/music/${playlist.song_ids[i]}`);
+            //     const song = await response.json();
+            //     songs.push(song);
+            // }
+
+            songs = playlist.songs;
 
             musicListTitle.textContent = playlist.name;
         } else {
