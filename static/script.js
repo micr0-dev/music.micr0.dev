@@ -905,7 +905,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const playlist = await response.json();
 
         if (playlist == null) {
-            albumsList.innerHTML = 'No music found';
             return;
         }
 
@@ -919,12 +918,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 const song = await response.json();
                 songs.push(song);
             }
+
+            musicListTitle.textContent = playlist.name;
         } else {
             for (let i = 0; i < playlist.songs.length; i++) {
                 const response = await fetchAuth(`/api/music/${playlist.songs[i]}`);
                 const song = await response.json();
                 songs.push(song);
             }
+
+            musicListTitle.textContent = playlist.title;
         }
 
         loadMusic(songs);
