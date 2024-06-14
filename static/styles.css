@@ -972,12 +972,19 @@ main {
     background-color: #FF5E5B;
     color: #fff;
     text-decoration: none;
-    border-radius: 5px;
-    transition: background-color 0.3s;
 }
 
 #donate-button:hover {
-    animation: shake 0.5s ease-in-out;
+    animation: shake 0.5s 2 ease-in-out;
+}
+
+#alredy-donated-modal-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #FF5E5B;
+    color: #fff;
+    text-decoration: none;
+    font-size: 12px;
 }
 
 @keyframes shake {
@@ -986,15 +993,15 @@ main {
     }
 
     25% {
-        transform: translateX(-5px);
+        transform: translateX(-3px);
     }
 
     50% {
-        transform: translateX(5px);
+        transform: translateX(3px);
     }
 
     75% {
-        transform: translateX(-5px);
+        transform: translateX(-3px);
     }
 
     100% {
