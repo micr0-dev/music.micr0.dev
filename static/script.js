@@ -407,28 +407,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
         loadMusic(musics);
 
-        // also load new playlists and albums
-        const playlistsResponse = await fetchAuth('/api/playlists?limit=10');
-        const playlists = await playlistsResponse.json();
+        // const playlistsResponse = await fetchAuth('/api/playlists?limit=10');
+        // const playlists = await playlistsResponse.json();
 
-        if (playlists == null) {
-            playlistsList.innerHTML = 'No playlists found';
-        }
+        // if (playlists == null) {
+        //     playlistsList.innerHTML = 'No playlists found';
+        // }
 
-        const playlistList = document.getElementById('playlist-list');
+        // const playlistList = document.getElementById('playlist-list');
 
-        loadPlaylists(playlists, playlistList);
+        // loadPlaylists(playlists, playlistList);
 
-        const albumsResponse = await fetchAuth('/api/albums?limit=10');
-        const albums = await albumsResponse.json();
+        // const albumsResponse = await fetchAuth('/api/albums?limit=10');
+        // const albums = await albumsResponse.json();
 
-        if (albums == null) {
-            albumsList.innerHTML = 'No albums found';
-        }
+        // if (albums == null) {
+        //     albumsList.innerHTML = 'No albums found';
+        // }
 
-        const albumsList = document.getElementById('albums-list');
+        // const albumsList = document.getElementById('albums-list');
 
-        loadAlbums(albums, albumsList);
+        // loadAlbums(albums, albumsList);
     }
 
     searchInput.addEventListener('input', async () => {
