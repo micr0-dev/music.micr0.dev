@@ -890,9 +890,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
         musicListTitle.textContent = playlist.name;
 
-        console.log(playlist);
+        //Get the songs from the playlist from IDs
+        let songs = [];
+        for (let i = 0; i < playlist.song_ids.length; i++) {
+            const response = await fetchAuth(`/api/music/${playlist.song_ids[i]}`);
+            const song = await response.json();
+            songs.push(song);
+        }
 
-        loadMusic(playlist.songs);
+        loadMusic(
     }
     // loadAlbums like loadPlaylists cards
     function loadAlbums(albums, element = albumsList) {
