@@ -203,6 +203,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 const result = await response.json();
                 if (!result.error.includes("already exists")) {
                     alert('Failed to upload music: ' + (result.error || 'Unknown error'));
+                } else {
+                    const uploadedSong = await response.json();
+                    await addSongToPlaylist(selectedPlaylistId, uploadedSong.id);
                 }
             } else {
                 const uploadedSong = await response.json();
