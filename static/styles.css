@@ -981,10 +981,14 @@ main {
     }
 
     #now-playing {
-        height: 60px;
+        height: 40px;
     }
 
     #mini-cover-art {
         display: block;
+    }
+
+    #track-info {
+        left: 100px;
     }
 }
