@@ -890,6 +890,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         musicListTitle.textContent = playlist.name;
 
+        console.log(playlist);
+
         loadMusic(playlist.songs);
     }
     // loadAlbums like loadPlaylists cards
