@@ -696,6 +696,8 @@ main {
 }
 
 
+
+
 #cover-art-container {
     position: fixed;
     bottom: 125px;
@@ -718,10 +720,21 @@ main {
     left: 10px;
     text-align: left;
     padding: 5px;
-    max-width: 50%;
+    max-width: 35%;
     overflow: hidden;
     white-space: nowrap;
     z-index: 0;
+}
+
+.track-info-gradient:after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 50px;
+    background: linear-gradient(to left, #000, transparent);
+    pointer-events: none;
 }
 
 #track-title {
@@ -743,19 +756,6 @@ main {
     justify-content: center;
     align-items: center;
     gap: 20px;
-    z-index: 1;
-    background-color: #000;
-}
-
-#audio-controls:before {
-    content: '';
-    position: absolute;
-    left: -50px;
-    top: 0;
-    bottom: 0;
-    width: 50px;
-    background: linear-gradient(to right, transparent, #000);
-    pointer-events: none;
     z-index: 1;
 }
 
