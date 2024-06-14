@@ -797,6 +797,10 @@ func (h *MusicHandler) GetPlaylistByID(c *gin.Context) {
 		return
 	}
 
+	for i, j := 0, len(playlist.Songs)-1; i < j; i, j = i+1, j-1 {
+		playlist.Songs[i], playlist.Songs[j] = playlist.Songs[j], playlist.Songs[i]
+	}
+
 	var songs []models.Music
 
 	for _, songID := range playlist.Songs {
