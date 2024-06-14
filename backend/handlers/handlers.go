@@ -885,7 +885,7 @@ func (h *MusicHandler) GetUserPlaylists(c *gin.Context) {
 }
 
 func (h *MusicHandler) Search(c *gin.Context) {
-	// limiter := c.Query("limit")
+	limiter := c.Query("limit")
 	query := c.Query("q")
 	if query == "" {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Query parameter 'q' is required"})
@@ -958,28 +958,28 @@ func (h *MusicHandler) Search(c *gin.Context) {
 		"albums":    albums,
 	}
 
-	// if limiter != "" {
-	// 	limit, err := strconv.Atoi(limiter)
-	// 	if err != nil {
-	// 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid limit parameter"})
-	// 		return
-	// 	}
+	if limiter != "" {
+		limit, err := strconv.Atoi(limiter)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid limit parameter"})
+			return
+		}
 
-	// 	if limit > len(songs) {
-	// 		limit = len(songs)
-	// 	}
-	// 	result["songs"] = songs[:limit]
+		if limit > len(songs) {
+			limit = len(songs)
+		}
+		result["songs"] = songs[:limit]
 
-	// 	if limit > len(playlists) {
-	// 		limit = len(playlists)
-	// 	}
-	// 	result["playlists"] = playlists[:limit]
+		if limit > len(playlists) {
+			limit = len(playlists)
+		}
+		result["playlists"] = playlists[:limit]
 
-	// 	if limit > len(albums) {
-	// 		limit = len(albums)
-	// 	}
-	// 	result["albums"] = albums[:limit]
-	// }
+		if limit > len(albums) {
+			limit = len(albums)
+		}
+		result["albums"] = albums[:limit]
+	}
 
 	c.JSON(http.StatusOK, result)
 }

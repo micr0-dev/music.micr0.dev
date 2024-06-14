@@ -432,7 +432,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const query = searchInput.value;
         if (query.length < 2) return;
 
-        const response = await fetchAuth(`/api/search?q=${query}?limit=10`);
+        const response = await fetchAuth(`/api/search?q=${query}&limit=10`);
         const results = await response.json();
 
         if (results == null) {
@@ -492,7 +492,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function updateScrollingBanner(text) {
-        dataScroll.innerHTML = `<span>${text} • &zwnj;</span><span id="num2">${text} • &zwnj;</span><span id="num3">${text} • &zwnj;</span><span id="num4">${text} • &zwnj;</span>`;
+        dataScroll.innerHTML = `< span > ${text} • & zwnj;</span ><span id="num2">${text} • &zwnj;</span><span id="num3">${text} • &zwnj;</span><span id="num4">${text} • &zwnj;</span>`;
     }
 
     async function fetchStreamToken(musicId) {
@@ -502,9 +502,9 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        const response = await fetch(`/api/streamtoken/${musicId}`, {
+        const response = await fetch(`/ api / streamtoken / ${musicId} `, {
             headers: {
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${token} `
             }
         });
 
@@ -518,18 +518,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function playTrack(music, isUserAction = true, play = true) {
         const streamToken = await fetchStreamToken(music.id);
-        audioPlayer.src = `/api/stream?token=${streamToken}`;
+        audioPlayer.src = `/ api / stream ? token = ${streamToken} `;
 
-        const thumbnailUrl = `/api/thumbnail/${music.id}?size=600`;
+        const thumbnailUrl = `/ api / thumbnail / ${music.id}?size = 600`;
         coverArt.src = thumbnailUrl;
         coverArt.alt = music.title;
         trackTitle.textContent = music.title;
-        artist = music.artist + (music.album_artist && music.artist != music.album_artist ? `, ${music.album_artist}` : '');
+        artist = music.artist + (music.album_artist && music.artist != music.album_artist ? `, ${music.album_artist} ` : '');
         artist = artist ? artist : 'Unknown Artist';
         trackArtist.textContent = artist;
         audioPlayer.currentTime = 0;
         seekSlider.value = 0;
-        seekSlider.style.setProperty('--value', `0%`);
+        seekSlider.style.setProperty('--value', `0 % `);
         audioPlayer.volume = volumeCurve(volumeSlider.value);
         if (play) {
             audioPlayer.play();
@@ -569,7 +569,7 @@ document.addEventListener('DOMContentLoaded', () => {
         info.push(music.album);
 
         const ext = music.filename.split('.').pop().toUpperCase();
-        info.push(`.${ext.toUpperCase()}`);
+        info.push(`.${ext.toUpperCase()} `);
 
         const isLossless = ext === 'FLAC' || ext === 'WAV' || ext === 'AIFF' || ext === 'ALAC' || ext === 'DSD';
         info.push(isLossless ? 'Lossless' : 'Lossy');
@@ -756,7 +756,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     volumeSlider.addEventListener('input', () => {
         audioPlayer.volume = volumeCurve(volumeSlider.value);
-        volumeSlider.style.setProperty('--value', `${volumeSlider.value}%`);
+        volumeSlider.style.setProperty('--value', `${volumeSlider.value}% `);
 
         savePlayerState();
     });
@@ -769,7 +769,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const duration = Math.floor(audioPlayer.duration);
         const progress = seekSlider.value / 10;
-        seekSlider.style.setProperty('--value', `${progress}%`);
+        seekSlider.style.setProperty('--value', `${progress}% `);
     });
 
     seekSlider.addEventListener('mousedown', () => {
@@ -786,7 +786,7 @@ document.addEventListener('DOMContentLoaded', () => {
         currentTimeLabel.textContent = formatTime(Math.floor(audioPlayer.currentTime));
 
         const progress = seekSlider.value / 10;
-        seekSlider.style.setProperty('--value', `${progress}%`);
+        seekSlider.style.setProperty('--value', `${progress}% `);
     });
 
     audioPlayer.addEventListener('timeupdate', () => {
@@ -803,7 +803,7 @@ document.addEventListener('DOMContentLoaded', () => {
         currentTimeLabel.textContent = formatTime(Math.floor(audioPlayer.currentTime));
 
         const progress = value / 10;
-        seekSlider.style.setProperty('--value', `${progress}%`);
+        seekSlider.style.setProperty('--value', `${progress}% `);
 
         savePlayerState();
     });
@@ -812,7 +812,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function formatTime(seconds) {
         const minutes = Math.floor(seconds / 60);
         seconds = seconds % 60;
-        return `${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
+        return `${minutes}:${seconds < 10 ? '0' + seconds : seconds} `;
     }
 
     function loadPlaylists(playlists, element = playlistsList) {
@@ -828,10 +828,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const playlistInfo = document.createElement('div');
             playlistInfo.className = 'playlist-item-info';
             playlistInfo.innerHTML = `
-            <div class="playlist-info">
+            < div class="playlist-info" >
                 <div class="playlist-item-title">${playlist.name}</div>
                 <div class="playlist-item-count">${playlist.songs.length} songs</div>
-            </div>
+            </div >
             `;
 
             div.appendChild(playlistInfo);
@@ -852,12 +852,12 @@ document.addEventListener('DOMContentLoaded', () => {
             songIDs.forEach(async songID => {
                 if (songID == 0) {
                     const img = document.createElement('img');
-                    img.src = `/api/thumbnail/0?size=160`;
+                    img.src = `/ api / thumbnail / 0 ? size = 160`;
                     playlistArt.appendChild(img);
                     div.style.setProperty('--art-color' + i, '#000000');
                     i++;
                 } else {
-                    const response = await fetchAuth(`/api/music/${songID}`);
+                    const response = await fetchAuth(`/ api / music / ${songID} `);
                     const song = await response.json();
 
                     if (i == 0) {
@@ -865,7 +865,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
 
                     const img = document.createElement('img');
-                    img.src = `/api/thumbnail/${song.id}?size=160`;
+                    img.src = `/ api / thumbnail / ${song.id}?size = 160`;
                     img.alt = song.title;
                     playlistArt.appendChild(img);
                     i++;
@@ -923,9 +923,9 @@ document.addEventListener('DOMContentLoaded', () => {
         let response;
 
         if (!isAlbum) {
-            response = await fetchAuth(`/api/playlists/${playlistId}`);
+            response = await fetchAuth(`/ api / playlists / ${playlistId} `);
         } else {
-            response = await fetchAuth(`/api/albums/${playlistId}`);
+            response = await fetchAuth(`/ api / albums / ${playlistId} `);
         }
         const playlist = await response.json();
 
@@ -939,7 +939,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let songs = [];
         if (!isAlbum) {
             for (let i = 0; i < playlist.song_ids.length; i++) {
-                const response = await fetchAuth(`/api/music/${playlist.song_ids[i]}`);
+                const response = await fetchAuth(`/ api / music / ${playlist.song_ids[i]} `);
                 const song = await response.json();
                 songs.push(song);
             }
@@ -947,7 +947,7 @@ document.addEventListener('DOMContentLoaded', () => {
             musicListTitle.textContent = playlist.name;
         } else {
             for (let i = 0; i < playlist.songs.length; i++) {
-                const response = await fetchAuth(`/api/music/${playlist.songs[i]}`);
+                const response = await fetchAuth(`/ api / music / ${playlist.songs[i]} `);
                 const song = await response.json();
                 songs.push(song);
             }
@@ -971,11 +971,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const playlistInfo = document.createElement('div');
             playlistInfo.className = 'playlist-item-info';
             playlistInfo.innerHTML = `
-            <div class="playlist-info">
+            < div class="playlist-info" >
                 <div class="playlist-item-title">${album.title}</div>
                 <div class="playlist-item-artist">${album.artist}</div>
                 <div class="playlist-item-count">${album.songs.length} songs</div>
-            </div>
+            </div >
             `;
 
             div.appendChild(playlistInfo);
@@ -986,11 +986,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const songID = album.songs[0];
 
-            const response = await fetchAuth(`/api/music/${songID}`);
+            const response = await fetchAuth(`/ api / music / ${songID} `);
             const song = await response.json();
 
             const img = document.createElement('img');
-            img.src = `/api/thumbnail/${song.id}?size=600`;
+            img.src = `/ api / thumbnail / ${song.id}?size = 600`;
             img.alt = song.title;
             playlistArt.appendChild(img);
 
