@@ -913,6 +913,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function loadPlaylist(playlistId, isAlbum = false) {
+        const currentScreenElement = document.getElementById(currentScreen)
+        if (currentScreenElement) {
+            currentScreenElement.classList.remove('selected');
+        }
+
         currentScreen = playlistId;
         uploadSection.classList.add('hidden');
         searchSection.classList.add('hidden');
