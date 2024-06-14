@@ -898,7 +898,7 @@ document.addEventListener('DOMContentLoaded', () => {
             songs.push(song);
         }
 
-        loadMusic(
+        loadMusic(songs);
     }
     // loadAlbums like loadPlaylists cards
     function loadAlbums(albums, element = albumsList) {
