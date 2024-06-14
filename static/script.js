@@ -543,10 +543,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         nowPlayingContainer.style.setProperty('--art-color', music.color);
 
-        // Set max-width for track info based on position of media controls
         const audioControls = document.getElementById('audio-controls');
-        trackInfo.style.setProperty('--max-width', `${audioControls.getBoundingClientRect().left - 20}px`);
-
+        trackInfo.style.setProperty('max-width', `${audioControls.getBoundingClientRect().left - 50}px`);
 
         if (trackInfo.scrollWidth > trackInfo.clientWidth) {
             trackInfo.classList.add("track-info-gradient");
@@ -1024,4 +1022,17 @@ document.addEventListener('DOMContentLoaded', () => {
     loadPlayerState();
     loadSidePlaylists();
     loadMusicList();
+});
+
+// On window resize, set max-width for track info based on position of media controls
+window.addEventListener('resize', () => {
+    const trackInfo = document.getElementById('track-info');
+    const audioControls = document.getElementById('audio-controls');
+    trackInfo.style.setProperty('max-width', `${audioControls.getBoundingClientRect().left - 50}px`);
+
+    if (trackInfo.scrollWidth > trackInfo.clientWidth) {
+        trackInfo.classList.add("track-info-gradient");
+    } else {
+        trackInfo.classList.remove("track-info-gradient");
+    }
 });
