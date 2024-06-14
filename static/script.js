@@ -971,16 +971,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
         loadMusic(songs);
 
-        if (!isAlbum) {
-            response = await fetchAuth(`/api/playlists/${playlistId}`);
-            const playlist = await response.json();
+        // if (!isAlbum) {
+        //     response = await fetchAuth(`/api/playlists/${playlistId}`);
+        //     const playlist = await response.json();
 
-            if (playlist == null) {
-                return;
-            }
+        //     if (playlist == null) {
+        //         return;
+        //     }
 
-            loadMusic(playlist.songs);
-        }
+        //     loadMusic(playlist.songs);
+        // }
     }
 
     // loadAlbums like loadPlaylists cards
