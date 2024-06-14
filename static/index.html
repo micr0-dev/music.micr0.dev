@@ -109,121 +109,123 @@
             <ul id="playlists-list"></ul>
         </div>
     </aside>
-    <div class="container">
-        <header>
-            <svg id="logo">
-                <use href="#logo"></use>
-            </svg>
-        </header>
-        <div class="content">
+    <div id="anti-sidebar">
+        <div class="container">
+            <header>
+                <svg id="logo">
+                    <use href="#logo"></use>
+                </svg>
+            </header>
+            <div class="content">
 
-            <main>
-                <section id="upload-section" class="hidden">
-                    <h2>Upload Music</h2>
-                    <form id="upload-form" enctype="multipart/form-data">
-                        <input type="file" name="files" multiple required>
-                        <div>
-                            <label for="playlist-select">Select Playlist:</label>
-                            <select id="playlist-select">
-                                <option value="" selected disabled>Select Playlist</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label for="new-playlist">Or Create New Playlist:</label>
-                            <input type="text" id="new-playlist" placeholder="New Playlist Name">
-                        </div>
-                        <button type="submit" name="upload">Upload</button>
-                        <label for="files" id="file-progress"></label>
-                    </form>
-                    <div id="upload-progress" class="loader hidden"></div>
-                </section>
+                <main>
+                    <section id="upload-section" class="hidden">
+                        <h2>Upload Music</h2>
+                        <form id="upload-form" enctype="multipart/form-data">
+                            <input type="file" name="files" multiple required>
+                            <div>
+                                <label for="playlist-select">Select Playlist:</label>
+                                <select id="playlist-select">
+                                    <option value="" selected disabled>Select Playlist</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="new-playlist">Or Create New Playlist:</label>
+                                <input type="text" id="new-playlist" placeholder="New Playlist Name">
+                            </div>
+                            <button type="submit" name="upload">Upload</button>
+                            <label for="files" id="file-progress"></label>
+                        </form>
+                        <div id="upload-progress" class="loader hidden"></div>
+                    </section>
 
-                <section id="search-section" class="hidden">
-                    <h2>Search</h2>
-                    <input type="text" id="search-input" placeholder="Search for music">
-                    <div id="search-results"></div>
-                </section>
+                    <section id="search-section" class="hidden">
+                        <h2>Search</h2>
+                        <input type="text" id="search-input" placeholder="Search for music">
+                        <div id="search-results"></div>
+                    </section>
 
-                <section id="music-list-section">
-                    <h2 id="music-list-title">Music List</h2>
-                    <div id="music-list" class="music-list"></div>
+                    <section id="music-list-section">
+                        <h2 id="music-list-title">Music List</h2>
+                        <div id="music-list" class="music-list"></div>
 
-                </section>
-            </main>
+                    </section>
+                </main>
+            </div>
+
+            <div id="playlist-menu" class="hidden">
+                <h3>Select Playlist</h3>
+                <div id="existing-playlists"></div>
+                <h3>Create New Playlist</h3>
+                <form id="create-playlist-form">
+                    <input type="text" name="playlist-name" placeholder="Playlist Name" required>
+                    <button type="submit">Create</button>
+                </form>
+            </div>
+
+            <footer id="now-playing-container">
+                <div id="cover-art-container" class="hidden">
+                    <img id="cover-art" src="" alt="Cover Art" />
+                </div>
+                <div id="data-scroll-container" class="hidden">
+                    <div id="data-scroll">
+                        <span>2013 Album Lossless .FLAC 16-Bit 44.1kHz</span>
+                        <span id="num2">2013 Album Lossless .FLAC 16-Bit 44.1kHz</span>
+                        <span id="num3">2013 Album Lossless .FLAC 16-Bit 44.1kHz</span>
+                        <span id="num4">2013 Album Lossless .FLAC 16-Bit 44.1kHz</span>
+                    </div>
+                </div>
+                <div class="slidecontainer">
+                    <input type="range" min="0" max="1000" value="0" class="slider" id="seek-slider">
+                </div>
+                <div id="now-playing">
+
+                    <div id="track-info">
+                        <h3 id="track-title">No song selected</h3>
+                        <p id="track-artist"></p>
+                    </div>
+                    <div id="audio-controls">
+                        <button id="repeat-button" class="control-button">
+                            <svg>
+                                <use href="#repeat"></use>
+                            </svg>
+                        </button>
+
+                        <button id="prev-button">
+                            <svg>
+                                <use href="#prev"></use>
+                            </svg>
+                        </button>
+                        <button id="play-pause">
+                            <svg id="play-icon">
+                                <use href="#play"></use>
+                            </svg>
+                            <svg id="pause-icon" style="display: none;">
+                                <use href="#pause"></use>
+                            </svg>
+                        </button>
+                        <button id="next-button">
+                            <svg>
+                                <use href="#next"></use>
+                            </svg>
+                        </button>
+                        <button id="shuffle-button" class="control-button">
+                            <svg>
+                                <use href="#shuffle"></use>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="volume">
+                        <input type="range" min="0" max="100" value="100" class="slider" id="volume-slider">
+                    </div>
+                    <div class="playtime">
+                        <span id="current-time">2:42</span> / <span id="duration">4:20</span>
+                    </div>
+                </div>
+
+                <audio id="audio-player"></audio>
+            </footer>
         </div>
-
-        <div id="playlist-menu" class="hidden">
-            <h3>Select Playlist</h3>
-            <div id="existing-playlists"></div>
-            <h3>Create New Playlist</h3>
-            <form id="create-playlist-form">
-                <input type="text" name="playlist-name" placeholder="Playlist Name" required>
-                <button type="submit">Create</button>
-            </form>
-        </div>
-
-        <footer id="now-playing-container">
-            <div id="cover-art-container" class="hidden">
-                <img id="cover-art" src="" alt="Cover Art" />
-            </div>
-            <div id="data-scroll-container" class="hidden">
-                <div id="data-scroll">
-                    <span>2013 Album Lossless .FLAC 16-Bit 44.1kHz</span>
-                    <span id="num2">2013 Album Lossless .FLAC 16-Bit 44.1kHz</span>
-                    <span id="num3">2013 Album Lossless .FLAC 16-Bit 44.1kHz</span>
-                    <span id="num4">2013 Album Lossless .FLAC 16-Bit 44.1kHz</span>
-                </div>
-            </div>
-            <div class="slidecontainer">
-                <input type="range" min="0" max="1000" value="0" class="slider" id="seek-slider">
-            </div>
-            <div id="now-playing">
-
-                <div id="track-info">
-                    <h3 id="track-title">No song selected</h3>
-                    <p id="track-artist"></p>
-                </div>
-                <div id="audio-controls">
-                    <button id="repeat-button" class="control-button">
-                        <svg>
-                            <use href="#repeat"></use>
-                        </svg>
-                    </button>
-
-                    <button id="prev-button">
-                        <svg>
-                            <use href="#prev"></use>
-                        </svg>
-                    </button>
-                    <button id="play-pause">
-                        <svg id="play-icon">
-                            <use href="#play"></use>
-                        </svg>
-                        <svg id="pause-icon" style="display: none;">
-                            <use href="#pause"></use>
-                        </svg>
-                    </button>
-                    <button id="next-button">
-                        <svg>
-                            <use href="#next"></use>
-                        </svg>
-                    </button>
-                    <button id="shuffle-button" class="control-button">
-                        <svg>
-                            <use href="#shuffle"></use>
-                        </svg>
-                    </button>
-                </div>
-                <div class="volume">
-                    <input type="range" min="0" max="100" value="100" class="slider" id="volume-slider">
-                </div>
-                <div class="playtime">
-                    <span id="current-time">2:42</span> / <span id="duration">4:20</span>
-                </div>
-            </div>
-
-            <audio id="audio-player"></audio>
-        </footer>
     </div>
 
     <script src="script.js"></script>

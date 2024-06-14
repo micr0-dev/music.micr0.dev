@@ -16,13 +16,17 @@ body {
     --art-color: #fff;
 }
 
+#anti-sidebar {
+    width: 100%;
+    margin-left: 300px;
+}
+
 .container {
     display: flex;
     flex-direction: column;
     max-width: 800px;
     width: 100%;
     padding: 20px;
-    margin-left: 300px;
 }
 
 header {
