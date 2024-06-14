@@ -393,11 +393,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function loadMusicList() {
-        const response = await fetchAuth('/api/music');
+        const response = await fetchAuth('/api/music?limit=10');
         const musics = await response.json();
 
         if (musics == null) {
-            musicList.innerHTML = '<li>No music found</li>';
+            musicList.innerHTML = 'No music found';
             return;
         }
 
@@ -406,13 +406,32 @@ document.addEventListener('DOMContentLoaded', () => {
         musics.reverse();
 
         loadMusic(musics);
+
+        // also load new playlists and albums
+        const playlistsResponse = await fetchAuth('/api/playlists?limit=10');
+        const playlists = await playlistsResponse.json();
+
+        if (playlists == null) {
+            playlistsList.innerHTML = 'No playlists found';
+        }
+
+        loadPlaylists(playlists);
+
+        const albumsResponse = await fetchAuth('/api/albums?limit=10');
+        const albums = await albumsResponse.json();
+
+        if (albums == null) {
+            albumsList.innerHTML = 'No albums found';
+        }
+
+        loadAlbums(albums);
     }
 
     searchInput.addEventListener('input', async () => {
         const query = searchInput.value;
         if (query.length < 2) return;
 
-        const response = await fetchAuth(`/api/search?q=${query}`);
+        const response = await fetchAuth(`/api/search?q=${query}?limit=10`);
         const results = await response.json();
 
         if (results == null) {
