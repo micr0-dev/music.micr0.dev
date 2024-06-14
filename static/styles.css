@@ -738,6 +738,14 @@ main {
     transition: box-shadow, 0.6s ease-out;
 }
 
+#mini-cover-art {
+    display: none;
+    width: 60px;
+    height: 60px;
+    box-shadow: 0 0 40px 20px var(--art-color);
+    transition: box-shadow, 0.6s ease-out;
+}
+
 #track-info {
     position: absolute;
     left: 10px;
@@ -971,5 +979,9 @@ main {
 
     #now-playing {
         height: 60px;
+    }
+
+    #mini-cover-art {
+        display: block;
     }
 }

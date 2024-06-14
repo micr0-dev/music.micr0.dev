@@ -20,6 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const currentTimeLabel = document.getElementById('current-time');
     const durationLabel = document.getElementById('duration');
     const coverArt = document.getElementById('cover-art');
+    const miniCoverArt = document.getElementById('mini-cover-art');
     const trackTitle = document.getElementById('track-title');
     const trackArtist = document.getElementById('track-artist');
     const nowPlayingContainer = document.getElementById('now-playing-container');
@@ -509,8 +510,11 @@ document.addEventListener('DOMContentLoaded', () => {
         audioPlayer.src = `/api/stream?token=${streamToken}`;
 
         const thumbnailUrl = `/api/thumbnail/${music.id}?size=600`;
+        const miniThumbnailUrl = `/api/thumbnail/${music.id}?size=160`;
         coverArt.src = thumbnailUrl;
         coverArt.alt = music.title;
+        miniCoverArt.src = miniThumbnailUrl;
+        miniCoverArt.alt = music.title;
         trackTitle.textContent = music.title;
         artist = music.artist + (music.album_artist && music.artist != music.album_artist ? `, ${music.album_artist}` : '');
         artist = artist ? artist : 'Unknown Artist';
