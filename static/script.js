@@ -815,7 +815,7 @@ document.addEventListener('DOMContentLoaded', () => {
             div.appendChild(playlistInfo);
 
             div.addEventListener('click', () => {
-                loadPlaylist(playlist);
+                loadPlaylist(playlist.id);
             });
 
             const songIDs = playlist.songs.slice(0, 4);
@@ -948,7 +948,7 @@ document.addEventListener('DOMContentLoaded', () => {
             div.appendChild(playlistInfo);
 
             div.addEventListener('click', () => {
-                loadPlaylist(playlist, true);
+                loadPlaylist(album.id, true);
             });
 
             const songID = album.songs[0];
