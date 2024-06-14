@@ -325,6 +325,10 @@ main {
     border: 1px solid #fff;
 }
 
+#search-input {
+    width: 100%;
+}
+
 #search-results {
     margin-top: 20px;
     padding: 20px;
