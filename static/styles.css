@@ -707,11 +707,11 @@ main {
 }
 
 #track-info {
-    max-width: 40%;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    position: relative;
+    position: absolute;
+    left: 10px;
+    text-align: left;
+    padding: 5px;
+    max-width: 35%;
 }
 
 #track-info:after {
