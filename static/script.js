@@ -403,8 +403,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         musicListTitle.textContent = 'Recently Added';
 
-        musics.reverse();
-
         loadMusic(musics);
 
         // const playlistsResponse = await fetchAuth('/api/playlists?limit=10');

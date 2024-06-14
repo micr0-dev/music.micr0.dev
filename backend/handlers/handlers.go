@@ -507,6 +507,10 @@ func (h *MusicHandler) GetMusic(c *gin.Context) {
 		return
 	}
 
+	for i, j := 0, len(musics)-1; i < j; i, j = i+1, j-1 {
+		musics[i], musics[j] = musics[j], musics[i]
+	}
+
 	if limiter != "" {
 		limit, err := strconv.Atoi(limiter)
 		if err != nil {
@@ -754,6 +758,10 @@ func (h *MusicHandler) GetPlaylists(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get playlists"})
 		return
+	}
+
+	for i, j := 0, len(playlists)-1; i < j; i, j = i+1, j-1 {
+		playlists[i], playlists[j] = playlists[j], playlists[i]
 	}
 
 	if limiter != "" {
