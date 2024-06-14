@@ -712,6 +712,8 @@ main {
     text-align: left;
     padding: 5px;
     max-width: 35%;
+    overflow: hidden;
+    white-space: nowrap;
 }
 
 #track-info:after {
