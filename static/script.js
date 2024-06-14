@@ -879,10 +879,12 @@ document.addEventListener('DOMContentLoaded', () => {
         searchButton.classList.remove('selected');
         uploadButton.classList.remove('selected');
 
+        let response;
+
         if (!isAlbum) {
-            const response = await fetchAuth(`/api/playlists/${playlistId}`);
+            response = await fetchAuth(`/api/playlists/${playlistId}`);
         } else {
-            const response = await fetchAuth(`/api/albums/${playlistId}`);
+            response = await fetchAuth(`/api/albums/${playlistId}`);
         }
         const playlist = await response.json();
 
