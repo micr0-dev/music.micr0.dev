@@ -947,6 +947,10 @@ main {
         transition: transform 0.3s;
     }
 
+    .content {
+        width: 90%;
+    }
+
     .sidebar-toggle {
         display: block;
     }
