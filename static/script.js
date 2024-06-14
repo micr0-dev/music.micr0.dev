@@ -384,6 +384,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         musicListTitle.textContent = 'Recently Added';
 
+        musics.reverse();
+
         loadMusic(musics);
     }
 
@@ -800,7 +802,7 @@ document.addEventListener('DOMContentLoaded', () => {
             div.appendChild(playlistInfo);
 
             div.addEventListener('click', () => {
-                // loadPlaylist(playlist); //TODO: Implement playlist view
+                loadPlaylist(playlist);
             });
 
             const songIDs = playlist.songs.slice(0, 4);
@@ -867,8 +869,21 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    async function loadPlaylist(playlistId) {
-        const response = await fetchAuth(`/api/playlists/${playlistId}`);
+    async function loadPlaylist(playlistId, isAlbum = false) {
+        currentScreen = 'home';
+        uploadSection.classList.add('hidden');
+        searchSection.classList.add('hidden');
+        musicSection.classList.remove('hidden');
+
+        homeButton.classList.add('selected');
+        searchButton.classList.remove('selected');
+        uploadButton.classList.remove('selected');
+
+        if (!isAlbum) {
+            const response = await fetchAuth(`/api/playlists/${playlistId}`);
+        } else {
+            const response = await fetchAuth(`/api/albums/${playlistId}`);
+        }
         const playlist = await response.json();
 
         if (playlist == null) {
@@ -904,7 +919,7 @@ document.addEventListener('DOMContentLoaded', () => {
             div.appendChild(playlistInfo);
 
             div.addEventListener('click', () => {
-                // loadPlaylist(playlist); //TODO: Implement playlist view
+                loadPlaylist(playlist, true);
             });
 
             const songID = album.songs[0];
