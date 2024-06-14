@@ -206,8 +206,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         document.getElementById('upload-progress').classList.add('hidden');
-        alert('All music files uploaded successfully!');
         loadMusicList();
+        loadSidePlaylists();
     });
 
     createPlaylistForm.addEventListener('submit', async (event) => {
@@ -252,8 +252,10 @@ document.addEventListener('DOMContentLoaded', () => {
         fetchPlaylists();
     }
 
-    async function addSongToPlaylist(playlistId) {
-        const songId = playlistMenu.dataset.songId;
+    async function addSongToPlaylist(playlistId, songId = null) {
+        if (!songId) {
+            songId = playlistMenu.dataset.songId;
+        }
 
         const response = await fetchAuth(`/api/playlists/${playlistId}`);
         const playlist = await response.json();
