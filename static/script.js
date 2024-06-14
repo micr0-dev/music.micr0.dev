@@ -1078,7 +1078,9 @@ document.addEventListener("DOMContentLoaded", function () {
         localStorage.setItem("donated", "true");
     });
 
-    setTimeout(function () {
-        modal.style.display = "block";
-    }, 1000);
+    if (window.innerWidth > 1000) {
+        setTimeout(function () {
+            modal.style.display = "block";
+        }, 1000);
+    }
 });

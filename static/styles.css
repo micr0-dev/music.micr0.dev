@@ -1009,12 +1009,6 @@ main {
     }
 }
 
-@media (min-width: 1000px) {
-    .modal {
-        display: block;
-    }
-}
-
 @media (max-width: 768px) {
     aside {
         height: 100vh;
