@@ -341,8 +341,6 @@ document.addEventListener('DOMContentLoaded', () => {
         homeButton.classList.remove('selected');
     });
 
-    // TODO: Dynamic loading of music list as you scroll
-
     function loadMusic(musics, element = musicList, skip = 0) {
         openQueue = musics.slice();
 
@@ -375,7 +373,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
                 ${isHiFi ? `<span class="hifi-tag">.${ext}</span>` : ''}
                 <button id="add-to-playlist"><svg><use href="#plus"></use></svg></button>
-            `; // TODO: Truncate long titles
+            `;
 
             if (isPlaying) {
                 div.classList.add('playing');
@@ -612,7 +610,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    //FIXME: Queue get reset weirdly
+    //FIX?ME: Queue get reset weirdly. could not reproduce the bug
 
     function loadQueue() {
         queue = openQueue.slice();
@@ -1008,6 +1006,27 @@ document.addEventListener('DOMContentLoaded', () => {
             element.appendChild(div);
         });
     }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const trackInfo = document.getElementById("track-info");
+
+        function applyGradient() {
+            if (trackInfo.scrollWidth > trackInfo.clientWidth) {
+                trackInfo.classList.add("track-info-gradient");
+            } else {
+                trackInfo.classList.remove("track-info-gradient");
+            }
+        }
+
+        // Monitor the text content change to apply gradient as necessary
+        const trackTitle = document.getElementById("track-title");
+        const observer = new MutationObserver(applyGradient);
+
+        observer.observe(trackTitle, { childList: true, characterData: true, subtree: true });
+
+        applyGradient();
+    });
+
 
     seekSlider.style.setProperty('--value', '0%');
 

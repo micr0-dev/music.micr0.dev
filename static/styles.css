@@ -725,7 +725,7 @@ main {
     white-space: nowrap;
 }
 
-#track-info:after {
+.track-info-gradient:after {
     content: '';
     position: absolute;
     right: 0;
