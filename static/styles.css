@@ -707,10 +707,22 @@ main {
 }
 
 #track-info {
+    max-width: 40%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    position: relative;
+}
+
+#track-info:after {
+    content: '';
     position: absolute;
-    left: 10px;
-    text-align: left;
-    padding: 5px;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 50px;
+    background: linear-gradient(to left, #000, transparent);
+    pointer-events: none;
 }
 
 #track-title {
