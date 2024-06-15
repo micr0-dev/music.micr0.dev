@@ -289,6 +289,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const rect = playlistMenu.getBoundingClientRect();
         const x = event.clientX - rect.width / 2;
         const y = event.clientY - rect.height / 2;
+        // make sure the menu is not out of the screen
+        if (x < 0) x = 0;
+        if (y < 0) y = 0;
+        if (x + rect.width > window.innerWidth) x = window.innerWidth - rect.width;
+        if (y + rect.height > window.innerHeight) y = window.innerHeight - rect.height;
+
         playlistMenu.style.left = `${x}px`;
         playlistMenu.style.top = `${y}px`;
 
