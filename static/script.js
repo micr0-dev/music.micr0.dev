@@ -854,9 +854,10 @@ document.addEventListener('DOMContentLoaded', () => {
     function loadPlaylists(playlists, element = wholePlaylistsList) {
         element.innerHTML = '';
         playlists.forEach(async playlist => {
+            let songs = [];
             playlist.songs.forEach((song, index) => {
-                if (song == "") {
-                    playlist.songs.splice(index, 1);
+                if (!song == "") {
+                    songs.push(song);
                 }
             });
 
@@ -872,11 +873,11 @@ document.addEventListener('DOMContentLoaded', () => {
             playlistInfo.innerHTML = `
             <div class="playlist-info">
                 <div class="playlist-item-title">${playlist.name}</div>
-                <div class="playlist-item-count">${playlist.songs.length} songs</div>
+                <div class="playlist-item-count">${songs.length} songs</div>
             </div>
             `;
 
-            console.log(playlist.songs);
+            console.log(songs);
 
             div.appendChild(playlistInfo);
 
@@ -884,7 +885,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 loadPlaylist(playlist.id);
             });
 
-            const songIDs = playlist.songs.slice(0, 4);
+            const songIDs = songs.slice(0, 4);
             if (songIDs.length < 4) {
                 for (let i = songIDs.length; i < 4; i++) {
                     songIDs.push(0);
@@ -893,7 +894,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             let i = 0;
 
-            playlist.songs.forEach(async songID => {
+            songIDs.forEach(async songID => {
                 if (songID == 0) {
                     const img = document.createElement('img');
                     img.src = `/api/thumbnail/0?size=160`;
