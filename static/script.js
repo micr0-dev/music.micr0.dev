@@ -290,8 +290,8 @@ document.addEventListener('DOMContentLoaded', () => {
         let x = event.clientX;
         let y = event.clientY;
 
-        x = Math.min(x, window.innerWidth - rect.width);
-        y = Math.min(y, window.innerHeight - rect.height);
+        x = Math.min(x, window.innerWidth - rect.width - 10);
+        y = Math.min(y, window.innerHeight - rect.height - 10);
         x = Math.max(x, 10);
         y = Math.max(y, 10);
 
