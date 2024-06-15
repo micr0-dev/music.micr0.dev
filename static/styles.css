@@ -490,8 +490,7 @@ main {
 }
 
 #playlist-menu.menu-hidden {
-    scale: 1;
-    top: -100%;
+    scale: 0;
     box-shadow: 0 0 40px 20px #0000;
 }
 
