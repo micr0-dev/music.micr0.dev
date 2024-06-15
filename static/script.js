@@ -307,7 +307,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        const isMouseOver = true;
+        let isMouseOver = true;
 
         function hideMenu() {
             isMouseOver = false;
