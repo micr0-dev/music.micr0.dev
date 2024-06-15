@@ -871,6 +871,8 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
             `;
 
+            console.log(playlist.songs);
+
             div.appendChild(playlistInfo);
 
             div.addEventListener('click', () => {
