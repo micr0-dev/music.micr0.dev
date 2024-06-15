@@ -306,12 +306,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.removeEventListener('click', hideMenu);
             }
         });
+
         // or if mouse leaves the menu for more than 1 second
-        document.addEventListener('mouseleave', function hideMenu(event) {
-            if (!playlistMenu.contains(event.target)) {
+        playlistMenu.addEventListener('mouseleave', function hideMenu() {
+            setTimeout(() => {
                 playlistMenu.classList.add('menu-hidden');
-                document.removeEventListener('mouseleave', hideMenu);
-            }
+            }, 1000);
+        });
+
+        playlistMenu.addEventListener('mouseenter', function resetTimer() {
+            clearTimeout(hideMenu);
+            playlistMenu.removeEventListener('mouseenter', resetTimer);
         });
 
         fetchPlaylists();
