@@ -848,6 +848,10 @@ main {
     padding: 10px;
 }
 
+.volume input {
+    height: 12px;
+}
+
 .playtime {
     position: absolute;
     right: 10px;
