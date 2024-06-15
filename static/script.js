@@ -969,11 +969,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     if (response.ok) {
                         loadSidePlaylists();
-                        div.removeChild(addButton);
-                        const addButton = document.createElement('button');
-                        addButton.className = 'added-playlist-button';
-                        addButton.innerHTML = `<svg><use href="#checkmark"></use></svg>`;
-                        div.appendChild(addButton);
+
+                        const addButton = div.getElementsByClassName('add-playlist-button')[0];
+                        const newButton = addButton.cloneNode(true);
+                        addButton.parentNode.replaceChild(newButton, addButton);
+                        newButton.className = 'added-playlist-button';
+                        newButton.innerHTML = `<svg><use href="#checkmark"></use></svg>`;
+
+                        div.appendChild(newButton);
                     } else {
                         alert('Failed to add playlist to user playlists');
                     }
