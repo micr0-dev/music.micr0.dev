@@ -955,12 +955,12 @@ document.addEventListener('DOMContentLoaded', () => {
             if (document.getElementById(playlist.id)) {
                 const addButton = document.createElement('button');
                 addButton.className = 'add-playlist-button';
-                addButton.textContent = `<svg><use href="#checkmark"></use></svg>`;
+                addButton.innerHTML = `<svg><use href="#checkmark"></use></svg>`;
                 div.appendChild(addButton);
             } else {
                 const addButton = document.createElement('button');
                 addButton.className = 'add-playlist-button';
-                addButton.textContent = `<svg><use href="#plus"></use></svg>`;
+                addButton.innerHTML = `<svg><use href="#plus"></use></svg>`;
                 addButton.addEventListener('click', async (event) => {
                     event.stopPropagation();
                     const response = await fetchAuth(`/user/playlists/${playlist.id}`, {
