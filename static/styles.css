@@ -978,6 +978,17 @@ main {
     text-decoration: none;
 }
 
+.modal-content blockquote {
+    margin: 20px 0;
+}
+
+#monero-wallet {
+    display: none;
+    padding: 10px;
+    background-color: #000;
+    color: #fff;
+}
+
 #alredy-donated-button {
     position: absolute;
     right: 10px;
