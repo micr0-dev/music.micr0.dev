@@ -64,6 +64,11 @@ func main() {
 	router.GET("/thumbnail/:id", musicHandler.GetThumbnail)
 	router.GET("/stream", musicHandler.StreamMusic)
 
+	// Public route for uptime monitoring
+	router.GET("/ping", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{"message": "pong"})
+	})
+
 	// Protected routes with authentication middleware
 	authorized := router.Group("/")
 	authorized.Use(middlewares.AuthMiddleware())
