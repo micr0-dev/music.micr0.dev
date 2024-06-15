@@ -114,6 +114,8 @@ aside button {
     background-color: #000;
     color: #fff;
     border: 1px solid #000;
+    overflow: hidden;
+    text-overflow: ellipsis;
     cursor: pointer;
     transition: border 0.2s;
 }
@@ -516,6 +518,7 @@ main {
     overflow-y: auto;
     max-width: 300px;
     overflow-x: hidden;
+    text-overflow: ellipsis;
 }
 
 #existing-playlists button {
