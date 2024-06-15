@@ -501,6 +501,7 @@ main {
     padding: 5px;
     font-size: 12px;
     cursor: pointer;
+    color: #0000;
     background-color: #0000;
     border: none;
     transition: transform 0.2s;
@@ -524,7 +525,14 @@ main {
 }
 
 .playlist-item .add-playlist-button:hover {
+    color: #0000;
+    background-color: #0000;
     transform: scale(1.2);
+}
+
+.playlist-item .added-playlist-button:hover {
+    color: #0000;
+    background-color: #0000;
 }
 
 #playlist-menu {
