@@ -485,9 +485,15 @@ main {
     left: 50%;
     transform: translate(-50%, -50%);
     background-color: #000;
+    border: 1px solid #fff;
     padding: 20px;
-    border-radius: 10px;
     z-index: 1000;
+    transition: border 0.2s;
+}
+
+.hidden #playlist-menu {
+    border: 1px solid #000;
+    display: none;
 }
 
 #playlist-menu h3 {
@@ -515,17 +521,17 @@ main {
     width: 100%;
     padding: 10px;
     font-size: 16px;
-    background-color: #000;
-    color: #fff;
-    border: 1px solid #000;
+    background-color: #fff;
+    color: #000;
+    border: 1px solid #fff;
     cursor: pointer;
     transition: border 0.2s;
 }
 
 #existing-playlists button:hover {
-    background-color: #fff;
-    color: #000;
-    border: 1px solid #fff;
+    background-color: #000;
+    color: #fff;
+    border: 1px solid #000;
 }
 
 
