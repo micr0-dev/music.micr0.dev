@@ -961,24 +961,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
             let i = 0;
 
-            let songDivs = [];
-
             songIDs.forEach(async songID => {
                 if (songID == 0) {
                     const img = document.createElement('img');
                     img.src = `/api/thumbnail/0?size=160`;
                     playlistArt.appendChild(img);
-                    if (i == 0) {
-                        div.style.setProperty('--art-color' + i, '#000000');
-                    }
+                    div.style.setProperty('--art-color' + i, '#000000');
                     i++;
                 } else {
                     const response = await fetchAuth(`/api/music/${songID}`);
                     const song = await response.json();
-
-                    if (i == 0) {
-                        div.style.setProperty('--art-color', song.color);
-                    }
+                    div.style.setProperty('--art-color', song.color);
 
                     const img = document.createElement('img');
                     img.src = `/api/thumbnail/${song.id}?size=160`;
@@ -986,14 +979,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     playlistArt.appendChild(img);
                     i++;
                 }
-                songDivs.push(div);
             });
 
-            Promise.all(songDivs).then(() => {
-                element.appendChild(div);
-            });
+            element.appendChild(div);
         });
-
     }
 
     async function loadSidePlaylists() {
