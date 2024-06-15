@@ -1,6 +1,7 @@
 package middlewares
 
 import (
+	"log"
 	"net/http"
 	"strings"
 
@@ -42,6 +43,7 @@ func AuthMiddleware() gin.HandlerFunc {
 			return jwtKey, nil
 		})
 		if err != nil {
+			log.Println(err)
 			if err == jwt.ErrSignatureInvalid {
 				c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
 				c.Abort()
