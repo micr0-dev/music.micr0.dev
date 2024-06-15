@@ -486,12 +486,12 @@ main {
     padding: 20px;
     z-index: 1000;
 
-    transition: scale 0.3s, box-shadow 0.6s ease-out;
+    transition: top 0.3s, left 0.3s, box-shadow 0.6s ease-out;
 }
 
 #playlist-menu.menu-hidden {
     scale: 1;
-    display: none;
+    top: -100%;
     box-shadow: 0 0 40px 20px #0000;
 }
 
