@@ -282,9 +282,13 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    function showPlaylistMenu(songId) {
+    function showPlaylistMenu(song) {
         playlistMenu.classList.remove('menu-hidden');
-        playlistMenu.dataset.songId = songId;
+        playlistMenu.dataset.songId = song.id;
+        // set title
+        playlistMenu.querySelector('h2').textContent = 'Add to Playlist';
+        // set color
+        playlistMenu.style.setProperty('--art-color', song.color);
 
         const rect = playlistMenu.getBoundingClientRect();
         let x = event.clientX;
@@ -455,7 +459,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const addToPlaylistBtn = div.querySelector('#add-to-playlist');
             addToPlaylistBtn.addEventListener('click', (event) => {
                 event.stopPropagation();
-                showPlaylistMenu(music.id);
+                showPlaylistMenu(music);
             });
 
             element.appendChild(div);
