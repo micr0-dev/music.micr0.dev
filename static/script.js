@@ -289,11 +289,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const rect = playlistMenu.getBoundingClientRect();
         let x = event.clientX - rect.width / 2;
         let y = event.clientY - rect.height / 2;
-        // make sure the menu is not out of the screen
-        if (x < rect.height / 2) x = rect.height / 2;
-        if (y < rect.width / 2) y = rect.width / 2;
-        if (x + rect.width > window.innerWidth) x = window.innerWidth - rect.width;
-        if (y + rect.height > window.innerHeight) y = window.innerHeight - rect.height;
+        // make sure the menu bounds are within the window
+        x = Math.min(x, window.innerWidth - rect.width);
+        y = Math.min(y, window.innerHeight - rect.height);
+
 
         playlistMenu.style.left = `${x}px`;
         playlistMenu.style.top = `${y}px`;
