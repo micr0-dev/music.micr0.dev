@@ -44,6 +44,11 @@ func AuthMiddleware() gin.HandlerFunc {
 		})
 		if err != nil {
 			log.Println(err)
+			if strings.Contains(err.Error(), "token is expired") {
+				c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+				c.Abort()
+				return
+			}
 			if err == jwt.ErrSignatureInvalid {
 				c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
 				c.Abort()
