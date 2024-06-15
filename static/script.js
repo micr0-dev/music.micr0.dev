@@ -432,7 +432,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         loadMusic(musics);
 
-        // load recently created playlists above
         const response2 = await fetchAuth('/api/playlists?limit=6');
         const playlists = await response2.json();
 
@@ -855,6 +854,12 @@ document.addEventListener('DOMContentLoaded', () => {
     function loadPlaylists(playlists, element = wholePlaylistsList) {
         element.innerHTML = '';
         playlists.forEach(async playlist => {
+            playlist.songs.forEach((song, index) => {
+                if (song == "") {
+                    playlist.songs.splice(index, 1);
+                }
+            });
+
             const div = document.createElement('div');
             div.className = 'playlist-item';
 
@@ -888,7 +893,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             let i = 0;
 
-            songIDs.forEach(async songID => {
+            playlist.songs.forEach(async songID => {
                 if (songID == 0) {
                     const img = document.createElement('img');
                     img.src = `/api/thumbnail/0?size=160`;
