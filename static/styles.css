@@ -500,6 +500,34 @@ main {
     gap: 10px;
 }
 
+#existing-playlists {
+    display: flex;
+    flex-direction: column;
+    max-height: 200px;
+    overflow-y: auto;
+    gap: 10px;
+}
+
+#existing-playlists button {
+    text-align: left;
+    display: block;
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    background-color: #000;
+    color: #fff;
+    border: 1px solid #000;
+    cursor: pointer;
+    transition: border 0.2s;
+}
+
+#existing-playlists button:hover {
+    background-color: #fff;
+    color: #000;
+    border: 1px solid #fff;
+}
+
+
 #now-playing {
     display: flex;
     justify-content: space-between;
