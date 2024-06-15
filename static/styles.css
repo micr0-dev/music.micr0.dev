@@ -506,6 +506,18 @@ main {
     transition: transform 0.2s;
 }
 
+.added-playlist-button {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    padding: 5px;
+    font-size: 12px;
+    cursor: pointer;
+    background-color: #0000;
+    border: none;
+    transition: transform 0.2s;
+}
+
 .playlist-item:hover svg {
     opacity: 1;
 }

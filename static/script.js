@@ -954,7 +954,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (document.getElementById(playlist.id)) {
                 const addButton = document.createElement('button');
-                addButton.className = 'add-playlist-button';
+                addButton.className = 'added-playlist-button';
                 addButton.innerHTML = `<svg><use href="#checkmark"></use></svg>`;
                 div.appendChild(addButton);
             } else {
