@@ -292,6 +292,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // make sure the menu bounds are within the window
         x = Math.min(x, window.innerWidth - rect.width);
         y = Math.min(y, window.innerHeight - rect.height);
+        x = Math.max(x, rect.width / 2);
+        y = Math.max(y, rect.height / 2);
 
 
         playlistMenu.style.left = `${x}px`;
