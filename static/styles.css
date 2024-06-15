@@ -478,6 +478,10 @@ main {
     color: #ccc;
 }
 
+.hidden #playlist-menu {
+    transform: translate(-50%, -50%) scale(0);
+    box-shadow: 0 0 40px 20px #0000;
+}
 
 #playlist-menu {
     position: fixed;
@@ -485,9 +489,11 @@ main {
     left: 50%;
     transform: translate(-50%, -50%);
     background-color: #000;
-    border: 1px solid #fff;
+    box-shadow: 0 0 40px 20px var(--art-color);
     padding: 20px;
     z-index: 1000;
+
+    transition: transform 0.6s, box-shadow 0.6s ease-out;
 }
 
 #playlist-menu h3 {
