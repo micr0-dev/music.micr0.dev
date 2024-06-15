@@ -518,12 +518,12 @@ main {
     overflow-y: auto;
     max-width: 300px;
     overflow-x: hidden;
-    text-overflow: ellipsis;
 }
 
 #existing-playlists button {
     text-align: left;
     display: block;
+    text-overflow: ellipsis;
     width: 100%;
     padding: 10px;
     font-size: 16px;
