@@ -283,7 +283,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function showPlaylistMenu(songId) {
-        playlistMenu.classList.remove('hidden');
+        playlistMenu.classList.remove('menu-hidden');
         playlistMenu.dataset.songId = songId;
 
         const rect = playlistMenu.getBoundingClientRect();
@@ -300,7 +300,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         document.addEventListener('click', function hideMenu(event) {
             if (!playlistMenu.contains(event.target)) {
-                playlistMenu.classList.add('hidden');
+                playlistMenu.classList.add('menu-hidden');
                 document.removeEventListener('click', hideMenu);
             }
         });
@@ -328,7 +328,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (updateResponse.ok) {
-                playlistMenu.classList.add('hidden');
+                playlistMenu.classList.add('menu-hidden');
             } else {
                 const result = await updateResponse.json();
                 alert('Failed to update playlist: ' + result.error);
