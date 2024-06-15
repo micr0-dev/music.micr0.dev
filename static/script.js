@@ -290,8 +290,8 @@ document.addEventListener('DOMContentLoaded', () => {
         let x = event.clientX - rect.width / 2;
         let y = event.clientY - rect.height / 2;
         // make sure the menu is not out of the screen
-        if (x < 0) x = 0;
-        if (y < 0) y = 0;
+        if (x < rect.height / 2) x = rect.height / 2;
+        if (y < rect.width / 2) y = rect.width / 2;
         if (x + rect.width > window.innerWidth) x = window.innerWidth - rect.width;
         if (y + rect.height > window.innerHeight) y = window.innerHeight - rect.height;
 
