@@ -287,8 +287,8 @@ document.addEventListener('DOMContentLoaded', () => {
         playlistMenu.dataset.songId = songId;
 
         const rect = playlistMenu.getBoundingClientRect();
-        const x = event.clientX - rect.width / 2;
-        const y = event.clientY - rect.height / 2;
+        let x = event.clientX - rect.width / 2;
+        let y = event.clientY - rect.height / 2;
         // make sure the menu is not out of the screen
         if (x < 0) x = 0;
         if (y < 0) y = 0;
