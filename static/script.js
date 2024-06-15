@@ -158,61 +158,6 @@ document.addEventListener('DOMContentLoaded', () => {
         return value;
     }
 
-    function rgbToHsl(r, g, b) {
-        r /= 255, g /= 255, b /= 255;
-
-        const max = Math.max(r, g, b), min = Math.min(r, g, b);
-
-        let h, s, l = (max + min) / 2;
-
-        if (max == min) {
-            h = s = 0;
-        } else {
-            const d = max - min;
-            s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-
-            switch (max) {
-                case r: h = (g - b) / d + (g < b ? 6 : 0); break;
-                case g: h = (b - r) / d + 2; break;
-                case b: h = (r - g) / d + 4; break;
-            }
-
-            h /= 6;
-        }
-
-        return [h, s, l];
-    }
-
-    function hslToRgb(h, s, l) {
-        let r, g, b;
-
-        if (s == 0) {
-            r = g = b = l;
-        } else {
-            const hue2rgb = (p, q, t) => {
-                if (t < 0) t += 1;
-                if (t > 1) t -= 1;
-                if (t < 1 / 6) return p + (q - p) * 6 * t;
-                if (t < 1 / 2) return q;
-                if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
-                return p;
-            }
-
-            const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
-            const p = 2 * l - q;
-
-            r = hue2rgb(p, q, h + 1 / 3);
-            g = hue2rgb(p, q, h);
-            b = hue2rgb(p, q, h - 1 / 3);
-        }
-
-        return [r * 255, g * 255, b * 255];
-    }
-
-    function rgbToHex(r, g, b) {
-        return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
-    }
-
     function checkColorTooDark(color) {
         const c = color.substring(1);      // strip #
         const rgb = parseInt(c, 16);   // convert rrggbb to decimal
@@ -225,18 +170,15 @@ document.addEventListener('DOMContentLoaded', () => {
         return luma < 10;
     }
 
-    function saturateAndLighten(color) {
-        const c = color.substring(1);      // strip #
-        const rgb = parseInt(c, 16);   // convert rrggbb to decimal
-        const r = (rgb >> 16) & 0xff;  // extract red
-        const g = (rgb >> 8) & 0xff;  // extract green
-        const b = (rgb >> 0) & 0xff;  // extract blue
+    function Lighten(color) {
+        let num = parseInt(color, 16),
+            amt = 20,
+            R = (num >> 16) + amt,
+            B = ((num >> 8) & 0x00FF) + amt,
+            G = (num & 0x0000FF) + amt;
 
-        const hsl = rgbToHsl(r, g, b);
-        const newHsl = [hsl[0], hsl[1] * 1.5, hsl[2] * 1.2];
-        const newRgb = hslToRgb(newHsl[0], newHsl[1], newHsl[2]);
-
-        return rgbToHex(newRgb[0], newRgb[1], newRgb[2]);
+        let newColor = G | (B << 8) | (R << 16);
+        return newColor.toString(16);
     }
 
     document.getElementById('upload-form').addEventListener('submit', async function (event) {
@@ -463,7 +405,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const isPlaying = currentTrack && currentTrack.id === music.id;
 
-            if (checkColorTooDark(music.color)) music.color = saturateAndLighten(music.color);
+            if (checkColorTooDark(music.color)) music.color = Lighten(music.color);
 
             div.style.setProperty('--art-color', music.color);
 
@@ -658,7 +600,7 @@ document.addEventListener('DOMContentLoaded', () => {
         coverArt.parentElement.classList.remove('hidden');
         dataScroll.parentElement.classList.remove('hidden');
 
-        if (checkColorTooDark(music.color)) music.color = saturateAndLighten(music.color);
+        if (checkColorTooDark(music.color)) music.color = Lighten(music.color);
 
         nowPlayingContainer.style.setProperty('--art-color', music.color);
 
