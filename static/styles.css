@@ -130,11 +130,6 @@ aside button.selected {
     border: 1px solid #fff;
 }
 
-#playlist-section {
-    overflow-x: hidden;
-    text-overflow: ellipsis;
-}
-
 .sidebar-toggle {
     display: none;
     position: fixed;
@@ -204,6 +199,11 @@ input[type="password"]:focus {
 #albums-list li:hover {
     background-color: #333;
     color: #fff;
+}
+
+#playlists-list button {
+    overflow-x: hidden;
+    text-overflow: ellipsis;
 }
 
 #user-info {
@@ -526,8 +526,6 @@ main {
 #existing-playlists button {
     text-align: left;
     display: block;
-    overflow-x: hidden;
-    text-overflow: ellipsis;
     width: 100%;
     padding: 10px;
     font-size: 16px;
