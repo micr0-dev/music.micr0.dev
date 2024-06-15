@@ -505,7 +505,8 @@ main {
     flex-direction: column;
     max-height: 200px;
     overflow-y: auto;
-    gap: 10px;
+    max-width: 300px;
+    overflow-x: hidden;
 }
 
 #existing-playlists button {
