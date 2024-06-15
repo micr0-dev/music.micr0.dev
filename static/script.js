@@ -1013,6 +1013,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
+            if (playlist.songs == null) {
+                return;
+            }
+
             loadMusic(playlist.songs, musicList, 40);
         }
     }
