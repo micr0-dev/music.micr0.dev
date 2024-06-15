@@ -963,7 +963,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 addButton.innerHTML = `<svg><use href="#plus"></use></svg>`;
                 addButton.addEventListener('click', async (event) => {
                     event.stopPropagation();
-                    const response = await fetchAuth(`/user/playlists/${playlist.id}`, {
+                    const response = await fetchAuth(`/api/user/playlists/${playlist.id}`, {
                         method: 'POST'
                     });
 
