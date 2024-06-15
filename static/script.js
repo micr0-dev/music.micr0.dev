@@ -37,6 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const trackInfo = document.getElementById('track-info');
     const wholePlaylistsList = document.getElementById('whole-playlists-list');
     const wholePlaylistsListTitle = document.getElementById('whole-playlists-title');
+    const recentPlaylists = document.getElementById('recent-playlists');
 
     let isPlaying = false;
     let openQueue = [];
@@ -305,6 +306,7 @@ document.addEventListener('DOMContentLoaded', () => {
         uploadSection.classList.add('hidden');
         searchSection.classList.add('hidden');
         musicSection.classList.remove('hidden');
+        recentPlaylists.classList.remove('hidden');
 
         homeButton.classList.add('selected');
         searchButton.classList.remove('selected');
@@ -323,6 +325,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         currentScreen = 'upload';
         musicSection.classList.add('hidden');
+        recentPlaylists.classList.add('hidden');
         searchSection.classList.add('hidden');
         uploadSection.classList.remove('hidden');
 
@@ -341,6 +344,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         currentScreen = 'search';
         musicSection.classList.add('hidden');
+        recentPlaylists.classList.add('hidden');
         uploadSection.classList.add('hidden');
         searchSection.classList.remove('hidden');
 
@@ -938,6 +942,7 @@ document.addEventListener('DOMContentLoaded', () => {
         currentScreen = playlistId;
         uploadSection.classList.add('hidden');
         searchSection.classList.add('hidden');
+        recentPlaylists.classList.add('hidden');
         musicSection.classList.remove('hidden');
 
         homeButton.classList.remove('selected');
