@@ -489,6 +489,7 @@ main {
     fill: #fff;
     opacity: 0;
     cursor: pointer;
+    background-color: #0000;
 
     transition: opacity 0.2s;
 }
