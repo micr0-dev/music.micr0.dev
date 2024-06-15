@@ -293,7 +293,7 @@ document.addEventListener('DOMContentLoaded', () => {
         x = Math.min(x, window.innerWidth - rect.width);
         y = Math.min(y, window.innerHeight - rect.height);
         x = Math.max(x, rect.width / 2);
-        y = Math.max(y, rect.height / 2);
+        y = Math.max(y, (rect.height / 2) + 10);
 
 
         playlistMenu.style.left = `${x}px`;
