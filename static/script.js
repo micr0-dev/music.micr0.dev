@@ -170,6 +170,20 @@ document.addEventListener('DOMContentLoaded', () => {
         return luma < 10;
     }
 
+    function saturateAndLighten(color) {
+        const c = color.substring(1);      // strip #
+        const rgb = parseInt(c, 16);   // convert rrggbb to decimal
+        const r = (rgb >> 16) & 0xff;  // extract red
+        const g = (rgb >> 8) & 0xff;  // extract green
+        const b = (rgb >> 0) & 0xff;  // extract blue
+
+        const hsl = rgbToHsl(r, g, b);
+        const newHsl = [hsl[0], hsl[1] * 1.5, hsl[2] * 1.2];
+        const newRgb = hslToRgb(newHsl[0], newHsl[1], newHsl[2]);
+
+        return rgbToHex(newRgb[0], newRgb[1], newRgb[2]);
+    }
+
     document.getElementById('upload-form').addEventListener('submit', async function (event) {
         event.preventDefault();
 
@@ -394,7 +408,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const isPlaying = currentTrack && currentTrack.id === music.id;
 
-            if (checkColorTooDark(music.color)) music.color = "#ffffff";
+            if (checkColorTooDark(music.color)) music.color = saturateAndLighten(music.color);
 
             div.style.setProperty('--art-color', music.color);
 
@@ -589,7 +603,7 @@ document.addEventListener('DOMContentLoaded', () => {
         coverArt.parentElement.classList.remove('hidden');
         dataScroll.parentElement.classList.remove('hidden');
 
-        if (checkColorTooDark(music.color)) music.color = "#ffffff";
+        if (checkColorTooDark(music.color)) music.color = saturateAndLighten(music.color);
 
         nowPlayingContainer.style.setProperty('--art-color', music.color);
 
