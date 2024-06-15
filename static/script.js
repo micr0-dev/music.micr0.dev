@@ -952,6 +952,30 @@ document.addEventListener('DOMContentLoaded', () => {
                 loadPlaylist(playlist.id);
             });
 
+            if (document.getElementById(playlist.id)) {
+                const addButton = document.createElement('button');
+                addButton.className = 'add-playlist-button';
+                addButton.textContent = `<svg><use href="#checkmark"></use></svg>`;
+                div.appendChild(addButton);
+            } else {
+                const addButton = document.createElement('button');
+                addButton.className = 'add-playlist-button';
+                addButton.textContent = `<svg><use href="#plus"></use></svg>`;
+                addButton.addEventListener('click', async (event) => {
+                    event.stopPropagation();
+                    const response = await fetchAuth(`/user/playlists/${playlist.id}`, {
+                        method: 'POST'
+                    });
+
+                    if (response.ok) {
+                        loadSidePlaylists();
+                    } else {
+                        alert('Failed to add playlist to user playlists');
+                    }
+                });
+                div.appendChild(addButton);
+            }
+
             const songIDs = songs.slice(0, 4);
             if (songIDs.length < 4) {
                 for (let i = songIDs.length; i < 4; i++) {

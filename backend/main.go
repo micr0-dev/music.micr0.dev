@@ -97,6 +97,7 @@ func main() {
 		authorized.GET("/whoami", musicHandler.WhoAmI)
 		authorized.GET("/user/uploaded", musicHandler.GetUserMusic)
 		authorized.GET("/user/playlists", musicHandler.GetUserPlaylists)
+		authorized.POST("/user/playlists/:id", musicHandler.AddToUserPlaylists)
 
 	}
 

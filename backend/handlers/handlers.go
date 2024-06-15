@@ -1133,3 +1133,35 @@ func (h *MusicHandler) WhoAmI(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{"username": username})
 }
+
+func (h *MusicHandler) AddToUserPlaylists(c *gin.Context) {
+	username, exists := c.Get("username")
+	if !exists {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get username"})
+		return
+	}
+
+	id := c.Param("id")
+
+	var user models.User
+	err := h.DB.Get(&user, "SELECT * FROM users WHERE username = ?", username)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get user"})
+		return
+	}
+
+	for _, playlistID := range user.PlaylistIDs {
+		if playlistID == id {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Playlist already exists in user's playlists"})
+			return
+		}
+	}
+
+	user.PlaylistIDs = append(user.PlaylistIDs, id)
+	if _, err := h.DB.NamedExec(`UPDATE users SET playlist_ids = :playlist_ids WHERE id = :id`, user); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update user"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Playlist added to user's playlists"})
+}
