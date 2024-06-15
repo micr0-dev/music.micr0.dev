@@ -287,8 +287,8 @@ document.addEventListener('DOMContentLoaded', () => {
         playlistMenu.dataset.songId = songId;
 
         const rect = playlistMenu.getBoundingClientRect();
-        let x = event.clientX - rect.width / 2;
-        let y = event.clientY - rect.height / 2;
+        let x = event.clientX;
+        let y = event.clientY;
 
         x = Math.min(x, window.innerWidth - rect.width);
         y = Math.min(y, window.innerHeight - rect.height);
