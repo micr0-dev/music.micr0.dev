@@ -286,8 +286,11 @@ document.addEventListener('DOMContentLoaded', () => {
         playlistMenu.classList.remove('hidden');
         playlistMenu.dataset.songId = songId;
 
-        playlistMenu.style.left = `${event.clientX}px`;
-        playlistMenu.style.top = `${event.clientY}px`;
+        const rect = playlistMenu.getBoundingClientRect();
+        const x = event.clientX - rect.width / 2;
+        const y = event.clientY - rect.height / 2;
+        playlistMenu.style.left = `${x}px`;
+        playlistMenu.style.top = `${y}px`;
 
         document.addEventListener('click', function hideMenu(event) {
             if (!playlistMenu.contains(event.target)) {
