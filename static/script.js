@@ -167,12 +167,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const luma = 0.2126 * r + 0.7152 * g + 0.0722 * b; // per ITU-R BT.709
 
-        return luma < 10;
+        return luma < 16;
     }
 
     function Lighten(color) {
         let num = parseInt(color, 16),
-            amt = 20,
+            amt = 45,
             R = (num >> 16) + amt,
             B = ((num >> 8) & 0x00FF) + amt,
             G = (num & 0x0000FF) + amt;
