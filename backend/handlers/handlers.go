@@ -1070,7 +1070,7 @@ func (h *MusicHandler) Login(c *gin.Context) {
 		return
 	}
 
-	expirationTime := time.Now().Add(24 * time.Hour)
+	expirationTime := time.Now().Add(24 * time.Hour * 7) // 1 week expiry
 	claims := &Claims{
 		Username: user.Username,
 		StandardClaims: jwt.StandardClaims{
