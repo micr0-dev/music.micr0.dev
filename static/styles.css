@@ -483,6 +483,16 @@ main {
     color: #ccc;
 }
 
+.playlist-item svg {
+    width: 24px;
+    height: 24px;
+    fill: #fff;
+    opacity: 0;
+    cursor: pointer;
+
+    transition: opacity 0.2s;
+}
+
 .add-playlist-button {
     position: absolute;
     top: 5px;
