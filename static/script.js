@@ -966,7 +966,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     const img = document.createElement('img');
                     img.src = `/api/thumbnail/0?size=160`;
                     playlistArt.appendChild(img);
-                    div.style.setProperty('--art-color' + i, '#000000');
+                    if (i == 0) {
+                        div.style.setProperty('--art-color' + i, '#000000');
+                    }
                     i++;
                 } else {
                     const response = await fetchAuth(`/api/music/${songID}`);
