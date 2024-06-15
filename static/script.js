@@ -926,6 +926,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
 
+            songs.reverse();
+
             const div = document.createElement('div');
             div.className = 'playlist-item';
 
