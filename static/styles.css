@@ -514,6 +514,7 @@ main {
     font-size: 12px;
     cursor: pointer;
     color: #0000;
+    background-color: #0000;
     border: none;
     transition: transform 0.2s;
 }
