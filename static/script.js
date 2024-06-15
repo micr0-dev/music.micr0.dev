@@ -167,7 +167,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const luma = 0.2126 * r + 0.7152 * g + 0.0722 * b; // per ITU-R BT.709
 
-        return luma < 40;
+        return luma < 10;
     }
 
     document.getElementById('upload-form').addEventListener('submit', async function (event) {
