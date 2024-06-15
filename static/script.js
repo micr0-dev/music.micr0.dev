@@ -961,6 +961,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             let i = 0;
 
+            console.log(songIDs);
+
             songIDs.forEach(async songID => {
                 if (songID == 0) {
                     const img = document.createElement('img');
