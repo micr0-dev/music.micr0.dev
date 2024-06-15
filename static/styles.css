@@ -480,7 +480,6 @@ main {
 
 #playlist-menu {
     position: fixed;
-    transform: translate(50%, 50%);
     scale: 1;
     background-color: #000;
     box-shadow: 0 0 40px 20px var(--art-color);
