@@ -513,7 +513,7 @@ main {
     padding: 5px;
     font-size: 12px;
     cursor: pointer;
-    background-color: #0000;
+    color: #0000;
     border: none;
     transition: transform 0.2s;
 }
