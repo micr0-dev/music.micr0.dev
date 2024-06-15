@@ -362,6 +362,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function loadMusic(musics, element = musicList, skip = 0) {
+        if (musics == null) {
+            element.innerHTML = 'No music found';
+            return;
+        }
         openQueue = musics.slice();
 
         if (skip > 0) {
