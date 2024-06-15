@@ -285,9 +285,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function showPlaylistMenu(song) {
         playlistMenu.classList.remove('menu-hidden');
         playlistMenu.dataset.songId = song.id;
-        // set title
         playlistMenu.querySelector('h2').textContent = song.title;
-        // set color
         playlistMenu.style.setProperty('--art-color', song.color);
 
         const rect = playlistMenu.getBoundingClientRect();
@@ -306,6 +304,13 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!playlistMenu.contains(event.target)) {
                 playlistMenu.classList.add('menu-hidden');
                 document.removeEventListener('click', hideMenu);
+            }
+        });
+        // or if mouse leaves the menu for more than 1 second
+        document.addEventListener('mouseleave', function hideMenu(event) {
+            if (!playlistMenu.contains(event.target)) {
+                playlistMenu.classList.add('menu-hidden');
+                document.removeEventListener('mouseleave', hideMenu);
             }
         });
 
