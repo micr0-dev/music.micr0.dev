@@ -267,18 +267,18 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     async function fetchPlaylists() {
-        const response = await fetchAuth('/api/playlists');
+        const response = await fetchAuth('/api/user/playlists');
         const playlists = await response.json();
 
         existingPlaylists.innerHTML = '';
         playlists.forEach(playlist => {
-            const div = document.createElement('div');
-            div.className = 'playlist-item';
-            div.textContent = playlist.name;
-            div.addEventListener('click', () => {
+            const button = document.createElement('button');
+            button.className = 'playlist-select-item';
+            button.textContent = playlist.name;
+            button.addEventListener('click', () => {
                 addSongToPlaylist(playlist.id);
             });
-            existingPlaylists.appendChild(div);
+            existingPlaylists.appendChild(button);
         });
     }
 
@@ -289,12 +289,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const rect = playlistMenu.getBoundingClientRect();
         let x = event.clientX - rect.width / 2;
         let y = event.clientY - rect.height / 2;
-        // make sure the menu bounds are within the window
+
         x = Math.min(x, window.innerWidth - rect.width);
         y = Math.min(y, window.innerHeight - rect.height);
         x = Math.max(x, rect.width / 2);
         y = Math.max(y, (rect.height / 2) + 10);
-
 
         playlistMenu.style.left = `${x}px`;
         playlistMenu.style.top = `${y}px`;
