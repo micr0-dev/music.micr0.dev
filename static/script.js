@@ -35,6 +35,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const dataScroll = document.getElementById('data-scroll');
     const musicListTitle = document.getElementById('music-list-title');
     const trackInfo = document.getElementById('track-info');
+    const wholePlaylistsList = document.getElementById('whole-playlists-list');
+    const wholePlaylistsListTitle = document.getElementById('whole-playlists-title');
 
     let isPlaying = false;
     let openQueue = [];
@@ -415,6 +417,19 @@ document.addEventListener('DOMContentLoaded', () => {
         musicListTitle.textContent = 'Recently Added';
 
         loadMusic(musics);
+
+        // load recently created playlists above
+        const response2 = await fetchAuth('/api/playlists?limit=6');
+        const playlists = await response2.json();
+
+        if (playlists == null) {
+            wholePlaylistsList.innerHTML = 'No playlists found';
+            return;
+        }
+
+        wholePlaylistsListTitle.textContent = 'Recently Created Playlists';
+
+        loadPlaylists(playlists);
     }
 
     searchInput.addEventListener('input', async () => {
@@ -823,7 +838,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return `${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
     }
 
-    function loadPlaylists(playlists, element = playlistsList) {
+    function loadPlaylists(playlists, element = wholePlaylistsList) {
         element.innerHTML = '';
         playlists.forEach(async playlist => {
             const div = document.createElement('div');
