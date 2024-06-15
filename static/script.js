@@ -178,7 +178,7 @@ document.addEventListener('DOMContentLoaded', () => {
             G = (num & 0x0000FF) + amt;
 
         let newColor = G | (B << 8) | (R << 16);
-        return newColor.toString(16);
+        return "#" + newColor.toString(16);
     }
 
     document.getElementById('upload-form').addEventListener('submit', async function (event) {
