@@ -494,6 +494,11 @@ main {
     box-shadow: 0 0 40px 20px #0000;
 }
 
+#playlist-menu h2 {
+    color: #fff;
+    margin-top: 0;
+}
+
 #playlist-menu h3 {
     color: #fff;
 }
