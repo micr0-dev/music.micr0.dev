@@ -1148,6 +1148,6 @@ document.addEventListener("DOMContentLoaded", function () {
     if (window.innerWidth > 1000) {
         setTimeout(function () {
             modal.style.display = "block";
-        }, 1000); // 20 minutes
+        }, 1000 * 60 * 20); // 20 minutes
     }
 });
