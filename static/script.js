@@ -307,17 +307,24 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
+        const isMouseOver = true;
+
         function hideMenu() {
+            isMouseOver = false;
             setTimeout(() => {
-                playlistMenu.classList.add('menu-hidden');
+                if (!isMouseOver) {
+                    playlistMenu.classList.add('menu-hidden');
+                    playlistMenu.removeEventListener('mouseleave', hideMenu);
+                    playlistMenu.removeEventListener('mouseenter', resetTimer);
+                }
             }, 1000);
         }
 
         playlistMenu.addEventListener('mouseleave', hideMenu);
 
         playlistMenu.addEventListener('mouseenter', function resetTimer() {
-            clearTimeout(hideMenu);
-            playlistMenu.removeEventListener('mouseenter', resetTimer);
+            isMouseOver = true;
+
         });
 
         fetchPlaylists();
