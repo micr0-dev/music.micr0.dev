@@ -314,6 +314,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         sidebar.classList.remove('active');
 
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
         loadMusicList();
     });
 
@@ -334,6 +336,8 @@ document.addEventListener('DOMContentLoaded', () => {
         homeButton.classList.remove('selected');
 
         sidebar.classList.remove('active');
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     });
 
     searchButton.addEventListener('click', () => {
@@ -351,6 +355,8 @@ document.addEventListener('DOMContentLoaded', () => {
         searchButton.classList.add('selected');
         uploadButton.classList.remove('selected');
         homeButton.classList.remove('selected');
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
 
         sidebar.classList.remove('active');
     });
@@ -948,6 +954,8 @@ document.addEventListener('DOMContentLoaded', () => {
         homeButton.classList.remove('selected');
         searchButton.classList.remove('selected');
         uploadButton.classList.remove('selected');
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
 
         const playlistSide = document.getElementById(playlistId)
         if (playlistSide) {
