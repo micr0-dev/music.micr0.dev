@@ -114,8 +114,6 @@ aside button {
     background-color: #000;
     color: #fff;
     border: 1px solid #000;
-    overflow-x: hidden;
-    text-overflow: ellipsis;
     cursor: pointer;
     transition: border 0.2s;
 }
@@ -130,6 +128,11 @@ aside button.selected {
     background-color: #fff;
     color: #000;
     border: 1px solid #fff;
+}
+
+#playlist-section {
+    overflow-x: hidden;
+    text-overflow: ellipsis;
 }
 
 .sidebar-toggle {
@@ -523,6 +526,7 @@ main {
 #existing-playlists button {
     text-align: left;
     display: block;
+    overflow-x: hidden;
     text-overflow: ellipsis;
     width: 100%;
     padding: 10px;
