@@ -961,7 +961,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             let i = 0;
 
-            console.log(songIDs);
+            let songDivs = [];
 
             songIDs.forEach(async songID => {
                 if (songID == 0) {
@@ -986,10 +986,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     playlistArt.appendChild(img);
                     i++;
                 }
+                songDivs.push(div);
             });
 
-            element.appendChild(div);
+            Promise.all(songDivs).then(() => {
+                element.appendChild(div);
+            });
         });
+
     }
 
     async function loadSidePlaylists() {
