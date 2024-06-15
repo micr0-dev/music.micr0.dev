@@ -209,6 +209,10 @@ document.addEventListener('DOMContentLoaded', () => {
         return [r * 255, g * 255, b * 255];
     }
 
+    function rgbToHex(r, g, b) {
+        return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+    }
+
     function checkColorTooDark(color) {
         const c = color.substring(1);      // strip #
         const rgb = parseInt(c, 16);   // convert rrggbb to decimal
