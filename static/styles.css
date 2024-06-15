@@ -486,7 +486,7 @@ main {
     padding: 20px;
     z-index: 1000;
 
-    transition: scale 0.2s, box-shadow 0.6s ease-out;
+    transition: box-shadow 0.6s ease-out;
 }
 
 #playlist-menu.menu-hidden {
