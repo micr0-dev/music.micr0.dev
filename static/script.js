@@ -301,8 +301,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.addEventListener('click', function hideMenu(event) {
             if (!playlistMenu.contains(event.target)) {
                 playlistMenu.classList.add('menu-hidden');
-                playlistMenu.style.left = '';
-                playlistMenu.style.top = '';
+                playlistMenu.style.top = '-100%';
                 document.removeEventListener('click', hideMenu);
             }
         });
