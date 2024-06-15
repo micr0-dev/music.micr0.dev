@@ -317,7 +317,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     playlistMenu.removeEventListener('mouseleave', hideMenu);
                     playlistMenu.removeEventListener('mouseenter', resetTimer);
                 }
-            }, 1000);
+            }, 500);
         }
 
         playlistMenu.addEventListener('mouseleave', hideMenu);
