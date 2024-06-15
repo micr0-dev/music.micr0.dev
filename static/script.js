@@ -307,12 +307,13 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // or if mouse leaves the menu for more than 1 second
-        playlistMenu.addEventListener('mouseleave', function hideMenu() {
+        function hideMenu() {
             setTimeout(() => {
                 playlistMenu.classList.add('menu-hidden');
             }, 1000);
-        });
+        }
+
+        playlistMenu.addEventListener('mouseleave', hideMenu);
 
         playlistMenu.addEventListener('mouseenter', function resetTimer() {
             clearTimeout(hideMenu);
