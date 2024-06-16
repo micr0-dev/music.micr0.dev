@@ -1,3 +1,5 @@
+let currentTrack = null;
+
 document.addEventListener("DOMContentLoaded", async function () {
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get('token');
