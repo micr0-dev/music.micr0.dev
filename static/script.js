@@ -497,7 +497,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
 
             const response = await fetchAuth(`/api/share/${songId}`, {
-                method: 'POST'
+                method: 'GET'
             });
 
             if (!response.ok) {
