@@ -286,7 +286,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function showPlaylistMenu(song) {
         playlistMenu.classList.remove('menu-hidden');
         playlistMenu.dataset.songId = song.id;
-        playlistMenu.querySelector('h2').textContent = song.title;
+        playlistMenu.querySelector('h2').textContent = "Add to Playlist";
         playlistMenu.style.setProperty('--art-color', song.color);
 
         const rect = playlistMenu.getBoundingClientRect();
