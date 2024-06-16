@@ -20,6 +20,7 @@ const nextButton = document.getElementById('next-button');
 const shuffleButton = document.getElementById('shuffle-button');
 const repeatButton = document.getElementById('repeat-button');
 
+let token = null;
 let currentTrack = null;
 let isPlaying = false;
 let isShuffle = false;
@@ -27,7 +28,7 @@ let isRepeat = false;
 
 document.addEventListener("DOMContentLoaded", async function () {
     const urlParams = new URLSearchParams(window.location.search);
-    const token = urlParams.get('token');
+    token = urlParams.get('token');
 
     if (!token) {
         alert('Invalid or missing token for shared content.');
@@ -41,7 +42,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         }
 
         const song = await response.json();
-        displaySharedSong(song, token);
+        displaySharedSong(song);
     } catch (error) {
         console.error('Error fetching shared song:', error);
         alert('Error fetching shared song');
@@ -86,7 +87,7 @@ String.prototype.toTitleCase = function () {
     return this.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
 }
 
-function displaySharedSong(music, token) {
+function displaySharedSong(music) {
     volumeSlider.style.setProperty('--value', `100%`);
     volumeSlider.value = 100;
     seekSlider.style.setProperty('--value', `0%`);
@@ -129,7 +130,7 @@ function displaySharedSong(music, token) {
     musicList.appendChild(div);
 }
 
-async function playTrack(music, token) {
+async function playTrack(music) {
     audioPlayer.src = `/api/stream?token=${token}`;
 
     const thumbnailUrl = `/api/thumbnail/${music.id}?size=600`;
@@ -275,7 +276,6 @@ nextButton.addEventListener('click', () => {
 shuffleButton.addEventListener('click', () => {
     isShuffle = !isShuffle;
     shuffleButton.classList.toggle('active');
-    shuffleQueue();
 });
 
 repeatButton.addEventListener('click', () => {
