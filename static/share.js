@@ -12,6 +12,13 @@ const pauseIcon = document.getElementById('pause-icon');
 const audioPlayer = document.getElementById('audio-player');
 const musicList = document.getElementById('music-list');
 const musicListTitle = document.getElementById('music-list-title');
+const currentTimeLabel = document.getElementById('current-time');
+const durationLabel = document.getElementById('duration');
+const playPauseButton = document.getElementById('play-pause-button');
+const prevButton = document.getElementById('prev-button');
+const nextButton = document.getElementById('next-button');
+const shuffleButton = document.getElementById('shuffle-button');
+const repeatButton = document.getElementById('repeat-button');
 
 let currentTrack = null;
 
