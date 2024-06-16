@@ -271,20 +271,16 @@ shuffleButton.addEventListener('click', () => {
     isShuffle = !isShuffle;
     shuffleButton.classList.toggle('active');
     shuffleQueue();
-    savePlayerState();
 });
 
 repeatButton.addEventListener('click', () => {
     isRepeat = !isRepeat;
     repeatButton.classList.toggle('active');
-    savePlayerState();
 });
 
 volumeSlider.addEventListener('input', () => {
     audioPlayer.volume = volumeCurve(volumeSlider.value);
     volumeSlider.style.setProperty('--value', `${volumeSlider.value}%`);
-
-    savePlayerState();
 });
 
 
