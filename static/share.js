@@ -251,8 +251,6 @@ playPauseButton.addEventListener('click', () => {
     }
 
     isPlaying = !isPlaying;
-
-    savePlayerState();
 });
 
 prevButton.addEventListener('click', () => {
@@ -330,8 +328,6 @@ audioPlayer.addEventListener('timeupdate', () => {
 
     const progress = value / 10;
     seekSlider.style.setProperty('--value', `${progress}%`);
-
-    savePlayerState();
 });
 
 
