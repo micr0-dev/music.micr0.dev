@@ -118,6 +118,15 @@ async function playTrack(music, token) {
     pauseIcon.style.display = 'inline';
     isPlaying = true;
 
+    if (currentTrack) {
+        const previousTrack = document.getElementById(currentTrack.id);
+        if (previousTrack) {
+            previousTrack.classList.remove('playing');
+        }
+    }
+
+    currentTrack = music;
+
     nowPlayingContainer.style.setProperty('--art-color', music.color);
 
     const audioControls = document.getElementById('audio-controls');
