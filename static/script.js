@@ -462,7 +462,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
                 ${isHiFi ? `<span class="hifi-tag">.${ext}</span>` : ''}
                 <button id="add-to-playlist"><svg><use href="#plus"></use></svg></button>
-                <button class="share-song-button" onclick="shareSong('${song.id}')">
+                <button class="share-song-button" onclick="shareSong('${music.id}')">
                 Share
             </button>
             `;
