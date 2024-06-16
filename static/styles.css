@@ -843,14 +843,18 @@ main {
     cursor: pointer;
     background-color: #000;
     border: none;
-    transition: transform 0.2s;
+    transition: transform 0.2s, background-color 0.2s;
 }
 
 #cover-art-container .share-song-button:hover {
     transform: scale(1.2);
 }
 
-#cover-art-container .edit-playlist-button {
+#cover-art-container:hover .share-song-button {
+    background-color: #0000;
+}
+
+#cover-art-container .edit-song-button {
     position: absolute;
     top: 5px;
     left: 5px;
@@ -859,7 +863,15 @@ main {
     cursor: pointer;
     background-color: #000;
     border: none;
-    transition: transform 0.2s;
+    transition: transform 0.2s, background-color 0.2s;
+}
+
+#cover-art-container .edit-song-button:hover {
+    transform: scale(1.2);
+}
+
+#cover-art-container:hover .edit-song-button {
+    background-color: #0000;
 }
 
 #mini-cover-art {
