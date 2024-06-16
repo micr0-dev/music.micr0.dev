@@ -462,7 +462,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
                 ${isHiFi ? `<span class="hifi-tag">.${ext}</span>` : ''}
                 <button id="add-to-playlist"><svg><use href="#plus"></use></svg></button>
-                <button class="share-song-button" onclick="shareSong('${music.id}')">
+                <button class="share-song-button">
                 Share
             </button>
             `;
@@ -481,6 +481,12 @@ document.addEventListener('DOMContentLoaded', () => {
             addToPlaylistBtn.addEventListener('click', (event) => {
                 event.stopPropagation();
                 showPlaylistMenu(music);
+            });
+
+            const shareButton = div.querySelector('.share-song-button');
+            shareButton.addEventListener('click', (event) => {
+                event.stopPropagation();
+                shareSong(music.id);
             });
 
             element.appendChild(div);

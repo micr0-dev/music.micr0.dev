@@ -336,6 +336,23 @@ main {
     transform: scale(1.2);
 }
 
+.music-item .share-song-button {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    padding: 5px;
+    font-size: 12px;
+    cursor: pointer;
+    background-color: #0000;
+    border: none;
+    transition: transform 0.2s;
+}
+
+.music-item .share-song-button:hover {
+    transform: scale(1.2);
+}
+
+
 .music-item.playing {
     background-image: linear-gradient(135deg, #000, #000);
     box-shadow: 0 0 40px 20px var(--art-color);
