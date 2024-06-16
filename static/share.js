@@ -98,6 +98,7 @@ async function playTrack(music, token) {
     const volumeSlider = document.getElementById('volume-slider');
     const playIcon = document.getElementById('play-icon');
     const pauseIcon = document.getElementById('pause-icon');
+    const audioPlayer = document.getElementById('audio-player');
 
     audioPlayer.src = `/api/stream?token=${token}`;
 
