@@ -21,6 +21,9 @@ const shuffleButton = document.getElementById('shuffle-button');
 const repeatButton = document.getElementById('repeat-button');
 
 let currentTrack = null;
+let isPlaying = false;
+let isShuffle = false;
+let isRepeat = false;
 
 document.addEventListener("DOMContentLoaded", async function () {
     const urlParams = new URLSearchParams(window.location.search);
