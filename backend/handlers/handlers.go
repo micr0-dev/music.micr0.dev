@@ -1225,7 +1225,7 @@ func (h *MusicHandler) AddToUserPlaylists(c *gin.Context) {
 		}
 	}
 
-	user.PlaylistIDs = append(user.LibraryIDs, id)
+	user.LibraryIDs = append(user.LibraryIDs, id)
 	if _, err := h.DB.NamedExec(`UPDATE users SET library_ids = :library_ids WHERE id = :id`, user); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update user"})
 		return
