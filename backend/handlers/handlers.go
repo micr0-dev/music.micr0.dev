@@ -1218,20 +1218,20 @@ func (h *MusicHandler) AddToUserPlaylists(c *gin.Context) {
 		return
 	}
 
-	for _, playlistID := range user.PlaylistIDs {
+	for _, playlistID := range user.LibraryIDs {
 		if playlistID == id {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Playlist already exists in user's playlists"})
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Playlist already exists in user's library"})
 			return
 		}
 	}
 
-	user.PlaylistIDs = append(user.PlaylistIDs, id)
-	if _, err := h.DB.NamedExec(`UPDATE users SET playlist_ids = :playlist_ids WHERE id = :id`, user); err != nil {
+	user.PlaylistIDs = append(user.LibraryIDs, id)
+	if _, err := h.DB.NamedExec(`UPDATE users SET library_ids = :library_ids WHERE id = :id`, user); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update user"})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "Playlist added to user's playlists"})
+	c.JSON(http.StatusOK, gin.H{"message": "Playlist added to user's library"})
 }
 
 func (h *MusicHandler) ShareMusic(c *gin.Context) {
