@@ -267,7 +267,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     async function fetchPlaylists() {
-        const response = await fetchAuth('/api/user/playlists');
+        const response = await fetchAuth('/api/user/library');
         const playlists = await response.json();
 
         existingPlaylists.innerHTML = '';
@@ -1003,7 +1003,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 addButton.innerHTML = `<svg><use href="#plus"></use></svg>`;
                 addButton.addEventListener('click', async (event) => {
                     event.stopPropagation();
-                    const response = await fetchAuth(`/api/user/playlists/${playlist.id}`, {
+                    const response = await fetchAuth(`/api/user/library/${playlist.id}`, {
                         method: 'POST'
                     });
 
@@ -1060,7 +1060,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function loadSidePlaylists() {
-        const response = await fetchAuth('/api/user/playlists');
+        const response = await fetchAuth('/api/user/library');
         const playlistSelect = document.getElementById('playlist-select');
         const playlists = await response.json();
 

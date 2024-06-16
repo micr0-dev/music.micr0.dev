@@ -982,6 +982,40 @@ func (h *MusicHandler) GetUserPlaylists(c *gin.Context) {
 	c.JSON(http.StatusOK, playlists)
 }
 
+func (h *MusicHandler) GetUserCreatedPlaylists(c *gin.Context) {
+	username, exists := c.Get("username")
+	if !exists {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get username, is user middleware missing?"})
+		return
+	}
+
+	var user models.User
+	err := h.DB.Get(&user, "SELECT * FROM users WHERE username = ?", username)
+	if err != nil {
+		log.Printf("Error querying user: %v", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get user"})
+		return
+	}
+
+	var PlaylistIDs []string
+	for _, playlistID := range user.PlaylistIDs {
+		PlaylistIDs = append(PlaylistIDs, playlistID)
+	}
+
+	var playlists []models.Playlist
+	for _, playlistID := range PlaylistIDs {
+		var playlist models.Playlist
+		err := h.DB.Get(&playlist, "SELECT id, name, songs FROM playlists WHERE id = ?", playlistID)
+		if err != nil {
+			log.Printf("Error fetching playlist: %v", err)
+			continue
+		}
+		playlists = append(playlists, playlist)
+	}
+
+	c.JSON(http.StatusOK, playlists)
+}
+
 func (h *MusicHandler) Search(c *gin.Context) {
 	limiter := c.Query("limit")
 	query := c.Query("q")
