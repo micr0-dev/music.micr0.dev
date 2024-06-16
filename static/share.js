@@ -81,6 +81,9 @@ function displaySharedSong(music, token) {
     div.addEventListener('click', () => {
         playTrack(music, token);
     });
+
+    const musicList = document.getElementById('music-list');
+    musicList.appendChild(div);
 }
 
 async function playTrack(music, token) {
