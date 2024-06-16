@@ -841,7 +841,7 @@ main {
     padding: 5px;
     font-size: 12px;
     cursor: pointer;
-    background-color: #000;
+    background-color: #0000;
     border: none;
     transition: transform 0.2s, background-color 0.2s;
 }
@@ -851,7 +851,7 @@ main {
 }
 
 #cover-art-container:hover .share-song-button {
-    background-color: #0000;
+    background-color: #000;
 }
 
 #cover-art-container .edit-song-button {
@@ -861,7 +861,7 @@ main {
     padding: 5px;
     font-size: 12px;
     cursor: pointer;
-    background-color: #000;
+    background-color: #0000;
     border: none;
     transition: transform 0.2s, background-color 0.2s;
 }
@@ -871,7 +871,7 @@ main {
 }
 
 #cover-art-container:hover .edit-song-button {
-    background-color: #0000;
+    background-color: #000;
 }
 
 #mini-cover-art {
