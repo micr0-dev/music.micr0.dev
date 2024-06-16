@@ -462,6 +462,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
                 ${isHiFi ? `<span class="hifi-tag">.${ext}</span>` : ''}
                 <button id="add-to-playlist"><svg><use href="#plus"></use></svg></button>
+                <button class="share-song-button" onclick="shareSong('${song.id}')">
+                Share
+            </button>
             `;
 
             if (isPlaying) {
@@ -482,6 +485,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
             element.appendChild(div);
         });
+    }
+
+    async function shareSong(songId) {
+        try {
+
+            const response = await fetchAuth(`/api/share/${songId}`, {
+                method: 'POST'
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to generate share link');
+            }
+
+            const data = await response.json();
+            const shareLink = `https://music.micr0.dev/share.html?token=${data.token}`;
+
+            console.log('Share link:', shareLink);
+            navigator.clipboard.writeText(shareLink);
+            alert('Share link copied to clipboard');
+        } catch (error) {
+            console.error('Error sharing song:', error);
+            alert('Error sharing song');
+        }
     }
 
     async function loadMusicList() {

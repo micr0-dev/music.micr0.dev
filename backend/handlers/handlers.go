@@ -1095,8 +1095,8 @@ type StreamClaims struct {
 	jwt.StandardClaims
 }
 
-func GenerateStreamToken(musicID string, secret []byte) (string, error) {
-	expirationTime := time.Now().Add(15 * time.Minute) // 15-minute expiry
+func GenerateStreamToken(musicID string, secret []byte, expireIn time.Duration) (string, error) {
+	expirationTime := time.Now().Add(expireIn) // 15-minute expiry
 	claims := &StreamClaims{
 		MusicID: musicID,
 		StandardClaims: jwt.StandardClaims{
@@ -1117,7 +1117,7 @@ func (h *MusicHandler) GetStreamToken(c *gin.Context) {
 		return
 	}
 
-	token, err := GenerateStreamToken(musicID, []byte(jwtKey))
+	token, err := GenerateStreamToken(musicID, []byte(jwtKey), 15*time.Minute)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to generate stream token"})
 		return
@@ -1164,4 +1164,28 @@ func (h *MusicHandler) AddToUserPlaylists(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"message": "Playlist added to user's playlists"})
+}
+
+func (h *MusicHandler) ShareMusic(c *gin.Context) {
+	musicID := c.Param("id")
+	var music models.Music
+	err := h.DB.Get(&music, "SELECT * FROM music WHERE id = ?", musicID)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Music not found"})
+		return
+	}
+
+	jwtKey, exists := os.LookupEnv("JWT_SECRET")
+	if !exists {
+		log.Fatal("JWT_SECRET environment variable not set")
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "JWT secret not set"})
+		return
+	}
+
+	token, err := GenerateStreamToken(musicID, []byte(jwtKey), 24*time.Hour)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to generate stream token"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"token": token})
 }

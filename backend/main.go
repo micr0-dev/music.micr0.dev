@@ -78,6 +78,7 @@ func main() {
 		authorized.POST("/music", musicHandler.UploadMusic)
 		authorized.PUT("/music/:id", musicHandler.UpdateMusic)
 		authorized.GET("/streamtoken/:id", musicHandler.GetStreamToken)
+		authorized.GET("/share/:id", musicHandler.ShareMusic)
 
 		// Playlist routes
 		authorized.POST("/playlists", musicHandler.CreatePlaylist)
@@ -121,3 +122,13 @@ func createUser(db *sqlx.DB, username, password string) error {
 	_, err = db.NamedExec(`INSERT INTO users (username, password, playlist_ids, uploaded_ids) VALUES (:username, :password, :playlist_ids, :uploaded_ids)`, &user)
 	return err
 }
+
+// TODO: Add a sharing feature for songs and playlists that works without authentication for 24 hours
+// TODO: Make actually good search and stuff
+// TODO: Add a feature to edit the metadata of the songs
+// TODO: Add a feature to delete songs
+// TODO: Add a feature to delete playlists
+// TODO: Make it so that better quality music overwrites the lower quality music
+// TODO: Add a lyrics viewer for songs
+
+// MIGHTDO: Music recommendations algorithm
