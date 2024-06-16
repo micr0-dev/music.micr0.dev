@@ -1218,6 +1218,7 @@ document.addEventListener('DOMContentLoaded', () => {
     loadPlayerState();
     loadSidePlaylists();
     loadMusicList();
+    fetchPlaylists();
 });
 
 // On window resize, set max-width for track info based on position of media controls
