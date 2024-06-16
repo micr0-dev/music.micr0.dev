@@ -747,6 +747,13 @@ func (h *MusicHandler) CreatePlaylist(c *gin.Context) {
 		return
 	}
 
+	user.LibraryIDs = append(user.LibraryIDs, playlist.ID)
+	if _, err := h.DB.NamedExec(`UPDATE users SET library_ids = :library_ids WHERE id = :id`, user); err != nil {
+		log.Printf("Error updating user: %v", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update user"})
+		return
+	}
+
 	c.JSON(http.StatusCreated, playlist)
 }
 
@@ -857,6 +864,33 @@ func (h *MusicHandler) UpdatePlaylist(c *gin.Context) {
 		return
 	}
 
+	username, exists := c.Get("username")
+	if !exists {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get username, is user middleware missing?"})
+		return
+	}
+
+	var user models.User
+	err := h.DB.Get(&user, "SELECT * FROM users WHERE username = ?", username)
+	if err != nil {
+		log.Printf("Error querying user: %v", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get user"})
+		return
+	}
+
+	doesExist := false
+
+	for _, playlistID := range user.PlaylistIDs {
+		if playlistID == id {
+			doesExist = true
+		}
+	}
+
+	if !doesExist {
+		c.JSON(http.StatusForbidden, gin.H{"error": "You do not have permission to delete this playlist"})
+		return
+	}
+
 	if _, err := h.DB.NamedExec(`UPDATE playlists SET name = :name, songs = :songs WHERE id = :id`, map[string]interface{}{
 		"id":    id,
 		"name":  playlist.Name,
@@ -871,6 +905,40 @@ func (h *MusicHandler) UpdatePlaylist(c *gin.Context) {
 
 func (h *MusicHandler) DeletePlaylist(c *gin.Context) {
 	id := c.Param("id")
+
+	username, exists := c.Get("username")
+	if !exists {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get username, is user middleware missing?"})
+		return
+	}
+
+	var user models.User
+	err := h.DB.Get(&user, "SELECT * FROM users WHERE username = ?", username)
+	if err != nil {
+		log.Printf("Error querying user: %v", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get user"})
+		return
+	}
+
+	var playlist models.Playlist
+	err = h.DB.Get(&playlist, "SELECT * FROM playlists WHERE id = ?", id)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Playlist not found"})
+		return
+	}
+
+	doesExist := false
+
+	for _, playlistID := range user.PlaylistIDs {
+		if playlistID == id {
+			doesExist = true
+		}
+	}
+
+	if !doesExist {
+		c.JSON(http.StatusForbidden, gin.H{"error": "You do not have permission to delete this playlist"})
+		return
+	}
 
 	if _, err := h.DB.Exec("DELETE FROM playlists WHERE id = ?", id); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete playlist"})
@@ -895,13 +963,13 @@ func (h *MusicHandler) GetUserPlaylists(c *gin.Context) {
 		return
 	}
 
-	var playlistIDs []string
-	for _, playlistID := range user.PlaylistIDs {
-		playlistIDs = append(playlistIDs, playlistID)
+	var LibraryIDs []string
+	for _, playlistID := range user.LibraryIDs {
+		LibraryIDs = append(LibraryIDs, playlistID)
 	}
 
 	var playlists []models.Playlist
-	for _, playlistID := range playlistIDs {
+	for _, playlistID := range LibraryIDs {
 		var playlist models.Playlist
 		err := h.DB.Get(&playlist, "SELECT id, name, songs FROM playlists WHERE id = ?", playlistID)
 		if err != nil {

@@ -118,6 +118,7 @@ func createUser(db *sqlx.DB, username, password string) error {
 		Password:    string(hashedPassword),
 		PlaylistIDs: models.JSONStringArray{},
 		UploadedIDs: models.JSONStringArray{},
+		LibraryIDs:  models.JSONStringArray{},
 	}
 
 	_, err = db.NamedExec(`INSERT INTO users (username, password, playlist_ids, uploaded_ids) VALUES (:username, :password, :playlist_ids, :uploaded_ids)`, &user)

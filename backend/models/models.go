@@ -59,6 +59,7 @@ type User struct {
 	Password    string          `db:"password" json:"-"`
 	PlaylistIDs JSONStringArray `db:"playlist_ids" json:"playlist_ids"`
 	UploadedIDs JSONStringArray `db:"uploaded_ids" json:"uploaded_ids"`
+	LibraryIDs  JSONStringArray `db:"library_ids" json:"library_ids"`
 }
 
 func InitializeDatabase(db *sqlx.DB) {
@@ -112,10 +113,48 @@ func InitializeDatabase(db *sqlx.DB) {
 			username TEXT,
 			password TEXT,
 			playlist_ids TEXT,
-			uploaded_ids TEXT
+			uploaded_ids TEXT,
+			library_ids TEXT
 		)
 	`)
 	if err != nil {
 		panic(err)
+	}
+
+	// migrate the database
+	var columnExists bool
+	err = db.Get(&columnExists, `
+    SELECT EXISTS (
+        SELECT 1
+        FROM pragma_table_info('users')
+        WHERE name = 'library_ids'
+    )`)
+	if err != nil {
+		panic(err)
+	}
+
+	if !columnExists {
+		MigrationAddLibraryIDs(db)
+		println("Migrated database")
+	}
+}
+
+func MigrationAddLibraryIDs(db *sqlx.DB) {
+	// Add the new column
+	_, err := db.Exec(`
+        ALTER TABLE users ADD COLUMN library_ids TEXT;
+    `)
+	if err != nil {
+		panic(fmt.Sprintf("Failed to add library_ids column: %v", err))
+	}
+
+	// Populate the new column with the values from playlist_ids
+	_, err = db.Exec(`
+      UPDATE users
+      SET library_ids = playlist_ids
+      WHERE library_ids IS NULL;
+    `)
+	if err != nil {
+		panic(fmt.Sprintf("Failed to populate library_ids column: %v", err))
 	}
 }
