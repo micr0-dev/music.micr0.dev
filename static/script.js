@@ -310,6 +310,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let isMouseOver = true;
 
+        function resetTimer() {
+            isMouseOver = true;
+
+        }
+
         function hideMenu() {
             isMouseOver = false;
             setTimeout(() => {
@@ -323,10 +328,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         playlistMenu.addEventListener('mouseleave', hideMenu);
 
-        playlistMenu.addEventListener('mouseenter', function resetTimer() {
-            isMouseOver = true;
-
-        });
+        playlistMenu.addEventListener('mouseenter', resetTimer);
 
         fetchPlaylists();
     }
