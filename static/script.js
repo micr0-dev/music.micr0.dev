@@ -984,6 +984,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 div.appendChild(addButton);
             }
 
+            // FIXME: Dont allow user who didnt create the playlist add songs to it
+
             const songIDs = songs.slice(0, 4);
             if (songIDs.length < 4) {
                 for (let i = songIDs.length; i < 4; i++) {

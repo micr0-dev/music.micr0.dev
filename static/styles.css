@@ -535,6 +535,10 @@ main {
     background-color: #0000;
 }
 
+.playlist-item .added-playlist-button svg {
+    fill: #fff;
+}
+
 #playlist-menu {
     position: fixed;
     scale: 1;
