@@ -261,13 +261,14 @@ document.addEventListener('DOMContentLoaded', () => {
             await fetchPlaylists();
             const playlistId = result.id;
             addSongToPlaylist(playlistId);
+            loadSidePlaylists();
         } else {
             alert('Failed to create playlist: ' + result.error);
         }
     });
 
     async function fetchPlaylists() {
-        const response = await fetchAuth('/api/user/library');
+        const response = await fetchAuth('/api/user/playlists');
         const playlists = await response.json();
 
         existingPlaylists.innerHTML = '';
@@ -725,7 +726,7 @@ document.addEventListener('DOMContentLoaded', () => {
             shareSong(music.id);
         });
 
-        coverArt.parentElement.appendChild(editButton);
+        // coverArt.parentElement.appendChild(editButton);
         coverArt.parentElement.appendChild(shareButton);
 
         if ('mediaSession' in navigator) {

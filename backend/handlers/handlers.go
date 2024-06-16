@@ -887,7 +887,7 @@ func (h *MusicHandler) UpdatePlaylist(c *gin.Context) {
 	}
 
 	if !doesExist {
-		c.JSON(http.StatusForbidden, gin.H{"error": "You do not have permission to delete this playlist"})
+		c.JSON(http.StatusForbidden, gin.H{"error": "You do not have permission to update this playlist"})
 		return
 	}
 
