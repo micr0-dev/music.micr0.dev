@@ -1212,5 +1212,15 @@ func (h *MusicHandler) ValidateShare(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "Token is valid"})
+	songID := claims.MusicID
+
+	var music models.Music
+
+	err = h.DB.Get(&music, "SELECT * FROM music WHERE id = ?", songID)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Music not found"})
+		return
+	}
+
+	c.JSON(http.StatusOK, music)
 }

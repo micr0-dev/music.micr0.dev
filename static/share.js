@@ -14,26 +14,29 @@ document.addEventListener("DOMContentLoaded", async function () {
         }
 
         const song = await response.json();
-        displaySharedSong(song);
+        displaySharedSong(song, token);
     } catch (error) {
         console.error('Error fetching shared song:', error);
         alert('Error fetching shared song');
     }
 });
 
-function displaySharedSong(song) {
+function displaySharedSong(song, token) {
+    const musicListTitle = document.getElementById('music-list-title');
+    musicListTitle.textContent = 'Shared Song';
     const musicList = document.getElementById('music-list');
     const songItem = `
-        <div class="song-item" id="${song.id}">
-            <img class="song-thumbnail" src="/api/thumbnail/${song.id}?size=100" alt="${song.title} cover" />
-            <div class="song-info">
-                <h3>${song.title}</h3>
-                <p>${song.artist}</p>
+        <div class="music-item" style="--art-color: "${song.color}";" id="${song.id}">
+            <img src="/api/thumbnail/${song.id}?size=160" alt="cover art" class="cover-art" loading="lazy">
+            <div class="music-info">
+                <div class="music-item-title">${song.title}</div>
+                <div class="music-item-artist">${song.artist}</div>
             </div>
-            <button onclick="playTrack(${song.id})">Play</button>
+            <button class="play-song-button" onclick="playTrack('${song.id}', '${token}')">
+                <svg><use href="#play"></use></svg>
+            </button>
         </div>
     `;
-
     musicList.innerHTML = songItem;
 
     document.getElementById('track-title').textContent = song.title;
@@ -41,8 +44,13 @@ function displaySharedSong(song) {
     document.getElementById('mini-cover-art').src = `/api/thumbnail/${song.id}?size=100`;
 }
 
-function playTrack(songId) {
+function playTrack(songId, token) {
     const audioPlayer = document.getElementById('audio-player');
-    audioPlayer.src = `/api/stream?token=${songId}`; // assuming token is needed for stream
+    audioPlayer.src = `/api/stream?token=${token}`; // Assuming token is needed for stream
     audioPlayer.play();
+
+    // Update Now Playing Info
+    document.getElementById('track-title').textContent = document.getElementById(songId).querySelector('.music-item-title').textContent;
+    document.getElementById('track-artist').textContent = document.getElementById(songId).querySelector('.music-item-artist').textContent;
+    document.getElementById('mini-cover-art').src = document.getElementById(songId).querySelector('.cover-art').src;
 }
