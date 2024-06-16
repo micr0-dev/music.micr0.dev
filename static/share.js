@@ -46,6 +46,17 @@ function Lighten(color) {
     return "#" + newColor.toString(16);
 }
 
+function volumeCurve(volume) {
+    let value = (Math.pow(10, volume / 2500) - 1) * 10;
+    if (value > 1) {
+        return 1;
+    } else if (value < 0) {
+        return 0;
+    }
+
+    return value;
+}
+
 function displaySharedSong(music, token) {
     const musicListTitle = document.getElementById('music-list-title');
     musicListTitle.textContent = 'Shared Song';
