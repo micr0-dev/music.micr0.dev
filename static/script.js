@@ -462,9 +462,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
                 ${isHiFi ? `<span class="hifi-tag">.${ext}</span>` : ''}
                 <button id="add-to-playlist"><svg><use href="#plus"></use></svg></button>
-                <button class="share-song-button">
-                Share
-            </button>
             `;
 
             if (isPlaying) {
@@ -481,12 +478,6 @@ document.addEventListener('DOMContentLoaded', () => {
             addToPlaylistBtn.addEventListener('click', (event) => {
                 event.stopPropagation();
                 showPlaylistMenu(music);
-            });
-
-            const shareButton = div.querySelector('.share-song-button');
-            shareButton.addEventListener('click', (event) => {
-                event.stopPropagation();
-                shareSong(music.id);
             });
 
             element.appendChild(div);
@@ -717,6 +708,25 @@ document.addEventListener('DOMContentLoaded', () => {
         if (play) {
             dataScroll.classList.add('playing');
         }
+
+        // Add edit and share buttons to the cover art container
+        const editButton = document.createElement('button');
+        editButton.className = 'edit-song-button';
+        editButton.innerHTML = `<svg><use href="#edit"></use></svg>`;
+        editButton.addEventListener('click', () => {
+            window.location.href = `/edit.html?id=${music.id}`;
+        });
+
+        const shareButton = document.createElement('button');
+        shareButton.className = 'share-song-button';
+        shareButton.innerHTML = `<svg><use href="#share"></use></svg>`;
+        shareButton.addEventListener('click', (event) => {
+            event.stopPropagation();
+            shareSong(music.id);
+        });
+
+        coverArt.parentElement.appendChild(editButton);
+        coverArt.parentElement.appendChild(shareButton);
 
         if ('mediaSession' in navigator) {
             navigator.mediaSession.metadata = new MediaMetadata({
@@ -975,8 +985,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="playlist-item-count">${songs.length} songs</div>
             </div>
             `;
-
-            console.log(songs);
 
             div.appendChild(playlistInfo);
 
