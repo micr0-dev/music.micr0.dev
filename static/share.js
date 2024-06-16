@@ -84,6 +84,10 @@ String.prototype.toTitleCase = function () {
 }
 
 function displaySharedSong(music, token) {
+    volumeSlider.style.setProperty('--value', `100%`);
+    volumeSlider.value = 100;
+    seekSlider.style.setProperty('--value', `0%`);
+    seekSlider.value = 0;
 
     musicListTitle.textContent = 'Shared Song';
     const div = document.createElement('div');
