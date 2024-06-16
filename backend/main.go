@@ -63,6 +63,7 @@ func main() {
 	router.POST("/login", musicHandler.Login)
 	router.GET("/thumbnail/:id", musicHandler.GetThumbnail)
 	router.GET("/stream", musicHandler.StreamMusic)
+	router.GET("/share/validate", musicHandler.ValidateShare)
 
 	// Public route for uptime monitoring
 	router.GET("/ping", func(c *gin.Context) {

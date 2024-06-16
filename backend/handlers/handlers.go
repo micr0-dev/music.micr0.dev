@@ -1189,3 +1189,28 @@ func (h *MusicHandler) ShareMusic(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{"token": token})
 }
+
+func (h *MusicHandler) ValidateShare(c *gin.Context) {
+	tokenStr := c.Query("token")
+
+	jwtKey, exists := os.LookupEnv("JWT_SECRET")
+	if !exists {
+		log.Fatal("JWT_SECRET environment variable not set")
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "JWT secret not set"})
+		return
+	}
+
+	claims := &StreamClaims{}
+	token, err := jwt.ParseWithClaims(tokenStr, claims, func(token *jwt.Token) (interface{}, error) {
+		return []byte(jwtKey), nil
+	})
+
+	if err != nil || !token.Valid {
+		log.Printf("Error validating token: %v", err)
+		log.Printf("Token: %v", token)
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Token is valid"})
+}
