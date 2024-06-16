@@ -57,6 +57,10 @@ function volumeCurve(volume) {
     return value;
 }
 
+String.prototype.toTitleCase = function () {
+    return this.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
+}
+
 function displaySharedSong(music, token) {
     const musicListTitle = document.getElementById('music-list-title');
     musicListTitle.textContent = 'Shared Song';
