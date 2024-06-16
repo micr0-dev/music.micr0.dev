@@ -1,3 +1,18 @@
+const dataScroll = document.getElementById('data-scroll');
+const trackInfo = document.getElementById('track-info');
+const nowPlayingContainer = document.getElementById('now-playing-container');
+const coverArt = document.getElementById('cover-art');
+const miniCoverArt = document.getElementById('mini-cover-art');
+const trackTitle = document.getElementById('track-title');
+const trackArtist = document.getElementById('track-artist');
+const seekSlider = document.getElementById('seek-slider');
+const volumeSlider = document.getElementById('volume-slider');
+const playIcon = document.getElementById('play-icon');
+const pauseIcon = document.getElementById('pause-icon');
+const audioPlayer = document.getElementById('audio-player');
+const musicList = document.getElementById('music-list');
+const musicListTitle = document.getElementById('music-list-title');
+
 let currentTrack = null;
 
 document.addEventListener("DOMContentLoaded", async function () {
@@ -62,7 +77,7 @@ String.prototype.toTitleCase = function () {
 }
 
 function displaySharedSong(music, token) {
-    const musicListTitle = document.getElementById('music-list-title');
+
     musicListTitle.textContent = 'Shared Song';
     const div = document.createElement('div');
     div.className = 'music-item';
@@ -97,24 +112,10 @@ function displaySharedSong(music, token) {
         playTrack(music, token);
     });
 
-    const musicList = document.getElementById('music-list');
     musicList.appendChild(div);
 }
 
 async function playTrack(music, token) {
-    const dataScroll = document.getElementById('data-scroll');
-    const trackInfo = document.getElementById('track-info');
-    const nowPlayingContainer = document.getElementById('now-playing-container');
-    const coverArt = document.getElementById('cover-art');
-    const miniCoverArt = document.getElementById('mini-cover-art');
-    const trackTitle = document.getElementById('track-title');
-    const trackArtist = document.getElementById('track-artist');
-    const seekSlider = document.getElementById('seek-slider');
-    const volumeSlider = document.getElementById('volume-slider');
-    const playIcon = document.getElementById('play-icon');
-    const pauseIcon = document.getElementById('pause-icon');
-    const audioPlayer = document.getElementById('audio-player');
-
     audioPlayer.src = `/api/stream?token=${token}`;
 
     const thumbnailUrl = `/api/thumbnail/${music.id}?size=600`;
