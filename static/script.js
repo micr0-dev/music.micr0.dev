@@ -1177,6 +1177,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             loadMusic(playlist.songs, musicList, 40);
+            loadQueue();
         }
     }
 
