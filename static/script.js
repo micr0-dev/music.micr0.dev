@@ -229,7 +229,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (!response.ok) {
                 const result = await response.json();
-                console.log(result);
                 if (!result.error.includes("already exists")) {
                     alert('Failed to upload music: ' + (result.error || 'Unknown error'));
                 } else {
@@ -549,6 +548,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const response = await fetchAuth(`/api/search?q=${query}&limit=10`);
         const results = await response.json();
 
+        console.log(results);
+
         if (results == null) {
             musicList.innerHTML = 'No music found';
             return;
@@ -576,10 +577,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         searchResults.appendChild(playlistsTitle);
         searchResults.appendChild(playlistsDiv);
-        searchResults.appendChild(albumsTitle);
-        searchResults.appendChild(albumsDiv);
         searchResults.appendChild(musicTitle);
         searchResults.appendChild(musicDiv);
+        searchResults.appendChild(albumsTitle);
+        searchResults.appendChild(albumsDiv);
 
         const playlistResults = results.playlists;
         const albumResults = results.albums;
