@@ -285,6 +285,15 @@ func (h *MusicHandler) UploadMusic(c *gin.Context) {
 		return
 	}
 
+	// Defer removing the file if something goes wrong
+	defer func() {
+		if err != nil {
+			if err := os.Remove(filepath); err != nil {
+				log.Printf("Error removing file: %v", err)
+			}
+		}
+	}()
+
 	metadata, err := readMetadata(filepath)
 	if err != nil {
 		log.Printf("Error reading metadata: %v", err)
@@ -325,12 +334,14 @@ func (h *MusicHandler) UploadMusic(c *gin.Context) {
 			"error": "Song already exists, try updating it instead with a PUT request",
 			"id":    existingID,
 		})
+		err = fmt.Errorf("song already exists")
 		return
 	}
 
 	username, exists := c.Get("username")
 	if !exists {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get username, is user middleware missing?"})
+		err = fmt.Errorf("failed to get username")
 		return
 	}
 

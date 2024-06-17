@@ -343,6 +343,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const playlist = await response.json();
 
         if (response.ok) {
+            // Dont add duplicate songs
+            if (playlist.song_ids.includes(songId)) {
+                playlistMenu.classList.add('menu-hidden');
+                return;
+            }
             playlist.song_ids.push(songId);
             playlist.songs = playlist.song_ids;
             playlist.song_ids = undefined;
