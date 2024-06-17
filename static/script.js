@@ -1084,9 +1084,8 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             button.addEventListener('dblclick', (event) => {
                 event.stopPropagation();
-                loadPlaylist(playlist.id);
+                loadPlaylist(playlist.id, false, true);
                 sidebar.classList.remove('active');
-                playTrack(playlist.songs[0]);
             });
 
             playlistsList.appendChild(button);
@@ -1099,7 +1098,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    async function loadPlaylist(playlistId, isAlbum = false) {
+    async function loadPlaylist(playlistId, isAlbum = false, playOnLoad = false) {
         const currentScreenElement = document.getElementById(currentScreen)
         if (currentScreenElement) {
             currentScreenElement.classList.remove('selected');
@@ -1160,6 +1159,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         loadMusic(songs);
+
+        if (playOnLoad) {
+            playTrack(songs[0]);
+        }
 
         if (!isAlbum) {
             response = await fetchAuth(`/api/playlists/${playlistId}?offset=40`);
