@@ -31,9 +31,9 @@ func main() {
 	defer db.Close()
 
 	// Get admin username and password from the command line arguments if they are provided
-	if len(os.Args) == 3 {
-		username := os.Args[1]
-		password := os.Args[2]
+	if len(os.Args) == 4 && os.Args[1] == "add" {
+		username := os.Args[2]
+		password := os.Args[3]
 
 		err = createUser(db, username, password)
 		if err != nil {
@@ -41,6 +41,16 @@ func main() {
 		}
 
 		fmt.Println("User created successfully")
+		return
+	} else if len(os.Args) == 3 && os.Args[1] == "remove" {
+		username := os.Args[2]
+
+		err = removeUser(db, username)
+		if err != nil {
+			log.Fatalf("Failed to remove user: %v", err)
+		}
+
+		fmt.Println("User removed successfully")
 		return
 	}
 
@@ -122,7 +132,12 @@ func createUser(db *sqlx.DB, username, password string) error {
 		LibraryIDs:  models.JSONStringArray{},
 	}
 
-	_, err = db.NamedExec(`INSERT INTO users (username, password, playlist_ids, uploaded_ids) VALUES (:username, :password, :playlist_ids, :uploaded_ids)`, &user)
+	_, err = db.NamedExec(`INSERT INTO users (username, password, playlist_ids, uploaded_ids, library_ids) VALUES (:username, :password, :playlist_ids, :uploaded_ids, :library_ids)`, user)
+	return err
+}
+
+func removeUser(db *sqlx.DB, username string) error {
+	_, err := db.Exec(`DELETE FROM users WHERE username = ?`, username)
 	return err
 }
 
