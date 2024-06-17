@@ -141,7 +141,6 @@ func removeUser(db *sqlx.DB, username string) error {
 	return err
 }
 
-// TODO: Add a sharing feature for songs and playlists that works without authentication for 24 hours
 // TODO: Make actually good search and stuff
 // TODO: Add a feature to edit the metadata of the songs
 // TODO: Add a feature to delete songs

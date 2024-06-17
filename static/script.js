@@ -1082,6 +1082,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 loadPlaylist(playlist.id);
                 sidebar.classList.remove('active');
             });
+            button.addEventListener('dblclick', (event) => {
+                event.stopPropagation();
+                loadPlaylist(playlist.id);
+                sidebar.classList.remove('active');
+                playTrack(playlist.songs[0]);
+            });
+
             playlistsList.appendChild(button);
 
             const option = document.createElement('option');
