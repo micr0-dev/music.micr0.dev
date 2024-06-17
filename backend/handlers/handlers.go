@@ -314,9 +314,16 @@ func (h *MusicHandler) UploadMusic(c *gin.Context) {
 	}
 
 	if count > 0 {
+		existingID := ""
+		err = h.DB.Get(&existingID, "SELECT id FROM music WHERE title = ? AND artist = ?", music.Title, music.Artist)
+		if err != nil {
+			log.Printf("Error querying music: %v", err)
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get existing music"})
+			return
+		}
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": "Song already exists, try updating it instead with a PUT request",
-			"id":    id,
+			"id":    existingID,
 		})
 		return
 	}
