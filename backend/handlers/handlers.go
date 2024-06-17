@@ -314,7 +314,10 @@ func (h *MusicHandler) UploadMusic(c *gin.Context) {
 	}
 
 	if count > 0 {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Song already exists, try updating it instead with a PUT request"})
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Song already exists, try updating it instead with a PUT request",
+			"id":    id,
+		})
 		return
 	}
 
