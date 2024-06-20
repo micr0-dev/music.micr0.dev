@@ -854,6 +854,26 @@ main {
     background-color: #000;
 }
 
+#cover-art-container .delete-song-button {
+    position: absolute;
+    bottom: 5px;
+    left: 5px;
+    padding: 5px;
+    font-size: 12px;
+    cursor: pointer;
+    background-color: #0000;
+    border: none;
+    transition: transform 0.2s, background-color 0.2s;
+}
+
+#cover-art-container .delete-song-button:hover {
+    transform: scale(1.2);
+}
+
+#cover-art-container:hover .delete-song-button {
+    background-color: #000;
+}
+
 #cover-art-container .edit-song-button {
     position: absolute;
     top: 5px;

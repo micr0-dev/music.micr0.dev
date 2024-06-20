@@ -735,8 +735,29 @@ document.addEventListener('DOMContentLoaded', () => {
             shareSong(music.id);
         });
 
+        const deleteButton = document.createElement('button');
+        deleteButton.className = 'delete-song-button';
+        deleteButton.innerHTML = `<svg><use href="#delete"></use></svg>`;
+        deleteButton.addEventListener('click', async (event) => {
+            event.stopPropagation();
+            const response = await fetchAuth(`/api/music/${music.id}`, {
+                method: 'DELETE'
+            });
+
+            if (response.ok) {
+                alert('Song Successfully Deleted');
+                loadMusicList();
+                nextButton.click();
+            } else {
+                alert('Failed to delete song');
+                console.error('Failed to delete song');
+                console.error(response);
+            }
+        });
+
         // coverArt.parentElement.appendChild(editButton);
         coverArt.parentElement.appendChild(shareButton);
+        coverArt.parentElement.appendChild(deleteButton);
 
         if ('mediaSession' in navigator) {
             navigator.mediaSession.metadata = new MediaMetadata({

@@ -517,6 +517,64 @@ func (h *MusicHandler) UpdateMusic(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Music updated successfully"})
 }
 
+func (h *MusicHandler) DeleteMusic(c *gin.Context) {
+	id := c.Param("id")
+
+	var music models.Music
+	err := h.DB.Get(&music, "SELECT * FROM music WHERE id = ?", id)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Music not found"})
+		return
+	}
+
+	username, exists := c.Get("username")
+	if !exists {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get username, is user middleware missing?"})
+		return
+	}
+
+	var user models.User
+	err = h.DB.Get(&user, "SELECT * FROM users WHERE username = ?", username)
+	if err != nil {
+		log.Printf("Error querying user: %v", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get user"})
+		return
+	}
+
+	doesExist := false
+
+	for _, uploadedID := range user.UploadedIDs {
+		if uploadedID == id {
+			doesExist = true
+			break
+		}
+	}
+
+	if !doesExist {
+		c.JSON(http.StatusForbidden, gin.H{"error": "You do not have permission to delete this music"})
+		return
+	}
+
+	if _, err := h.DB.Exec("DELETE FROM music WHERE id = ?", id); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete music"})
+		return
+	}
+
+	if _, err := h.DB.Exec("DELETE FROM albums WHERE id = ?", id); err != nil {
+		log.Printf("Error deleting album: %v", err)
+	}
+
+	if _, err := h.DB.Exec("DELETE FROM playlists WHERE id = ?", id); err != nil {
+		log.Printf("Error deleting playlist: %v", err)
+	}
+
+	if _, err := h.DB.Exec("DELETE FROM users WHERE id = ?", id); err != nil {
+		log.Printf("Error deleting user: %v", err)
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Music deleted successfully"})
+}
+
 func (h *MusicHandler) GetMusic(c *gin.Context) {
 	limiter := c.Query("limit")
 

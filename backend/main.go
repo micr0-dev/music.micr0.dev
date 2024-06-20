@@ -90,6 +90,7 @@ func main() {
 		authorized.PUT("/music/:id", musicHandler.UpdateMusic)
 		authorized.GET("/streamtoken/:id", musicHandler.GetStreamToken)
 		authorized.GET("/share/:id", musicHandler.ShareMusic)
+		authorized.DELETE("/music/:id", musicHandler.DeleteMusic)
 
 		// Playlist routes
 		authorized.POST("/playlists", musicHandler.CreatePlaylist)
