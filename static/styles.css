@@ -1190,17 +1190,18 @@ main {
         display: none;
     }
 
+    /* 
     #audio-controls {
         display: none;
-    }
+    } */
 
     .volume {
         display: none;
     }
 
-    .playtime {
+    /* .playtime {
         display: none;
-    }
+    } */
 
     #now-playing {
         height: 40px;
