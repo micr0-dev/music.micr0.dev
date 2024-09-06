@@ -1158,8 +1158,8 @@ main {
 
 #toast-container {
     position: fixed;
-    bottom: 30px;
-    left: 30px;
+    bottom: 130px;
+    left: 330px;
     z-index: 1000;
 }
 
