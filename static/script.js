@@ -1185,7 +1185,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         musicList.innerHTML = ''; // Clear previous contents
-        musicList.appendChild(deleteButton); // Append the delete button at the top
+        musicListTitle.appendChild(deleteButton); // Append the delete button at the top
 
         // Get the songs from the playlist from IDs
         let songs = [];
