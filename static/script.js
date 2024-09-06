@@ -81,6 +81,36 @@ document.addEventListener('DOMContentLoaded', () => {
         return response;
     }
 
+    function customAlert (message) {
+        const toastContainer = document.getElementById('toast-container');
+
+        if (!toastContainer) {
+            console.error('Toast container not found. Please ensure you have a div with id="toast-container" in your HTML.');
+            return;
+        }
+
+        const toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.textContent = message;
+
+        toastContainer.appendChild(toast);
+
+        // Show the toast
+        setTimeout(() => {
+            toast.classList.add('show');
+        }, 10);
+
+        // Hide and remove the toast after 2 seconds
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => {
+                toastContainer.removeChild(toast);
+            }, 300);
+        }, 2000);
+    }
+
+    // Overwrite the default alert function
+    window.alert = customAlert;
 
     function savePlayerState () {
         localStorage.setItem('player-state', JSON.stringify({
