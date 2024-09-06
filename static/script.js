@@ -1164,32 +1164,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
         musicListTitle.textContent = playlist.name;
 
-        // Create and append the delete button
-        const deleteButton = document.createElement('button');
-        deleteButton.className = 'delete-playlist-button';
-        deleteButton.textContent = 'Delete Playlist';
-        deleteButton.addEventListener('click', async () => {
-            const confirmed = confirm('Are you sure you want to delete this playlist?');
-            if (confirmed) {
-                const response = await fetchAuth(`/api/playlists/${playlistId}`, {
-                    method: 'DELETE'
-                });
-                if (response.ok) {
-                    alert('Playlist successfully deleted.');
-                    loadSidePlaylists(); // Update the playlists in the sidebar
-                    homeButton.click();  // Navigate to the home screen
-                } else {
-                    alert('Failed to delete playlist');
-                }
-            }
-        });
-
-        musicList.innerHTML = ''; // Clear previous contents
-        musicListTitle.appendChild(deleteButton); // Append the delete button at the top
-
-        // Get the songs from the playlist from IDs
+        //Get the songs from the playlist from IDs
         let songs = [];
         if (!isAlbum) {
+            // for (let i = 0; i < playlist.song_ids.length; i++) {
+            //     const response = await fetchAuth(`/api/music/${playlist.song_ids[i]}`);
+            //     const song = await response.json();
+            //     songs.push(song);
+            // }
+
             songs = playlist.songs;
 
             musicListTitle.textContent = playlist.name;
@@ -1225,7 +1208,6 @@ document.addEventListener('DOMContentLoaded', () => {
             loadQueue();
         }
     }
-
 
     // loadAlbums like loadPlaylists cards
     function loadAlbums (albums, element = albumsList) {
