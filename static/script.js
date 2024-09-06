@@ -85,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const toastContainer = document.getElementById('toast-container');
 
         if (!toastContainer) {
-            console.error('Toast container not found. Please ensure you have a div with id="toast-container" in your HTML.');
+            console.error('Toast container not found.');
             return;
         }
 
@@ -776,7 +776,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (response.ok) {
                 alert('Song Successfully Deleted');
-                loadMusicList();
+                loadPlaylist(currentScreen);
                 nextButton.click();
             } else {
                 alert('Failed to delete song');
