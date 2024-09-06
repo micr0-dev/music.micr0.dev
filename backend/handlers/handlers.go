@@ -588,18 +588,6 @@ func (h *MusicHandler) DeleteMusic(c *gin.Context) {
 		return
 	}
 
-	if _, err := h.DB.Exec("DELETE FROM albums WHERE id = ?", id); err != nil {
-		log.Printf("Error deleting album: %v", err)
-	}
-
-	if _, err := h.DB.Exec("DELETE FROM playlists WHERE id = ?", id); err != nil {
-		log.Printf("Error deleting playlist: %v", err)
-	}
-
-	if _, err := h.DB.Exec("DELETE FROM users WHERE id = ?", id); err != nil {
-		log.Printf("Error deleting user: %v", err)
-	}
-
 	c.JSON(http.StatusOK, gin.H{"message": "Music deleted successfully"})
 }
 

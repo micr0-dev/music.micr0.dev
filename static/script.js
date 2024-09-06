@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let isShuffle = false;
     let isRepeat = false;
 
-    async function fetchAuth(url, options = {}) {
+    async function fetchAuth (url, options = {}) {
         const token = localStorage.getItem('token');
         if (!token) {
             window.location.href = '/login.html';
@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
-    function savePlayerState() {
+    function savePlayerState () {
         localStorage.setItem('player-state', JSON.stringify({
             queue,
             currentTrack,
@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }));
     }
 
-    function loadPlayerState() {
+    function loadPlayerState () {
         volumeSlider.style.setProperty('--value', '100%');
         const state = localStorage.getItem('player-state');
         if (state == null) return;
@@ -147,7 +147,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return this.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
     }
 
-    function volumeCurve(volume) {
+    function volumeCurve (volume) {
         let value = (Math.pow(10, volume / 2500) - 1) * 10;
         if (value > 1) {
             return 1;
@@ -158,7 +158,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return value;
     }
 
-    function checkColorTooDark(color) {
+    function checkColorTooDark (color) {
         const c = color.substring(1);      // strip #
         const rgb = parseInt(c, 16);   // convert rrggbb to decimal
         const r = (rgb >> 16) & 0xff;  // extract red
@@ -170,7 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return luma < 16;
     }
 
-    function Lighten(color) {
+    function Lighten (color) {
         let num = parseInt(color, 16),
             amt = 45,
             R = (num >> 16) + amt,
@@ -267,7 +267,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    async function fetchPlaylists() {
+    async function fetchPlaylists () {
         const response = await fetchAuth('/api/user/playlists');
         const playlists = await response.json();
 
@@ -283,7 +283,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    function showPlaylistMenu(song) {
+    function showPlaylistMenu (song) {
         playlistMenu.classList.remove('menu-hidden');
         playlistMenu.dataset.songId = song.id;
         playlistMenu.querySelector('h2').textContent = "Add to Playlist";
@@ -301,7 +301,7 @@ document.addEventListener('DOMContentLoaded', () => {
         playlistMenu.style.left = `${x}px`;
         playlistMenu.style.top = `${y}px`;
 
-        document.addEventListener('click', function hideMenu(event) {
+        document.addEventListener('click', function hideMenu (event) {
             if (!playlistMenu.contains(event.target)) {
                 playlistMenu.classList.add('menu-hidden');
                 document.removeEventListener('click', hideMenu);
@@ -310,12 +310,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let isMouseOver = true;
 
-        function resetTimer() {
+        function resetTimer () {
             isMouseOver = true;
 
         }
 
-        function hideMenu() {
+        function hideMenu () {
             isMouseOver = false;
             setTimeout(() => {
                 if (!isMouseOver) {
@@ -333,7 +333,7 @@ document.addEventListener('DOMContentLoaded', () => {
         fetchPlaylists();
     }
 
-    async function addSongToPlaylist(playlistId, songId = null) {
+    async function addSongToPlaylist (playlistId, songId = null) {
         if (!songId) {
             songId = playlistMenu.dataset.songId;
         }
@@ -434,7 +434,7 @@ document.addEventListener('DOMContentLoaded', () => {
         sidebar.classList.remove('active');
     });
 
-    function loadMusic(musics, element = musicList, skip = 0) {
+    function loadMusic (musics, element = musicList, skip = 0) {
         if (musics == null) {
             element.innerHTML = 'No music found';
             return;
@@ -492,7 +492,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    async function shareSong(songId) {
+    async function shareSong (songId) {
         try {
 
             const response = await fetchAuth(`/api/share/${songId}`, {
@@ -515,7 +515,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    async function loadMusicList() {
+    async function loadMusicList () {
         const response = await fetchAuth('/api/music?limit=20');
         const musics = await response.json();
 
@@ -606,11 +606,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    function updateScrollingBanner(text) {
+    function updateScrollingBanner (text) {
         dataScroll.innerHTML = `<span>${text} • &zwnj;</span><span id="num2">${text} • &zwnj;</span><span id="num3">${text} • &zwnj;</span><span id="num4">${text} • &zwnj;</span>`;
     }
 
-    async function fetchStreamToken(musicId) {
+    async function fetchStreamToken (musicId) {
         const token = localStorage.getItem('token');
         if (!token) {
             window.location.href = '/login.html';
@@ -631,7 +631,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return data.token;
     }
 
-    async function playTrack(music, isUserAction = true, play = true) {
+    async function playTrack (music, isUserAction = true, play = true) {
         const streamToken = await fetchStreamToken(music.id);
         audioPlayer.src = `/api/stream?token=${streamToken}`;
 
@@ -798,12 +798,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     //FIX?ME: Queue get reset weirdly. could not reproduce the bug
 
-    function loadQueue() {
+    function loadQueue () {
         queue = openQueue.slice();
         shuffleQueue();
     }
 
-    function shuffleQueue() {
+    function shuffleQueue () {
         const artistMap = {};
 
         shuffleedQueue = queue.slice();
@@ -836,7 +836,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
-    function getCurrentIndex() {
+    function getCurrentIndex () {
         let currentIndex;
         if (isShuffle) {
             currentIndex = shuffleedQueue.findIndex(m => m.id === currentTrack.id);
@@ -846,7 +846,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return currentIndex;
     }
 
-    function playNextTrack() {
+    function playNextTrack () {
         let currentIndex = getCurrentIndex();
 
         if (isRepeat) {
@@ -863,7 +863,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function playPreviousTrack() {
+    function playPreviousTrack () {
         let currentIndex = getCurrentIndex();
 
         if (audioPlayer.currentTime > 5) {
@@ -983,13 +983,13 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 
-    function formatTime(seconds) {
+    function formatTime (seconds) {
         const minutes = Math.floor(seconds / 60);
         seconds = seconds % 60;
         return `${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
     }
 
-    function loadPlaylists(playlists, element = wholePlaylistsList) {
+    function loadPlaylists (playlists, element = wholePlaylistsList) {
         element.innerHTML = '';
         playlists.forEach(async playlist => {
             let songs = [];
@@ -1090,7 +1090,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    async function loadSidePlaylists() {
+    async function loadSidePlaylists () {
         const response = await fetchAuth('/api/user/library');
         const playlistSelect = document.getElementById('playlist-select');
         const playlists = await response.json();
@@ -1126,7 +1126,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    async function loadPlaylist(playlistId, isAlbum = false, playOnLoad = false) {
+    async function loadPlaylist (playlistId, isAlbum = false, playOnLoad = false) {
         const currentScreenElement = document.getElementById(currentScreen)
         if (currentScreenElement) {
             currentScreenElement.classList.remove('selected');
@@ -1164,15 +1164,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
         musicListTitle.textContent = playlist.name;
 
-        //Get the songs from the playlist from IDs
+        // Create and append the delete button
+        const deleteButton = document.createElement('button');
+        deleteButton.className = 'delete-playlist-button';
+        deleteButton.textContent = 'Delete Playlist';
+        deleteButton.addEventListener('click', async () => {
+            const confirmed = confirm('Are you sure you want to delete this playlist?');
+            if (confirmed) {
+                const response = await fetchAuth(`/api/playlists/${playlistId}`, {
+                    method: 'DELETE'
+                });
+                if (response.ok) {
+                    alert('Playlist successfully deleted.');
+                    loadSidePlaylists(); // Update the playlists in the sidebar
+                    homeButton.click();  // Navigate to the home screen
+                } else {
+                    alert('Failed to delete playlist');
+                }
+            }
+        });
+
+        musicList.innerHTML = ''; // Clear previous contents
+        musicList.appendChild(deleteButton); // Append the delete button at the top
+
+        // Get the songs from the playlist from IDs
         let songs = [];
         if (!isAlbum) {
-            // for (let i = 0; i < playlist.song_ids.length; i++) {
-            //     const response = await fetchAuth(`/api/music/${playlist.song_ids[i]}`);
-            //     const song = await response.json();
-            //     songs.push(song);
-            // }
-
             songs = playlist.songs;
 
             musicListTitle.textContent = playlist.name;
@@ -1209,8 +1226,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+
     // loadAlbums like loadPlaylists cards
-    function loadAlbums(albums, element = albumsList) {
+    function loadAlbums (albums, element = albumsList) {
         element.innerHTML = '';
         albums.forEach(async album => {
             const div = document.createElement('div');
