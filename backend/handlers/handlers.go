@@ -267,6 +267,18 @@ func downloadImage(url, filepath string) error {
 	return err
 }
 
+func isHigherQuality(newExt, existingExt string) bool {
+	qualityOrder := map[string]int{
+		".aiff": 5,
+		".wav":  4,
+		".flac": 3,
+		".aac":  2,
+		".mp3":  1,
+	}
+
+	return qualityOrder[newExt] > qualityOrder[existingExt]
+}
+
 func (h *MusicHandler) UploadMusic(c *gin.Context) {
 	file, err := c.FormFile("file")
 	if err != nil {
@@ -277,9 +289,9 @@ func (h *MusicHandler) UploadMusic(c *gin.Context) {
 
 	id := generateUniqueID()
 	filename := id + filepath.Ext(file.Filename)
-	filepath := "./static/" + filename
+	afilepath := "./static/" + filename
 
-	if err := c.SaveUploadedFile(file, filepath); err != nil {
+	if err := c.SaveUploadedFile(file, afilepath); err != nil {
 		log.Printf("Error saving file: %v", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save file"})
 		return
@@ -288,13 +300,13 @@ func (h *MusicHandler) UploadMusic(c *gin.Context) {
 	// Defer removing the file if something goes wrong
 	defer func() {
 		if err != nil {
-			if err := os.Remove(filepath); err != nil {
+			if err := os.Remove(afilepath); err != nil {
 				log.Printf("Error removing file: %v", err)
 			}
 		}
 	}()
 
-	metadata, err := readMetadata(filepath)
+	metadata, err := readMetadata(afilepath)
 	if err != nil {
 		log.Printf("Error reading metadata: %v", err)
 		return
@@ -324,18 +336,34 @@ func (h *MusicHandler) UploadMusic(c *gin.Context) {
 
 	if count > 0 {
 		existingID := ""
-		err = h.DB.Get(&existingID, "SELECT id FROM music WHERE title = ? AND artist = ?", music.Title, music.Artist)
+		existingFilename := ""
+		err = h.DB.QueryRow("SELECT id, filename FROM music WHERE title = ? AND artist = ?", music.Title, music.Artist).Scan(&existingID, &existingFilename)
 		if err != nil {
 			log.Printf("Error querying music: %v", err)
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get existing music"})
 			return
 		}
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "Song already exists, try updating it instead with a PUT request",
-			"id":    existingID,
-		})
-		err = fmt.Errorf("song already exists")
-		return
+
+		existingExt := filepath.Ext(existingFilename)
+		newExt := filepath.Ext(filename)
+
+		if isHigherQuality(newExt, existingExt) {
+			existingPath := "./static/" + existingFilename
+			if err := os.Remove(existingPath); err != nil {
+				log.Printf("Error removing existing file: %v", err)
+				c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete existing file"})
+				return
+			}
+
+			if _, err := h.DB.Exec("UPDATE music SET filename = ? WHERE id = ?", filename, existingID); err != nil {
+				log.Printf("Error updating existing music entry: %v", err)
+				c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update existing music"})
+				return
+			}
+		} else {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Uploaded file is of lower quality than the existing one"})
+			return
+		}
 	}
 
 	username, exists := c.Get("username")
