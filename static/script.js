@@ -259,7 +259,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (!response.ok) {
                 const result = await response.json();
-                if (!result.error.includes("already exists")) {
+                if (!result.error.includes("lower quality than the existing one")) {
                     alert('Failed to upload music: ' + (result.error || 'Unknown error'));
                 } else {
                     const uploadedSong = result;
