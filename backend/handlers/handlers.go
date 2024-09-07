@@ -361,7 +361,7 @@ func (h *MusicHandler) UploadMusic(c *gin.Context) {
 				return
 			}
 		} else {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Uploaded file is of lower quality than the existing one"})
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Uploaded file is of lower quality than the existing one", "id": existingID, "filename": existingFilename})
 			return
 		}
 	}
